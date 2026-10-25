@@ -12,3 +12,21 @@
 .profile-picker{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:12px;font-weight:700}.profile-picker select{max-width:125px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--ink);padding:8px 7px;font-weight:750;font-size:13px}.profile-setup{max-width:680px;margin:16px auto}.profile-setup .form-row{margin-top:14px}@media(max-width:500px){.site-header{flex-wrap:wrap;gap:12px;padding-top:18px}.header-actions{margin-left:auto}.brand{font-size:15px}.profile-picker span{display:none}.profile-picker select{max-width:112px;padding:7px 4px}}
 
 .diet-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:13px}.diet-option{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;font-size:13px;font-weight:650}.diet-option input{width:18px;height:18px;accent-color:var(--green);flex:none}.profile-setup textarea,#dietary-settings textarea{width:100%;min-height:76px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--ink);resize:vertical;font:inherit}@media(max-width:480px){.diet-choices{grid-template-columns:1fr}}
+
+/* Mobile layout stability: contain long text, respect narrow screens and prevent iOS input zoom. */
+html{width:100%;overflow-x:clip;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{width:100%;min-width:0;overflow-x:clip}
+.app-shell,main,.card,.pad,.metric,.topline,.section-head,.row,.site-header,.header-actions,.profile-picker,.meal-info,.small-meal,.day-card,.custom-meal,.grocery,.ingredient,.sheet{min-width:0;max-width:100%}
+.card,.metric,.meal-info,.small-meal,.custom-meal,.grocery span,.weight-record,.steps-desc,.inline-note,.desc,.tag,.meal-name,.small-meal .name,.meal-meta,.metric-main,.metric-sub,.metric-label,.hero-big,.hero-small,.hero-number,.ingredient,.section-head,.brand{overflow-wrap:anywhere}
+.cards,.day-card-details,.small-grid,.form-row,.diet-choices{min-width:0}
+.cards>*,.day-card-details>*,.small-grid>*,.form-row>*,.diet-choices>*{min-width:0}
+.header-actions{flex-shrink:0}
+.brand{min-width:0;letter-spacing:0.025em}
+.brand>span:last-child{min-width:0;overflow-wrap:normal}
+.row>*,.section-head>*,.topline>*,.custom-meal>*,.ingredient>*{min-width:0}
+.grocery .amount,.ingredient strong{max-width:42%;white-space:normal;text-align:right;overflow-wrap:anywhere}
+.week-nav{gap:6px}.week-nav span{min-width:0;text-align:center;overflow-wrap:anywhere}
+.metric-main,.hero-big{font-variant-numeric:tabular-nums}
+.field input,.field select,.meal-swap-label select,.profile-picker select,.profile-setup textarea,#dietary-settings textarea{font-size:16px;max-width:100%;min-width:0}
+button{max-width:100%;overflow-wrap:anywhere}
+@media(max-width:370px){.app-shell{padding-left:10px;padding-right:10px}.hero{grid-template-columns:minmax(0,1fr) minmax(0,95px);padding:15px;gap:7px}.hero-big{font-size:clamp(25px,8vw,34px)}.cards{gap:5px}.metric{padding:9px}.metric-main{font-size:clamp(16px,5.1vw,21px)}.metric-sub{font-size:9px}.day-card{padding:12px}.day-card-details{gap:4px}.small-meal{font-size:11px;padding-left:5px}.site-header{gap:6px}.brand{font-size:13px}.profile-picker select{max-width:105px}}
