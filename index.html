@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="lv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f6f8f4">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Mans uzturs">
+  <meta name="description" content="Uztura plānotājs ar atsevišķiem Māra un Līvas profiliem.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <title>Mans uzturs | Ēdienkarte un progress</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="site-header">
+      <a class="brand" href="#diena" aria-label="Mans uzturs, sākums"><span class="brand-icon">✳</span><span>MANS<span class="brand-accent">UZTURS</span></span></a>
+      <div class="header-actions"><label class="profile-picker"><span>Profils</span><select id="profile-select" aria-label="Izvēlies uztura profilu"><option value="maris">👤 Māris</option><option value="liva">👤 Līva</option></select></label><button type="button" id="refresh-app" class="refresh-btn" aria-label="Atjaunināt aplikāciju" title="Atjaunināt aplikāciju">↻</button></div>
+    </header>
+    <main id="app" aria-live="polite"></main>
+    <nav class="bottom-nav" aria-label="Galvenā navigācija">
+      <button type="button" data-nav="diena"><span class="nav-icon">◉</span><span>Diena</span></button>
+      <button type="button" data-nav="nedela"><span class="nav-icon">▦</span><span>Nedēļa</span></button>
+      <button type="button" data-nav="iepirkumi"><span class="nav-icon">☷</span><span>Iepirkumi</span></button>
+      <button type="button" data-nav="gatavosana"><span class="nav-icon">◷</span><span>Gatavošana</span></button>
+      <button type="button" data-nav="progress"><span class="nav-icon">↗</span><span>Progress</span></button>
+    </nav>
+  </div>
+  <div id="modal" class="modal-layer" hidden></div>
+  <div id="toast" role="status" aria-live="polite" class="toast" hidden></div>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
