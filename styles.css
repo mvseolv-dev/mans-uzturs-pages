@@ -30,3 +30,9 @@ body{width:100%;min-width:0;overflow-x:clip}
 .field input,.field select,.meal-swap-label select,.profile-picker select,.profile-setup textarea,#dietary-settings textarea{font-size:16px;max-width:100%;min-width:0}
 button{max-width:100%;overflow-wrap:anywhere}
 @media(max-width:370px){.app-shell{padding-left:10px;padding-right:10px}.hero{grid-template-columns:minmax(0,1fr) minmax(0,95px);padding:15px;gap:7px}.hero-big{font-size:clamp(25px,8vw,34px)}.cards{gap:5px}.metric{padding:9px}.metric-main{font-size:clamp(16px,5.1vw,21px)}.metric-sub{font-size:9px}.day-card{padding:12px}.day-card-details{gap:4px}.small-meal{font-size:11px;padding-left:5px}.site-header{gap:6px}.brand{font-size:13px}.profile-picker select{max-width:105px}}
+
+/* Keep cooking schedule action readable on narrow mobile screens. */
+.cooking-callout{align-items:center;gap:14px}
+.cooking-callout-text{flex:1 1 auto;min-width:0}
+.cooking-callout .btn{flex:0 0 auto;min-width:max-content;white-space:nowrap;overflow-wrap:normal;text-align:center}
+@media(max-width:390px){.cooking-callout{align-items:stretch;flex-direction:column;gap:12px}.cooking-callout .btn{width:100%;min-width:0}}
