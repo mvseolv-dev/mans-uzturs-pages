@@ -1,6 +1,6 @@
 /* MANS UZTURS ACTIVE - standalone sports UI extension, preserves existing state. */
 let fitWeekOffset=0;
-let fitSelectedDay=(rigaToday().getUTCDay()+6)%7;
+let fitSelectedDay=null;
 const FIT_NAMES=['P','O','T','C','Pk','S','Sv'];
 const FIT_ROUTINES=[
  {id:'mobility',emoji:'◌',type:'ATJAUNOŠANĀS',name:'Mobilitāte pēc basketbola',minutes:12,desc:'Vieglas kustības potītēm, gurniem un mugurai. Bez steigas un bez spēka izsīkuma.',exercise:['ankle','hips','bird']},
@@ -12,8 +12,8 @@ const FIT_EXERCISES={
  push:{name:'Atspiešanās pret sienu',sets:'2 x 8-12',tip:'Plaukstas uz sienas aptuveni plecu augstumā. Lēni pietuvini krūtis sienai, pēc tam izspiedies atpakaļ.',cues:['Ķermenis vienā līnijā','Elkoņi ne pārāk plati','Izspiežoties izelpo'],art:'push'},
  bridge:{name:'Gurnu tiltiņš',sets:'2 x 10-12',tip:'Guļus uz muguras, ceļi saliekti. Pacel gurnus līdz pleci, gurni un ceļi veido taisnu līniju.',cues:['Sasprindzini sēžas muskuļus','Neizliec muguras lejasdaļu','Augšā noturi 1 sekundi'],art:'bridge'},
  bird:{name:'Bird-dog',sets:'2 x 6-8 katrā pusē',tip:'Četrrāpus lēni izstiep pretējo roku un kāju. Noturi ķermeni stabili, tad samaini puses.',cues:['Gurnus turi paralēlus grīdai','Nesagriez muguru','Kusties lēnām'],art:'bird'},
- ankle:{name:'Potīšu mobilitāte',sets:'1-2 x 8 katrai kājai',tip:'Stāvus ar atbalstu. Virzi celi uz priekšu virs pēdas, papēdi neatceļot no grīdas.',cues:['Kustība bez sāpēm','Papēdis paliek uz grīdas','Lēns ritms'],art:'squat'},
- hips:{name:'Gurnu mobilitāte',sets:'1-2 x 30 s katrā pusē',tip:'No stabila izklupiena maigi virzi gurnus uz priekšu, līdz jūti vieglu stiepšanos gurna priekšpusē.',cues:['Mugura taisna','Bez atsperīgām kustībām','Elpo mierīgi'],art:'bridge'}
+ ankle:{name:'Potīšu mobilitāte',sets:'1-2 x 8 katrai kājai',tip:'Stāvus ar atbalstu. Virzi celi uz priekšu virs pēdas, papēdi neatceļot no grīdas.',cues:['Kustība bez sāpēm','Papēdis paliek uz grīdas','Lēns ritms'],art:'ankle'},
+ hips:{name:'Gurnu mobilitāte',sets:'1-2 x 30 s katrā pusē',tip:'No stabila izklupiena maigi virzi gurnus uz priekšu, līdz jūti vieglu stiepšanos gurna priekšpusē.',cues:['Mugura taisna','Bez atsperīgām kustībām','Elpo mierīgi'],art:'hips'}
 };
 function fitD(date){return new Intl.DateTimeFormat('lv-LV',{day:'numeric',month:'short',timeZone:'UTC'}).format(new Date(date+'T12:00:00Z'))}
 function fitToday(){return dateISO(rigaToday())}
@@ -46,6 +46,8 @@ function fitArt(type){
  push:{a:'M52 37L62 75L39 105M62 75L75 105M52 49L100 49M100 20V109',b:'M196 37L204 75L181 105M204 75L218 105M196 51L230 61L243 51M244 20V109',p1:[51,26],p2:[195,26]},
  bridge:{a:'M28 93L55 94L82 71L108 103M55 94L45 105M108 103L118 103',b:'M168 94L200 66L227 70L247 104M200 66L191 48M247 104L253 104',p1:[20,88],p2:[160,89]},
  bird:{a:'M32 82L57 62L88 64L105 90M57 62L49 95M88 64L86 96M57 62L43 48',b:'M169 81L191 63L220 63L251 41M191 63L162 44M220 63L225 98M191 63L184 97',p1:[26,76],p2:[164,73]}
+ ,ankle:{a:'M54 42L54 77L70 96L96 105M54 77L43 105M54 56L74 58',b:'M201 42L201 76L222 96L248 104M201 76L190 103M201 56L221 58',p1:[54,30],p2:[201,30]},
+ hips:{a:'M56 42L57 73L78 85L103 106M57 73L42 100M57 56L77 65',b:'M200 42L204 74L229 84L245 105M204 74L190 104M204 55L224 65',p1:[55,30],p2:[199,30]}
  }[type]||null;
  if(!pieces)return '';
  const h='<defs><linearGradient id="figureShade" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a7f44d"/><stop offset="100%" stop-color="#39b986"/></linearGradient></defs>';
@@ -83,6 +85,7 @@ function renderFitnessDashboard(){
  '<div class="fit-section-head"><div><span>ĪSAKIE CEĻI</span><h2>Ko darīsim tālāk?</h2></div></div><div class="fit-shortcuts"><button data-nav="majasha"><div class="fit-shortcut-icon">'+fitIcon('spark')+'</div><strong>Mājas treniņš</strong><span>15-20 min · bez inventāra</span>'+fitIcon('arrow')+'</button><button data-nav="uzturs"><div class="fit-shortcut-icon">'+fitIcon('fork')+'</div><strong>Uztura dienasgrāmata</strong><span>Ēdienreizes un iepirkumi</span>'+fitIcon('arrow')+'</button></div></div>';
 }
 function renderFitnessSchedule(){
+ if(fitSelectedDay===null)fitSelectedDay=(rigaToday().getUTCDay()+6)%7;
  const week=fitWeek(),focus=week[fitSelectedDay]||week[0];
  return '<div class="fit-page">'+fitHeading('TAVS SPĒLES PLĀNS','Treniņu grafiks','Basketbols, pastaigas un atjaunošanās ar iespēju atzīmēt paveikto.')+
  fitTrainingSummary()+fitStrip(week)+fitSession(focus,true)+
