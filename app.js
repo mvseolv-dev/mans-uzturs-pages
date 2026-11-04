@@ -158,14 +158,14 @@ function renderProfileSetup(){
 const SPORT_DAYS=[
  {day:0,name:'Pirmdiena',type:'Basketbols',title:'Treniņš Gardenē',time:'19:00',place:'Gardene',minutes:90},
  {day:1,name:'Otrdiena',type:'Pastaiga',title:'60 minūšu pastaiga',time:'Pēc darba',place:'Brīvā dabā',minutes:60},
- {day:2,name:'Trešdiena',type:'Iespējams',title:'Treniņš Dobeles hallē',time:'20:30',place:'Dobele',minutes:90},
+ {day:2,name:'Trešdiena',type:'Atcelts',title:'Brīva diena',time:'',place:'',minutes:0},
  {day:3,name:'Ceturtdiena',type:'Basketbols',title:'Treniņš',time:'19:00',place:'Gardene vai pie veterāniem',minutes:90},
  {day:4,name:'Piektdiena',type:'Pastaiga',title:'60 minūšu pastaiga',time:'Pēc darba',place:'Brīvā dabā',minutes:60},
  {day:5,name:'Sestdiena',type:'BUKI',title:'BUKI treniņš',time:'11:00-13:00',place:'Jaunbērze',minutes:120},
  {day:6,name:'Svētdiena',type:'BUKI',title:'Spēle vai BUKI treniņš',time:'Spēle pēc kalendāra / 11:00-13:00',place:'Spēles vieta / Jaunbērze',minutes:120}
 ];
 function sportDate(day,offset=0){let d=rigaToday();d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+6)%7+day+offset*7);return dateISO(d)}
-function sportItems(offset=0){return SPORT_DAYS.map(base=>{const date=sportDate(base.day,offset),choice=state.sportChoices?.[date]||'';let x={...base,date,choice};if(base.day===3){x.title=choice==='veterans'?'Veterānu treniņš':'Treniņš Gardenē';x.place=choice==='veterans'?'Pie veterāniem':'Gardene';}if(base.day===2)x.type=choice==='yes'?'Basketbols':choice==='no'?'Atcelts':'Iespējams';if(base.day===6){if(choice==='game'){x.title='BUKI spēle';x.time='Pēc spēles kalendāra';x.place='Pēc spēles kalendāra'}if(choice==='practice'){x.title='BUKI treniņš';x.time='11:00-13:00';x.place='Jaunbērze'}if(choice==='rest'){x.title='Atpūta';x.type='Atcelts';x.time='';x.place=''}}return x})}
+function sportItems(offset=0){return SPORT_DAYS.map(base=>{const date=sportDate(base.day,offset),choice=state.sportChoices?.[date]||'';let x={...base,date,choice};if(base.day===3){x.title=choice==='veterans'?'Veterānu treniņš':'Treniņš Gardenē';x.place=choice==='veterans'?'Pie veterāniem':'Gardene';}if(base.day===6){if(choice==='game'){x.title='BUKI spēle';x.time='Pēc spēles kalendāra';x.place='Pēc spēles kalendāra'}if(choice==='practice'){x.title='BUKI treniņš';x.time='11:00-13:00';x.place='Jaunbērze'}if(choice==='rest'){x.title='Atpūta';x.type='Atcelts';x.time='';x.place=''}}return x})}
 function sportDone(date){return !!state.sportLog?.[date]?.done}
 const SPORT_MOVES=[
  ['Pietupiens pie krēsla','2 x 10','Apsēdies atpakaļ līdz krēslam un celies. Ceļgali virzās pēdu virzienā.','squat'],
