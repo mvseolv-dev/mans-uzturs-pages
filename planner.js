@@ -42,7 +42,7 @@ fitSummary=function(sessions){
 fitNext=function(){
  const current=fitToday();
  const choices=[...plannerSessions(0),...plannerSessions(1),...plannerSessions(2)].filter(s=>fitPossible(s)&&!fitDone(s)&&s.date>=current);
- return choices.sort((a,b)=>a.date.localeCompare(b.date)||plannerTime(a.time).localeCompare(plannerTime(b.time)))[0]||null;
+ return choices.sort((a,b)=>a.date.localeCompare(b.date)||plannerTime(a.time).localeCompare(plannerTime(b.time)))[0]||{date:current,name:'Nav plānots',title:'Pievieno aktivitāti',time:'',place:'',minutes:0,type:'Atcelts'};
 };
 function plannerHeading(type){return type==='Pastaiga'?'PASTAIGA':type==='Spēle'?'SPĒLE':type==='Mājas treniņš'?'MĀJĀS':type==='Basketbols'||type==='BUKI'?'BASKETBOLS':'AKTIVITĀTE'}
 function plannerChip(s){
@@ -59,7 +59,7 @@ function plannerStartDate(day=fitSelectedDay){
 function plannerShowEditor(mode,day,date,id){
  const target=mode==='edit'?(id?plannerRecords().find(e=>e.id===id):plannerDaySessions(day).find(e=>!e.custom&&e.date===date)):null;
  const key=date||plannerStartDate(day);
- const recurring=!!target&&target.repeat==='weekly';
+ const recurring=!!target&&(target.repeat==='weekly'||(!!target.custom===false&&!!state.trainingOverrides?.['date:'+key]));
  plannerEditor={mode,id:id||'',date:key,day:day??(new Date(key+'T12:00:00Z').getUTCDay()+6)%7,title:target?.title||'',type:target?.type==='BUKI'?'Basketbols':target?.type||'Basketbols',time:target?.time&&/^\d{2}:\d{2}$/.test(target.time)?target.time:'19:00',place:target?.place||'',minutes:target?.minutes||90,repeat:recurring,base:!!target&&!target.custom};
  render();
  const el=document.getElementById('planner-form');
@@ -79,7 +79,7 @@ function plannerEditForm(){
  '<label class="ap-field-wide">Vieta<input name="place" maxlength="100" value="'+safe(e.place)+'" placeholder="Piemēram, Dobeles sporta centrs"></label>'+
  '<label class="ap-field-wide ap-repeat"><input name="repeat" type="checkbox" '+(e.repeat?'checked':'')+'><span>Atkārtot katru nedēļu šajā nedēļas dienā</span></label>'+
  '</div><p class="ap-planner-help">'+(e.base?'Saglabājot varēsi mainīt šo vienu datumu vai attiecīgo treniņu visās nedēļās.':'Ja atzīmēsi atkārtošanu, treniņš parādīsies arī nākamajās nedēļās.')+'</p>'+
- '<button type="submit" class="ap-planner-save">Saglabāt aktivitāti ↗</button></form>';
+ '<button type="submit" class="ap-planner-save">Saglabāt aktivitāti ↗</button>'+(e.base?'<button type="button" class="ap-planner-stop" data-plan="skip-week" data-day="'+e.day+'">Noņemt šo treniņu no visām nedēļām</button>':'')+'</form>';
 }
 function plannerEmpty(date){return '<div class="ap-planner-empty"><span>◌</span><h3>Šajā dienā treniņš nav ieplānots</h3><p>Atpūties vai pievieno jaunu aktivitāti, kad būs zināms grafiks.</p><button data-plan="new" data-date="'+date+'">+ Pievienot treniņu</button></div>'}
 renderFitnessSchedule=function(){
@@ -115,7 +115,7 @@ function plannerSave(form){
   state.trainingEntries??=[];
   const existing=plannerEditor?.id?state.trainingEntries.find(e=>e.id===plannerEditor.id):null;
   const id=existing?.id||'custom-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);
-  const value={id,title,type,time,place,minutes,repeat:weekly?'weekly':'once',date,weekday:day,startDate:date};
+  const value={id,title,type,time,place,minutes,repeat:weekly?'weekly':'once',date,weekday:day,startDate:existing?.startDate||date};
   if(existing)Object.assign(existing,value);else state.trainingEntries.push(value);
  }
  fitSelectedDay=day;
@@ -130,6 +130,7 @@ document.addEventListener('click',event=>{
  if(action==='cancel'){plannerEditor=null;render();return}
  if(action==='new'){const date=b.dataset.date||plannerStartDate();const day=(new Date(date+'T12:00:00Z').getUTCDay()+6)%7;plannerShowEditor('new',day,date,null);return}
  if(action==='edit'){plannerShowEditor('edit',Number(b.dataset.day),b.dataset.date,b.dataset.id||null);return}
+ if(action==='skip-week'){const day=Number(b.dataset.day);if(!confirm('Noņemt noklusēto treniņu no visām nedēļām?'))return;state.trainingSkips??={};state.trainingSkips['week:'+day]=true;plannerEditor=null;save();render();return}
  if(action==='restore'){state.trainingSkips??={};delete state.trainingSkips['date:'+b.dataset.date];delete state.trainingSkips['week:'+b.dataset.day];save();render();return}
  if(action==='toggle'){
   const key=b.dataset.key,items=plannerSessions(),item=items.find(x=>plannerKey(x)===key);if(!item)return;
@@ -152,3 +153,5 @@ document.addEventListener('submit',event=>{
  if(event.target?.id!=='planner-form')return;
  event.preventDefault();plannerSave(event.target);
 });
+
+render();
