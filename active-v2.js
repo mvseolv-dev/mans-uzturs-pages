@@ -88,7 +88,7 @@ renderFitnessDashboard=function(){
  '<div class="ap-day-strip">'+week.map(x=>'<button data-nav="trenini" class="'+(x.date===today?'now ':'')+(fitDone(x)?'marked':'')+'"><span>'+x.name.slice(0,2)+'</span><b>'+x.date.slice(-2)+'</b><small>'+(fitDone(x)?'✓':x.type==='Pastaiga'?'◉':'·')+'</small></button>').join('')+'</div>'+
  activeWeeklyStats()+
  activeSection("TEAM / BUKI","Komandas treniņi",'<button class="ap-text-btn" data-nav="komanda">Atvērt ↗</button>')+
- '<button class="ap-team-shortcut" data-nav="komanda"><span class="ap-team-shortcut-icon">🏀</span><span><strong>Ko trenēsim ar zēniem?</strong><small>112 vingrinājumi · cilvēku skaits · metieni · dribls · aizsardzība</small></span><b>↗</b></button>'+
+ '<button class="ap-team-shortcut" data-nav="komanda"><span class="ap-team-shortcut-icon">🏀</span><span><strong>Ko trenēsim ar zēniem?</strong><small>169 vingrinājumi · cilvēku skaits · metieni · dribls · aizsardzība</small></span><b>↗</b></button>'+
  activeSection("TRAINING LIBRARY","Vingrojumi mājās",'<button class="ap-text-btn" data-nav="majasha">Visi ↗</button>')+
  '<div class="ap-program-grid">'+ACTIVE_PROGRAMS.slice(0,2).map(activeCard).join('')+'</div>'+
  activeSection("BODY METRICS","Svara tendence",'<button class="ap-text-btn" data-nav="progress">Progress ↗</button>')+
