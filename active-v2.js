@@ -100,7 +100,7 @@ renderFitnessSchedule=function(){
 };
 renderFitnessHome=function(){
  return '<div class="ap-screen">'+activeTitle("WORKOUT LIBRARY","Mājas treniņi","Reāli vingrinājumu video, skaidri soļi un īsas programmas bez inventāra.")+
- '<div class="ap-highlight"><div><span>MOVE BETTER / FEEL BETTER</span><h2>YOUR<br>BODY.<br><em>YOUR POWER.</em></h2><p>Sāc ar 12-20 minūtēm.</p></div><img src="'+activeImg("squat")+'" alt="Vingrinājuma video priekšskatījums" loading="lazy" referrerpolicy="no-referrer"/></div>'+
+ '<div class="ap-highlight"><div><span>MOVE BETTER / FEEL BETTER</span><h2>YOUR<br>BODY.<br><em>YOUR POWER.</em></h2><p>Sāc ar 12-20 minūtēm.</p></div><img src="'+activeImg("reverse")+'" alt="Vingrinājuma video priekšskatījums" loading="lazy" referrerpolicy="no-referrer"/></div>'+
  activeSection("CHOOSE A WORKOUT","Programmas",activeTag("3 PROGRAMMAS","lime"))+
  '<div class="ap-workout-list">'+ACTIVE_PROGRAMS.map(r=>'<button class="ap-workout-row" data-ap-open="'+r.id+'"><img src="'+activeImg(r.moves[0])+'" alt="" loading="lazy" referrerpolicy="no-referrer"><div><small>'+r.label+'</small><strong>'+safe(r.title)+'</strong><span>'+r.minutes+' MIN · '+r.moves.length+' VINGRINĀJUMI · '+r.level+'</span><p>'+r.summary+'</p></div><b>↗</b></button>').join('')+'</div>'+
  '<div class="ap-notice"><b>Izvēlies pēc basketbola slodzes</b><p>Sāc ar vienu spēka vai stabilitātes sesiju nedēļā. Starp smagu kāju slodzi un spēli atstāj atjaunošanās laiku; ja ir vairākas intensīvas basketbola dienas, izvēlies tikai mobilitāti. Spēka vingrinājumos atstāj 2-3 atkārtojumus rezervē.</p></div></div>';
