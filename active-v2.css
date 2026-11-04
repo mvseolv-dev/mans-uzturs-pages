@@ -231,3 +231,34 @@ body:has(.fit-subnav) .footer-text{color:#6a7d6a}
 .ap-selected-confirm:disabled{opacity:.4;cursor:not-allowed}
 @media(max-width:480px){.ap-selected-card{padding:16px;gap:18px}.ap-selected-title{gap:11px}.ap-selected-symbol{width:47px;height:47px;flex-basis:47px;font-size:22px}.ap-selected-footer input{width:85px}.ap-selected-confirm{padding:11px;font-size:12px}.ap-location-toggle button{font-size:12px;padding:12px 9px}}
 @media(max-width:340px){.ap-selected-footer{flex-direction:column;align-items:stretch}.ap-selected-footer label{align-self:flex-start}.ap-selected-confirm{width:100%}}
+
+/* Fast visual exercise guides: start and finish poses visible without playing a video. */
+.ap-exercise.ap-exercise-visual{grid-template-columns:minmax(0,1fr) minmax(0,.95fr);align-items:stretch}
+.ap-ex-visual{min-width:0;display:flex;flex-direction:column;justify-content:center;padding:14px;background:#162319}
+.ap-ex-visual-kicker{font-size:9px;font-weight:900;letter-spacing:.13em;color:#bbf86f;padding:0 3px;margin-bottom:12px}
+.ap-pose-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;align-items:start;min-width:0}
+.ap-pose-gallery.ap-pose-single{grid-template-columns:minmax(0,1fr);justify-items:center}
+.ap-pose{margin:0;min-width:0;overflow:hidden;border-radius:14px;background:#d7edfa;border:1px solid #476454;position:relative}
+.ap-pose-gallery.ap-pose-single .ap-pose{width:min(100%,235px)}
+.ap-pose img{width:100%;height:auto;aspect-ratio:1;object-fit:cover;display:block;background:#d7edfa}
+.ap-pose figcaption{background:#22362a;color:#e6f9d6;font-size:10px;font-weight:850;letter-spacing:.08em;text-align:center;padding:9px 3px;line-height:1.25}
+.ap-pose-note{grid-column:1/-1;font-size:11px;color:#c0d1b7;line-height:1.55;background:#2a3627;padding:12px;border-radius:10px;border:1px solid #455a3f}
+.ap-ex-instruction-label{font-size:10px;font-weight:850;letter-spacing:.1em;color:#c4fa72;margin-top:8px}
+.ap-ex-credit-video{font-size:10px;color:#708e74;margin-top:14px;line-height:1.5}
+.ap-exercise-visual .ap-ex-info>span{font-size:11px;color:#c7fa39}
+.ap-exercise-visual .ap-ex-info ul{margin-bottom:20px}
+.ap-exercise-visual .ap-ex-actions button:first-child{background:#283d2d;border-color:#657c51;color:#def7bf}
+.ap-disclaimer a{color:#c7fa39;text-decoration:underline;text-underline-offset:2px}
+@media(max-width:680px){
+ .ap-exercise.ap-exercise-visual{grid-template-columns:1fr}
+ .ap-ex-visual{padding:13px}
+ .ap-ex-visual-kicker{margin-bottom:10px}
+ .ap-pose-gallery{gap:7px}
+ .ap-pose figcaption{font-size:9px;padding:8px 2px}
+ .ap-exercise-visual .ap-ex-info{padding:17px}
+ .ap-exercise-visual .ap-ex-info h3{font-size:21px}
+}
+@media(max-width:340px){
+ .ap-pose figcaption{font-size:8px}
+ .ap-exercise-visual .ap-ex-actions button{font-size:9px}
+}
