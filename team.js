@@ -62,7 +62,7 @@ function tmGenerate(){
 }
 function tmPlanText(items=tmDraft()?.items||[]){
  const s=tmState(),header="BUKI / KOMANDAS TRENIŅŠ\n"+(tmDraft()?.date||s.date)+" | "+(tmDraft()?.criteria?.players||s.players)+" spēlētāji | "+tmPlanTotal(items)+" min\n";
- return header+items.map((e,i)=>{const d=TEAM_BY_ID[e.id];return (i+1)+". "+(d?.title||e.id)+" ("+e.minutes+" min)\n   "+(d?.action||"")+"\n   Uzsvars: "+(d?.coach||"")}).join("\n");
+ return header+items.map((e,i)=>{const d=TEAM_BY_ID[e.id];return (i+1)+". "+(d?tmFriendlyTitle(d):e.id)+" ("+e.minutes+" min)\n   "+(d?.action||"")+"\n   Uzsvars: "+(d?.coach||"")}).join("\n");
 }
 function tmDraftAdd(id){
  const s=tmState(),d=TEAM_BY_ID[id];if(!d)return;
@@ -114,13 +114,13 @@ function tmCriteria(){
 }
 function tmCard(d,opts={}){
  const s=tmState(),inPlan=(s.draft?.items||[]).some(x=>x.id===d.id),favorite=s.favorites.includes(d.id);
- return '<article class="tm-drill-card"><button type="button" class="tm-drill-open" data-tm="detail" data-id="'+d.id+'"><div class="tm-drill-preview">'+tmCourt(d.diagram,true,{drill:d,step:2})+'</div><div class="tm-drill-text"><span>'+tmCat(d.category)+' · '+TEAM_LEVELS[d.intensity]+'</span><h3>'+safe(d.title)+'</h3><p>'+d.minPlayers+'+ spēlētāji · '+d.minutes+' min · '+(d.minBalls?'ar bumbu':'bez bumbas')+'</p></div></button>'+
+ return '<article class="tm-drill-card"><button type="button" class="tm-drill-open" data-tm="detail" data-id="'+d.id+'"><div class="tm-drill-preview">'+tmCourt(d.diagram,true,{drill:d,step:2})+'</div><div class="tm-drill-text"><span>'+tmCat(d.category)+' · '+TEAM_LEVELS[d.intensity]+'</span><h3>'+safe(tmFriendlyTitle(d))+'</h3><p>'+d.minPlayers+'+ spēlētāji · '+d.minutes+' min · '+(d.minBalls?'ar bumbu':'bez bumbas')+'</p></div></button>'+
  '<div class="tm-drill-footer"><button type="button" data-tm="favorite" data-id="'+d.id+'" aria-label="'+(favorite?'Izņemt no favorītiem':'Pievienot favorītiem')+'" class="tm-fave '+(favorite?'on':'')+'">'+(favorite?'♥':'♡')+'</button>'+
  '<button type="button" data-tm="add" data-id="'+d.id+'" class="tm-add '+(inPlan?'added':'')+'">'+(inPlan?'✓ Plānā':'+ Pievienot')+'</button></div></article>';
 }
 function tmPlanCard(item,i,total){
  const d=TEAM_BY_ID[item.id];if(!d)return '';
- return '<article class="tm-plan-item"><div class="tm-plan-index">'+String(i+1).padStart(2,"0")+'</div><button class="tm-plan-main" data-tm="detail" data-id="'+d.id+'"><div class="tm-plan-diagram">'+tmCourt(d.diagram,true,{drill:d,step:2})+'</div><div class="tm-plan-copy"><span>'+tmCat(d.category)+' · '+TEAM_LEVELS[d.intensity]+'</span><strong>'+safe(d.title)+'</strong><small>'+safe(d.action)+'</small></div></button>'+
+ return '<article class="tm-plan-item"><div class="tm-plan-index">'+String(i+1).padStart(2,"0")+'</div><button class="tm-plan-main" data-tm="detail" data-id="'+d.id+'"><div class="tm-plan-diagram">'+tmCourt(d.diagram,true,{drill:d,step:2})+'</div><div class="tm-plan-copy"><span>'+tmCat(d.category)+' · '+TEAM_LEVELS[d.intensity]+'</span><strong>'+safe(tmFriendlyTitle(d))+'</strong><small>'+safe(d.action)+'</small></div></button>'+
  '<div class="tm-plan-edit"><label>MIN<input type="number" data-tm-duration="'+i+'" min="3" max="30" value="'+item.minutes+'" inputmode="numeric"></label><div><button type="button" data-tm="up" data-index="'+i+'" '+(i===0?'disabled':'')+' aria-label="Pārvietot uz augšu">↑</button><button type="button" data-tm="down" data-index="'+i+'" '+(i===total-1?'disabled':'')+' aria-label="Pārvietot uz leju">↓</button><button type="button" data-tm="remove" data-index="'+i+'" aria-label="Izņemt vingrinājumu">×</button></div></div></article>';
 }
 function tmDraftPanel(){
@@ -141,6 +141,7 @@ function tmLibrary(){
  return '<div class="tm-library"><div class="tm-section-title"><span>VINGRINĀJUMU BIBLIOTĒKA</span><h2>'+TEAM_DRILLS.length+' varianti basketbolam</h2><p>Redzami tikai treniņa nosacījumiem piemēroti vingrinājumi. Maini cilvēku skaitu un intensitāti ģeneratorā.</p></div>'+
  '<div class="tm-search"><span>⌕</span><input id="tm-search" value="'+safe(tmSearch)+'" type="search" autocomplete="off" placeholder="Meklēt metienu, driblu, aizsardzību..." aria-label="Meklēt vingrinājumus"></div>'+
  '<div class="tm-cat-scroll">'+[["all","Visi"],...TEAM_CATEGORIES].map(([id,label])=>'<button data-tm="category" data-value="'+id+'" class="'+(tmCategory===id?'active':'')+'">'+label+'</button>').join('')+'</div>'+
+ (tmCategory==='shoot'?'<div class="tm-shot-filters"><span>METIENU VEIDI · '+TEAM_DRILLS.filter(d=>d.category==='shoot').length+' VINGRINĀJUMI</span><div>'+[['all','Visi metieni'],...TEAM_SHOOTING_TYPES].map(([id,label])=>'<button type="button" data-tm="shot-type" data-value="'+id+'" class="'+(tmShotType===id?'active':'')+'">'+label+'</button>').join('')+'</div></div>':'')+
  '<div class="tm-library-bar"><button data-tm="favonly" class="'+(tmFavoritesOnly?'active':'')+'">♥ Favorīti</button><span id="tm-results-count">'+list.length+' piemēroti</span></div>'+
  '<div id="tm-library-results">'+(list.length?'<div class="tm-drill-grid">'+list.map(d=>tmCard(d)).join('')+'</div>':'<div class="tm-empty"><h3>Neviens vingrinājums neatbilst filtriem</h3><p>Samazini intensitāti vai izvēlies citu kategoriju.</p></div>')+'</div></div>';
 }
@@ -154,21 +155,45 @@ function tmSaved(){
 function tmDetail(){
  const d=TEAM_BY_ID[tmFocusDrill],s=tmState();
  if(!d){tmFocusDrill=null;return tmLibrary()}
+ const steps=tmStepInfo(d),idx=Math.max(0,Math.min(2,tmGuideStep)),step=steps[idx];
+ const diff=tmFriendlyTitle(d),terms=tmGlossaryTermsFor(d);
+ const stepButtons=steps.map((st,i)=>'<button type="button" data-tm="step" data-index="'+i+'" aria-pressed="'+(i===idx)+'" class="'+(i===idx?'active':'')+'"><span>'+String(i+1).padStart(2,'0')+'</span>'+st.title+'</button>').join('');
+ const roles=tmRoleLabels(d).map(x=>'<span>'+safe(x)+'</span>').join('');
+ const related=terms.length?'<div class="tm-inline-glossary"><div class="tm-section-title"><span>BASKETBOLA TERMINI</span><h2>Ko tie nozīmē?</h2></div>'+terms.map(([word,lat,explain])=>'<div><strong>'+safe(word)+' <span>= '+safe(lat)+'</span></strong><p>'+safe(explain)+'</p></div>').join('')+'<button type="button" data-tm="open-terms">Atvērt visu terminu vārdnīcu ↗</button></div>':'';
  return '<div class="tm-detail"><button data-tm="back" class="tm-back">‹ Atpakaļ uz treniņiem</button>'+
- '<div class="tm-detail-title"><span>'+tmCat(d.category)+' · '+TEAM_LEVELS[d.intensity]+'</span><h1>'+safe(d.title)+'</h1><p>'+d.minPlayers+'+ spēlētāji · '+d.minutes+' min · '+d.minBalls+' bumbas</p></div>'+
- '<div class="tm-large-diagram">'+tmCourt(d.diagram)+tmLegend()+'</div>'+
- '<div class="tm-detail-steps"><div><b>01</b><div><h3>Izvietojums</h3><p>'+safe(d.setup)+'</p></div></div>'+
- '<div><b>02</b><div><h3>Izpilde</h3><p>'+safe(d.action)+'</p></div></div>'+
+ '<div class="tm-detail-title"><span>'+tmCat(d.category)+' · '+TEAM_LEVELS[d.intensity]+'</span><h1>'+safe(diff)+'</h1>'+
+ (diff!==d.title?'<div class="tm-original-term">Oriģinālais nosaukums: '+safe(d.title)+'</div>':'')+
+ '<p>'+d.minPlayers+'+ spēlētāji · '+d.minutes+' min · '+d.minBalls+' bumbas</p></div>'+
+ '<div class="tm-step-studio"><div class="tm-section-title"><span>VIZUĀLĀ PAMĀCĪBA</span><h2>Izpilde pa soļiem</h2><p>Izvēlies soli un izlasi, kas jādara katram spēlētājam.</p></div>'+
+ '<div class="tm-step-tabs">'+stepButtons+'</div>'+
+ '<div class="tm-large-diagram">'+tmCourt(d.diagram,false,{drill:d,step:idx})+tmLegend()+'</div>'+
+ '<div class="tm-step-explain"><span>'+step.label+'</span><h3>'+step.title+'</h3><p>'+safe(step.text)+'</p>'+
+ (idx===0?'<div class="tm-role-list">'+roles+'</div>':'<small>'+safe(step.extra)+'</small>')+
+ (idx===2&&d.goal?'<strong class="tm-target">MĒRĶIS: '+safe(d.goal)+'</strong>':'')+
+ '</div><div class="tm-step-actions"><button type="button" data-tm="step" data-index="'+Math.max(0,idx-1)+'" '+(idx===0?'disabled':'')+'>← Iepriekšējais</button>'+
+ '<span>'+(idx+1)+' / 3</span><button type="button" data-tm="step" data-index="'+Math.min(2,idx+1)+'" '+(idx===2?'disabled':'')+'>Nākamais solis →</button></div></div>'+
+ '<div class="tm-detail-steps"><div><b>01</b><div><h3>Novietošanās</h3><p>'+safe(d.setup)+'</p></div></div>'+
+ '<div><b>02</b><div><h3>Ko darīt</h3><p>'+safe(d.action)+'</p></div></div>'+
  '<div><b>03</b><div><h3>Trenera uzsvars</h3><p>'+safe(d.coach)+'</p></div></div></div>'+
- '<div class="tm-detail-info"><span>NEPIECIEŠAMAIS</span><strong>'+Math.max(0,d.minBalls)+' bumbas · '+d.minPlayers+' vai vairāk cilvēki</strong><span>LOKĀLĀ PIELĀGOŠANA</span><p>'+((s.players>d.minPlayers&&d.minPlayers>=2)?'Sadaliet dalībniekus mazās grupās un mainiet lomas ik pēc dažiem atkārtojumiem.':'Mainiet puses un lomas pēc katras īsās sērijas.')+'</p></div>'+
- '<div class="tm-detail-buttons"><button data-tm="add" data-id="'+d.id+'">＋ Pievienot manam plānam</button><button data-tm="favorite" data-id="'+d.id+'">'+(s.favorites.includes(d.id)?'♥ Favorītos':'♡ Favorītiem')+'</button></div>'+
- '<p class="tm-footnote">Shēma ir konkrētā vingrinājuma izvietojuma un galvenās kustības ilustrācija, nevis pilna animācija. Vienlaikus rotējošus spēlētājus nolasiet pēc izpildes apraksta.</p></div>';
+ (related||'<button type="button" class="tm-term-link" data-tm="open-terms">Nesaproti terminu? Atvērt basketbola vārdnīcu ↗</button>')+
+ '<div class="tm-detail-info"><span>NEPIECIEŠAMAIS</span><strong>'+d.minBalls+' bumbas · vismaz '+d.minPlayers+' spēlētāji</strong>'+
+ (d.goal?'<span>TRĀPĪJUMU / ATKĀRTOJUMU MĒRĶIS</span><strong>'+safe(d.goal)+'</strong>':'')+
+ '<span>KĀ SADALĪT LOMAS?</span><p>'+((s.players>d.minPlayers&&d.minPlayers>=2)?'Ja cilvēku vairāk, sadalieties pa pāriem vai grupām un mainiet lomas pēc katras sērijas.':'Mainiet puses un lomas pēc katras sērijas.')+'</p></div>'+
+ '<div class="tm-detail-buttons"><button data-tm="add" data-id="'+d.id+'">＋ Pievienot treniņa plānam</button><button data-tm="favorite" data-id="'+d.id+'">'+(s.favorites.includes(d.id)?'♥ Favorītos':'♡ Favorītiem')+'</button></div>'+
+ '<p class="tm-footnote">Shēmas ir vienkāršoti izvietojuma un kustību piemēri. Trenera soļu apraksts nosaka precīzu izpildi; zīmējums neaizstāj visu vingrinājuma secību.</p></div>';
+}
+function tmGlossary(){
+ const term=tmTermQuery.toLocaleLowerCase("lv-LV").trim();
+ const list=TEAM_GLOSSARY.filter(([w,lv,text])=>(w+' '+lv+' '+text).toLocaleLowerCase('lv-LV').includes(term));
+ return '<div class="tm-glossary"><div class="tm-section-title"><span>PALĪDZĪBA TRENIŅOS</span><h2>Basketbola terminu vārdnīca</h2><p>28 termini izskaidroti saprotamā latviešu valodā. Vari izmantot pirms treniņa vai atvērt, skatot vingrinājumu.</p></div>'+
+ '<div class="tm-search"><span>⌕</span><input id="tm-term-search" type="search" placeholder="Meklē terminu vai skaidrojumu..." value="'+safe(tmTermQuery)+'" autocomplete="off"></div>'+
+ '<div id="tm-term-results" class="tm-term-list">'+list.map(([term,lat,text])=>'<article><span>'+safe(term)+'</span><h3>'+safe(lat)+'</h3><p>'+safe(text)+'</p></article>').join('')+'</div></div>';
 }
 function renderTeamStudio(){
  if(activeProfile!=="maris")return renderDay();
  const s=tmState();
  return '<div class="ap-screen tm-app">'+(tmFocusDrill?tmDetail():tmHeader()+tmTabs()+
- (tmTab==="generate"?tmGenerator():tmTab==="library"?tmLibrary():tmSaved())+
+ (tmTab==="generate"?tmGenerator():tmTab==="library"?tmLibrary():tmTab==="saved"?tmSaved():tmGlossary())+
  '<div class="tm-resource"><b>Metodika</b><p>Treniņu struktūra balstās uz Jr. NBA un FIBA treneru principiem par mazām grupām, atkārtojumu kvalitāti un spēles situācijām. Programmas salikšana notiek ierīcē pēc izvēlētajiem filtriem, nevis ar ārēju AI servisu.</p><a href="https://jr.nba.com/basketball-practice-plans/starter/" target="_blank" rel="noopener noreferrer">Jr. NBA prakses plāni ↗</a></div>')+'</div>';
 }
 function tmChange(key,value){
@@ -187,11 +212,14 @@ document.addEventListener('click',async event=>{
  const target=event.target.closest('[data-tm]');if(!target)return;
  const act=target.dataset.tm,s=tmState(),id=target.dataset.id,idx=Number(target.dataset.index);
  if(act==="tab"){tmTab=target.dataset.value;tmFocusDrill=null;render();return}
+ if(act==="open-terms"){tmTab="glossary";tmFocusDrill=null;render();return}
+ if(act==="step"){tmGuideStep=Math.max(0,Math.min(2,Number(target.dataset.index)||0));render();return}
+ if(act==="shot-type"){tmShotType=target.dataset.value;render();return}
  if(act==="focus"){const i=s.focus.indexOf(id);if(i>=0)s.focus.splice(i,1);else s.focus.push(id);save();render();return}
  if(act==="category"){tmCategory=target.dataset.value;render();return}
  if(act==="favonly"){tmFavoritesOnly=!tmFavoritesOnly;render();return}
  if(act==="favorite"){const i=s.favorites.indexOf(id);if(i>=0)s.favorites.splice(i,1);else s.favorites.push(id);save();render();return}
- if(act==="detail"){tmFocusDrill=id;render();window.scrollTo?.({top:0,behavior:"smooth"});return}
+ if(act==="detail"){tmFocusDrill=id;tmGuideStep=0;render();window.scrollTo?.({top:0,behavior:"smooth"});return}
  if(act==="back"){tmFocusDrill=null;render();return}
  if(act==="add"){tmDraftAdd(id);return}
  if(act==="generate"){tmGenerate();return}
@@ -224,6 +252,12 @@ document.addEventListener('input',event=>{
  if(e?.dataset?.tmRange==="players"){
   const counter=document.getElementById("tm-player-read"),number=document.getElementById("tm-player-number");
   if(counter)counter.textContent=e.value;if(number)number.value=e.value;return;
+ }
+ if(e?.id==="tm-term-search"){
+  tmTermQuery=e.value;
+  const list=document.getElementById("tm-term-results");
+  if(list)list.innerHTML=TEAM_GLOSSARY.filter(([word,lv,txt])=>(word+" "+lv+" "+txt).toLocaleLowerCase("lv-LV").includes(tmTermQuery.toLocaleLowerCase("lv-LV"))).map(([word,lv,txt])=>'<article><span>'+safe(word)+'</span><h3>'+safe(lv)+'</h3><p>'+safe(txt)+'</p></article>').join('');
+  return;
  }
  if(e?.id==="tm-search"){
   tmSearch=e.value;
