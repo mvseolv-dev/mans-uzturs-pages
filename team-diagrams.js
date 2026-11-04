@@ -1,5 +1,14 @@
 /* Profesionālas basketbola puslaukuma shēmas. O = uzbrucējs, X = aizsargs. */
 function tmScene(kind){
+ const extra={
+ pnrbare:{o:[[274,210,"1"],[218,152,"2"]],run:["M270 200 Q241 163 213 147","M214 147 L191 83"],pass:["M241 173 L193 85"]},
+ pnrgame:{o:[[274,210,"1"],[218,152,"2"]],x:[[248,175,"1"],[194,113,"2"]],run:["M268 198 Q236 165 209 142","M214 141 L190 86"],pass:["M239 170 L194 89"],def:["M195 113 L187 93"]},
+ handoffbare:{o:[[92,185,"1"],[259,181,"2"]],run:["M97 175 Q164 152 228 169"],pass:["M118 174 L231 172"]},
+ fourout:{o:[[185,219,"1"],[77,166,"2"],[283,163,"3"],[79,81,"4"]],pass:["M175 210 L93 173"],run:["M284 151 L260 113"]},
+ threeout:{o:[[185,218,"1"],[76,151,"2"],[281,150,"3"]],run:["M185 207 L184 174"],pass:["M172 210 L91 154"]},
+ givego:{o:[[264,197,"1"],[85,180,"2"]],pass:["M252 191 L100 184","M100 174 Q164 105 188 79"],run:["M256 181 Q244 116 194 81"]},
+ fourvthree:{o:[[82,220,"1"],[184,227,"2"],[283,220,"3"],[83,131,"4"]],x:[[144,147,"1"],[230,143,"2"],[184,104,"3"]],run:["M81 208 Q115 141 150 87","M279 207 Q241 139 222 91"],pass:["M105 214 L177 215"]}
+ };
  const t={
  warm:{o:[[82,206,"1"],[174,222,"2"],[281,206,"3"]],run:["M82 196 Q88 140 120 111","M174 211 Q202 161 241 112","M279 195 Q267 145 246 118"]},
  agility:{o:[[90,222,"1"]],cones:[[90,193],[150,170],[209,141],[267,113]],run:["M90 211 L90 193 L150 170 L209 141 L267 113"]},
@@ -37,7 +46,7 @@ function tmScene(kind){
  threevtwo:{o:[[85,216,"1"],[186,223,"2"],[274,217,"3"]],x:[[143,133,"1"],[231,130,"2"]],run:["M84 206 Q95 139 150 93","M273 203 Q252 127 211 85"],pass:["M105 211 L176 210"]},
  sprint:{o:[[186,222,"1"]],cones:[[185,180],[185,121],[185,81]],run:["M185 209 L185 94"]}
  };
- return t[kind]||t.spot;
+ return extra[kind]||t[kind]||t.spot;
 }
 function tmCourt(diagram,small=false){
  const sc=tmScene(diagram),safePath=str=>String(str).replace(/"/g,"&quot;");
@@ -54,7 +63,7 @@ function tmCourt(diagram,small=false){
  '<rect x="139" y="16" width="92" height="113"/><path d="M139 129 A46 46 0 0 0 231 129 M23 268 H347"/>'+
  '<path d="M139 57 H231" stroke="#6e8d73"/><circle cx="185" cy="63" r="10" stroke="#a2c8a0"/><path d="M167 42H203" stroke="#e5f0db" stroke-width="3"/></g>'+
  drawPaths(sc.run,'run',true)+drawPaths(sc.pass,'pass',true)+drawPaths(sc.def,'def',true)+drawPaths(sc.shot,'shot',false)+drawPaths(sc.pass2,'pass',true)+cones+rings+
- players(sc.o,'offense')+players(sc.x,'defense')+'<text x="32" y="273" fill="#8cae8f" font-size="10" font-weight="700">PU S L A U K U M S</text></svg>';
+ players(sc.o,'offense')+players(sc.x,'defense')+'<text x="32" y="273" fill="#8cae8f" font-size="10" font-weight="700">PUSLAUKUMS</text></svg>';
 }
 function tmLegend(){
  return '<div class="tm-legend"><span><b class="tm-dot offense">O</b> Uzbrucējs</span><span><b class="tm-dot defense">X</b> Aizsargs</span><span><i class="tm-route-key"></i> Kustība</span><span><i class="tm-pass-key"></i> Piespēle</span></div>';
