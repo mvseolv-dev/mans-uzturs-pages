@@ -201,3 +201,33 @@ body:has(.fit-subnav) .footer-text{color:#6a7d6a}
 @media(max-width:680px){.ap-hero{height:325px;background-position:60% center}.ap-hero h1{font-size:56px}.ap-metrics-panel{grid-template-columns:1fr}.ap-metrics-panel .ap-chart{max-height:140px}.ap-exercise{grid-template-columns:1fr}.ap-ex-img{height:220px;min-height:0}.ap-ex-info{padding:18px}}
 @media(max-width:430px){.ap-hero{height:310px;border-radius:22px}.ap-hero-info{padding:22px 17px}.ap-hero h1{font-size:49px}.ap-hero p{font-size:11px}.ap-hero-pill{font-size:9px}.ap-section h2{font-size:21px}.ap-next{padding:13px;gap:9px}.ap-next-icon{width:47px;height:47px;flex-basis:47px;font-size:23px}.ap-next h3{font-size:16px}.ap-next button{width:31px;height:31px;flex-basis:31px}.ap-day-strip{gap:5px}.ap-day-strip button{padding:10px 1px}.ap-stats{gap:5px}.ap-stats>div{padding:11px 9px}.ap-stats span{font-size:8px;min-height:24px}.ap-stats strong{font-size:21px}.ap-stats em{font-size:9px}.ap-program-grid{gap:8px}.ap-program{min-height:185px;padding:11px}.ap-program-copy strong{font-size:14px}.ap-program-copy small{font-size:8px}.ap-workout-row img{width:83px;height:94px;flex-basis:83px}.ap-workout-row strong{font-size:14px}.ap-workout-row p{font-size:10px}.ap-workout-row>div{gap:4px}.ap-weight-form{grid-template-columns:1fr}.ap-welcome-date{font-size:10px;padding:7px}.ap-welcome strong{font-size:13px}.ap-welcome>div:nth-child(2)>span{font-size:8px}.ap-week-item{gap:8px;padding:11px}.ap-week-item .ap-tag{font-size:7px;padding:5px 6px}.ap-week-content strong{font-size:12px}}
 @media(max-width:360px){.ap-hero h1{font-size:42px}.ap-next-icon{display:none}.ap-welcome-date{display:none}.ap-program-copy strong{font-size:13px}.ap-stats strong{font-size:19px}}
+
+/* Selected training - accessible dark card, separate location choices and strong contrast. */
+.ap-selected-card{background:#171f19;color:#f2f6ee;border:1px solid #3b493b;border-radius:22px;padding:21px;display:grid;gap:20px;min-width:0;box-shadow:0 12px 30px #0002}
+.ap-selected-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.ap-selected-meta>span:first-child{font-size:10px;color:#bcf66a;font-weight:900;letter-spacing:.11em}
+.ap-selected-state{background:#293b28;color:#d2f9a1;border:1px solid #46613e;border-radius:999px;padding:7px 10px;font-size:10px;font-weight:850}
+.ap-selected-state.pending{background:#403720;color:#ffdea5;border-color:#705e36}
+.ap-selected-state.done{background:#c7fa39;color:#193019;border-color:#c7fa39}
+.ap-selected-title{display:flex;align-items:center;gap:15px;min-width:0}
+.ap-selected-symbol{width:56px;height:56px;flex:0 0 56px;display:grid;place-items:center;background:#283b29;border:1px solid #3b5936;border-radius:15px;font-size:26px}
+.ap-selected-title>div:last-child{flex:1;min-width:0}
+.ap-selected-title h3{font-size:clamp(19px,4vw,25px);font-weight:860;line-height:1.2;letter-spacing:-.035em;margin:0 0 8px;color:#f5f9f1!important}
+.ap-selected-title p{font-size:13px;line-height:1.5;color:#b4c5b4!important;margin:0;overflow-wrap:anywhere}
+.ap-selected-options{border-top:1px solid #354235;padding-top:17px;display:grid;gap:12px}
+.ap-selected-options>span{font-size:10px;letter-spacing:.1em;color:#adc6ab;font-weight:850}
+.ap-location-toggle{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.ap-location-toggle button{border:1px solid #455344;background:#252d26;color:#c5d2c2;padding:14px 10px;border-radius:13px;min-width:0;text-align:left;display:flex;flex-direction:column;gap:5px;font-size:14px;font-weight:820;line-height:1.3;overflow-wrap:anywhere}
+.ap-location-toggle button small{font-size:11px;font-weight:650;color:#8ca38d}
+.ap-location-toggle button.selected{background:#c7fa39;color:#183018;border-color:#c7fa39}
+.ap-location-toggle button.selected small{color:#42633a}
+.ap-selected-options .fit-input-label{color:#c3d5bd;font-size:12px;font-weight:750}
+.ap-selected-options .fit-input-label select{display:block;width:100%;max-width:100%;background:#29362a;color:#f5f9f1;border:1px solid #586f54;font-size:16px;padding:13px;border-radius:12px;min-height:48px;color-scheme:dark}
+.ap-selected-options .fit-input-label option{background:#29362a;color:#f5f9f1}
+.ap-selected-footer{display:flex;align-items:end;justify-content:space-between;gap:13px;padding-top:15px;border-top:1px solid #344235}
+.ap-selected-footer label{display:grid;gap:9px;color:#a9c4a6;font-size:10px;font-weight:850;letter-spacing:.07em}
+.ap-selected-footer input{width:96px;max-width:100%;background:#273328;border:1px solid #50614c;border-radius:11px;padding:12px;color:#f6fff0;font-size:16px;font-weight:800;color-scheme:dark}
+.ap-selected-confirm{min-height:45px;background:#c7fa39;color:#14260d!important;border:0;padding:11px 14px;border-radius:12px;font-size:13px;font-weight:850;white-space:normal;text-align:center;line-height:1.25}
+.ap-selected-confirm:disabled{opacity:.4;cursor:not-allowed}
+@media(max-width:480px){.ap-selected-card{padding:16px;gap:18px}.ap-selected-title{gap:11px}.ap-selected-symbol{width:47px;height:47px;flex-basis:47px;font-size:22px}.ap-selected-footer input{width:85px}.ap-selected-confirm{padding:11px;font-size:12px}.ap-location-toggle button{font-size:12px;padding:12px 9px}}
+@media(max-width:340px){.ap-selected-footer{flex-direction:column;align-items:stretch}.ap-selected-footer label{align-self:flex-start}.ap-selected-confirm{width:100%}}
