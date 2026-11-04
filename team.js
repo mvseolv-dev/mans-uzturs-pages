@@ -128,6 +128,7 @@ function tmDraftPanel(){
  const items=draft.items.filter(e=>TEAM_BY_ID[e.id]),minutes=tmPlanTotal(items);
  const warm=items.filter(e=>TEAM_BY_ID[e.id].phase==="warm").length,main=items.filter(e=>TEAM_BY_ID[e.id].phase==="main").length,cool=items.filter(e=>TEAM_BY_ID[e.id].phase==="cool").length;
  return '<div class="tm-draft"><div class="tm-draft-head"><div><span>03 / TAVS TRENIŅŠ · '+draft.date+'</span><h2>'+items.length+' vingrinājumi · '+minutes+' min</h2><p>Iesildīšanās: '+warm+' · Galvenā daļa: '+main+' · Nobeigums: '+cool+'</p></div><b class="tm-duration-badge">'+minutes+' MIN</b></div>'+
+ (minutes<tmState().minutes*.7?'<div class="tm-shortfall">Šiem nosacījumiem iespējams piedāvāt tikai '+minutes+' min no '+tmState().minutes+' min. Lai iegūtu pilnāku treniņu, pievieno bumbu vai grozu, izvēlies citu intensitāti vai atkārto tehnikas daļas.</div>':'')+
  '<div class="tm-plan-list">'+items.map((item,i)=>tmPlanCard(item,i,items.length)).join('')+'</div>'+
  '<div class="tm-plan-actions"><button class="tm-save" data-tm="save">✓ Saglabāt plānu</button><button class="tm-outline" data-tm="copy">Kopēt tekstu</button><button class="tm-outline" data-tm="print">Drukāt</button><button class="tm-danger" data-tm="clear">Notīrīt</button></div>'+
  '<p class="tm-footnote">Vari mainīt ilgumu, pārvietot vingrinājumus, tos izņemt vai pievienot citus no bibliotēkas. Saglabātais plāns glabājas tavā ierīcē.</p></div>';
