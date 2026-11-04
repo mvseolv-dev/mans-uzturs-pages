@@ -249,4 +249,5 @@ document.addEventListener('change',event=>{
 });
 
 // Restore a direct #komanda link after all Team Studio modules have loaded.
+window.teamStudioReady=true;
 if(typeof render==='function'&&page==='komanda'&&activeProfile==='maris')render();
