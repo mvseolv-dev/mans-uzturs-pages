@@ -73,12 +73,12 @@ function plannerEditForm(){
  '<div class="ap-planner-fields">'+
  '<label class="ap-field-wide">Nosaukums<input name="title" maxlength="90" value="'+safe(e.title)+'" placeholder="Piemēram, basketbola treniņš" required></label>'+
  '<label>Aktivitāte<select name="type">'+PLAN_TYPES.map(t=>'<option value="'+t+'"'+(e.type===t?' selected':'')+'>'+t+'</option>').join('')+'</select></label>'+
- '<label>Datums<input type="date" name="date" value="'+e.date+'"'+(e.base?' readonly':'')+' required></label>'+
+ '<label>Datums<input type="date" name="date" value="'+e.date+'" required></label>'+
  '<label>Laiks<input name="time" type="time" value="'+e.time+'" required></label>'+
  '<label>Ilgums (min)<input name="minutes" type="number" min="5" max="300" value="'+e.minutes+'" required></label>'+
  '<label class="ap-field-wide">Vieta<input name="place" maxlength="100" value="'+safe(e.place)+'" placeholder="Piemēram, Dobeles sporta centrs"></label>'+
  '<label class="ap-field-wide ap-repeat"><input name="repeat" type="checkbox" '+(e.repeat?'checked':'')+'><span>Atkārtot katru nedēļu šajā nedēļas dienā</span></label>'+
- '</div><p class="ap-planner-help">'+(e.base?'Saglabājot varēsi mainīt šo vienu datumu vai attiecīgo treniņu visās nedēļās.':'Ja atzīmēsi atkārtošanu, treniņš parādīsies arī nākamajās nedēļās.')+'</p>'+
+ '</div><p class="ap-planner-help">'+(e.base?'Vari labot laiku, vietu un datumu. Pārvietojot uz citu datumu, vecā aktivitāte tiks noņemta tikai norādītajā datumā vai visās nedēļās, ja atzīmē atkārtošanu.':'Ja atzīmēsi atkārtošanu, treniņš parādīsies arī nākamajās nedēļās.')+'</p>'+
  '<button type="submit" class="ap-planner-save">Saglabāt aktivitāti ↗</button>'+(e.base?'<button type="button" class="ap-planner-stop" data-plan="skip-week" data-day="'+e.day+'">Noņemt šo treniņu no visām nedēļām</button>':'')+'</form>';
 }
 function plannerEmpty(date){return '<div class="ap-planner-empty"><span>◌</span><h3>Šajā dienā treniņš nav ieplānots</h3><p>Atpūties vai pievieno jaunu aktivitāti, kad būs zināms grafiks.</p><button data-plan="new" data-date="'+date+'">+ Pievienot treniņu</button></div>'}
@@ -108,14 +108,20 @@ function plannerSave(form){
  const day=(new Date(date+'T12:00:00Z').getUTCDay()+6)%7;
  if(plannerEditor?.base){
   const key=(weekly?'week:'+plannerEditor.day:'date:'+plannerEditor.date);
-  state.trainingOverrides??={};
-  state.trainingOverrides[key]={title,type,time,place,minutes};
-  if(state.trainingSkips)delete state.trainingSkips[key];
+  if(date!==plannerEditor.date){
+   state.trainingSkips??={};state.trainingSkips[key]=true;
+   state.trainingEntries??=[];
+   state.trainingEntries.push({id:'custom-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),title,type,time,place,minutes,repeat:weekly?'weekly':'once',date,weekday:day,startDate:date});
+  }else{
+   state.trainingOverrides??={};
+   state.trainingOverrides[key]={title,type,time,place,minutes};
+   if(state.trainingSkips)delete state.trainingSkips[key];
+  }
  }else{
   state.trainingEntries??=[];
   const existing=plannerEditor?.id?state.trainingEntries.find(e=>e.id===plannerEditor.id):null;
   const id=existing?.id||'custom-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);
-  const value={id,title,type,time,place,minutes,repeat:weekly?'weekly':'once',date,weekday:day,startDate:existing?.startDate||date};
+  const value={id,title,type,time,place,minutes,repeat:weekly?'weekly':'once',date,weekday:day,startDate:existing?.weekday===day?(existing.startDate||date):date};
   if(existing)Object.assign(existing,value);else state.trainingEntries.push(value);
  }
  fitSelectedDay=day;
