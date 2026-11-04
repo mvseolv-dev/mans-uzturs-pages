@@ -73,7 +73,7 @@ renderFitnessDashboard=function(){
  '<div class="ap-day-strip">'+week.map(x=>'<button data-nav="trenini" class="'+(x.date===today?'now ':'')+(fitDone(x)?'marked':'')+'"><span>'+x.name.slice(0,2)+'</span><b>'+x.date.slice(-2)+'</b><small>'+(fitDone(x)?'✓':x.type==='Pastaiga'?'◉':'·')+'</small></button>').join('')+'</div>'+
  activeWeeklyStats()+
  activeSection("TRAINING LIBRARY","Vingrojumi mājās",'<button class="ap-text-btn" data-nav="majasha">Visi ↗</button>')+
- '<div class="ap-program-grid">'+ACTIVE_PROGRAMS.slice(1).map(activeCard).join('')+'</div>'+
+ '<div class="ap-program-grid">'+ACTIVE_PROGRAMS.slice(0,2).map(activeCard).join('')+'</div>'+
  activeSection("BODY METRICS","Svara tendence",'<button class="ap-text-btn" data-nav="progress">Progress ↗</button>')+
  '<div class="ap-metrics-panel"><div><span>PAŠREIZĒJAIS SVARS</span><h3>'+(last?fmt(last.weight,1):'--')+' <small>kg</small></h3><p>Mērķis: '+fmt(state.config.goal,0)+' kg</p></div>'+activeChart()+'</div></div>';
 };
