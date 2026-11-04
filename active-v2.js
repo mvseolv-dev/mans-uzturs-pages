@@ -31,9 +31,24 @@ const ACTIVE_TIPS={
  calf:{name:"Ikru pacelšanās",sets:"3 x 12-15",tip:"Stāvus lēni pacelies uz pirkstgaliem, augšā noturi sekundi un kontrolēti nolaid papēžus. Ja ar abām kājām viegli, pārej uz vienu kāju.",cues:["2 sekundes augšup, 2 lejup","Nelek un neatsperies","Vajadzības gadījumā pieturies"]},
  planktap:{name:"Planks ar plecu pieskārieniem",sets:"2 x 10 katrai rokai",tip:"Augstā plankā pārmaiņus pieskaries pretējam plecam. Kājas nedaudz platāk, lai gurni nešūpotos.",cues:["Sasprindzini vēdera muskuļus","Gurnus turi paralēli grīdai","Nešūpo ķermeni sānis"]},
  deadbug:{name:"Dead bug",sets:"2 x 10 katrā pusē",tip:"Guļus uz muguras, rokas un kājas paceltas. Lēni izstiep pretējo roku un kāju, muguras lejasdaļai paliekot stabilai.",cues:["Muguru neizliec","Kusties lēni","Izelpo izstiepjoties"]},
- ankle:{name:"Potīšu mobilitāte",sets:"1 x 10 katrai kājai",tip:"Virzi celi uz priekšu virs pēdas, neatraujot papēdi. Video parāda potītes kustīguma pārbaudi, nevis atsevišķu spēka treniņu.",cues:["Papēdis uz grīdas","Bez sāpēm","Lēns un kontrolēts ritms"]},
+ ankle:{name:"Potīšu mobilitāte",sets:"1 x 10 katrai kājai",tip:"Uz stabila paaugstinājuma novieto vienu pēdu. Lēnām virzi celi uz priekšu pēdas virzienā, papēdi turot uz atbalsta. Izpildi tikai ērtā amplitūdā.",cues:["Papēdis uz grīdas","Bez sāpēm","Lēns un kontrolēts ritms"]},
  hips:{name:"Gurnu saliecēju stiepšana",sets:"1-2 x 30 s katrā pusē",tip:"Pusceļos maigi virzi gurnus uz priekšu, turot vēderu un sēžas muskuļus sasprindzinātus. Jājūt neliela stiepšanās gurna priekšpusē.",cues:["Neizliec muguru","Nepārspīlē stiepšanās dziļumu","Mierīgi elpo"]}
 };
+const ACTIVE_STILLS={
+ reverse:['start','peak'],push:['start','peak'],rdl:['start','peak'],
+ bulgarian:['start','peak'],sideplank:['main'],lateral:['start','peak'],
+ calf:['start','peak'],planktap:['main'],deadbug:['start','peak'],
+ ankle:['main'],hips:['main']
+};
+function activePoseGallery(id){
+ const parts=ACTIVE_STILLS[id];if(!parts)return '';
+ const ex=activeT(id),one=parts.length===1;
+ const labels=one?['POZĪCIJA']:['01 · SĀKUMS','02 · KUSTĪBA'];
+ const photos=parts.map((part,i)=>'<figure class="ap-pose"><img src="./assets/exercises/'+id+'-'+part+'.webp" alt="'+safe(ex.name)+' - '+(one?'vingrinājuma pozīcija':i?'kustības beigu pozīcija':'sākuma pozīcija')+'" loading="lazy" decoding="async" width="512" height="512"><figcaption>'+labels[i]+'</figcaption></figure>').join('');
+ const note=id==='planktap'?'Attēlā redzama sākuma pozīcija. No planka pārmaiņus pieskaries pretējam plecam, gurnus turi nekustīgus.':
+ id==='ankle'?'Attēlā ir potītes mobilitātes variants ar paaugstinājumu. Video rāda alternatīvu kustības pārbaudi.':'';
+ return '<div class="ap-pose-gallery '+(one?'ap-pose-single':'')+'">'+photos+(note?'<div class="ap-pose-note">'+note+'</div>':'')+'</div>';
+}
 const ACTIVE_COVER="https://images.pexels.com/photos/974525/pexels-photo-974525.jpeg?auto=compress&cs=tinysrgb&w=1250";
 function activeImg(id){return "https://i.ytimg.com/vi/"+ACTIVE_VIDEOS[id].id+"/hqdefault.jpg"}
 function activeT(id){return ACTIVE_TIPS[id]||FIT_EXERCISES[id]}
@@ -107,17 +122,19 @@ renderFitnessHome=function(){
 };
 function activeExercise(id,routine,index){
  const ex=activeT(id),meta=ACTIVE_VIDEOS[id],done=!!state.exerciseChecks?.[fitToday()+"|"+routine+"|"+id];
- return '<article class="ap-exercise"><div class="ap-ex-img"><img src="'+activeImg(id)+'" alt="Video priekšskatījums: '+safe(ex.name)+'" loading="lazy" referrerpolicy="no-referrer"><button data-ap-video="'+id+'" aria-label="Atskaņot '+safe(ex.name)+'"><b>▶</b><span>SKATĪTIES VIDEO</span></button><small>0'+(index+1)+'</small></div><div class="ap-ex-info"><span>'+ex.sets+' · '+meta.source+'</span><h3>'+safe(ex.name)+'</h3><p>'+safe(ex.tip)+'</p><ul>'+ex.cues.map(x=>'<li>✓ '+safe(x)+'</li>').join('')+'</ul><div class="ap-ex-actions"><button data-ap-video="'+id+'">▶ VIDEO</button><button class="'+(done?'done':'')+'" data-ap-check="'+id+'" data-ap-routine="'+routine+'">'+(done?'✓ PAVEIKTS':'○ ATZĪMĒT')+'</button></div></div></article>';
+ return '<article class="ap-exercise ap-exercise-visual">'+
+ '<div class="ap-ex-visual"><div class="ap-ex-visual-kicker">0'+(index+1)+' · VIZUĀLĀ PAMĀCĪBA</div>'+activePoseGallery(id)+'</div>'+
+ '<div class="ap-ex-info"><span>'+ex.sets+'</span><h3>'+safe(ex.name)+'</h3><div class="ap-ex-instruction-label">KĀ IZPILDĪT</div><p>'+safe(ex.tip)+'</p><ul>'+ex.cues.map(x=>'<li>✓ '+safe(x)+'</li>').join('')+'</ul><div class="ap-ex-actions"><button data-ap-video="'+id+'">▶ SKATĪT VIDEO</button><button class="'+(done?'done':'')+'" data-ap-check="'+id+'" data-ap-routine="'+routine+'">'+(done?'✓ PAVEIKTS':'○ ATZĪMĒT')+'</button></div><div class="ap-ex-credit-video">Video: '+safe(meta.source)+'</div></div></article>';
 }
 renderFitnessRoutine=function(id){
  const routine=ACTIVE_PROGRAMS.find(x=>x.id===id)||ACTIVE_PROGRAMS[0],key=fitToday()+"|"+routine.id,done=!!state.homeSessions?.[key],doneCount=routine.moves.filter(m=>!!state.exerciseChecks?.[fitToday()+"|"+routine.id+"|"+m]).length;
  return '<div class="ap-screen"><button class="ap-back" data-nav="majasha">‹ ATPAKAĻ UZ PROGRAMMĀM</button>'+
  '<div class="ap-routine-cover" style="--ap-photo:url('+activeImg(routine.moves[0])+')"><div><span>'+routine.label+' / '+routine.minutes+' MIN</span><h1>'+safe(routine.title)+'</h1><p>'+safe(routine.summary)+'</p>'+activeTag(routine.level,"lime")+'</div></div>'+
  '<div class="ap-routine-progress"><span>PAVEIKTIE VINGRINĀJUMI <b>'+doneCount+' / '+routine.moves.length+'</b></span><div><i style="width:'+Math.round(doneCount/routine.moves.length*100)+'%"></i></div></div>'+
- activeSection("EXERCISES","Video demonstrācijas",activeTag("REĀLI VIDEO","lime"))+
+ activeSection("EXERCISES","Vingrinājumi attēlos",activeTag("ATTĒLI + VIDEO","lime"))+
  '<div class="ap-ex-list">'+routine.moves.map((m,i)=>activeExercise(m,routine.id,i)).join('')+'</div>'+
  '<button class="ap-cta-wide" data-ap-finish="'+routine.id+'">'+(done?'✓ ATCELT PAVEIKTO':'✓ ATZĪMĒT TRENIŅU KĀ PAVEIKTU')+'</button>'+
- '<p class="ap-disclaimer">Ieteicamā atpūta starp piegājieniem: 45-90 sekundes. Sāc ar mazāku apjomu un uzturi labu tehniku. Video ir ārējo autoru demonstrācijas, to pieejamība atkarīga no YouTube. Pie sāpēm pārtrauc vingrinājumu.</p></div>';
+ '<p class="ap-disclaimer">Ieteicamā atpūta starp piegājieniem: 45-90 sekundes. Sāc ar mazāku apjomu un uzturi labu tehniku. Attēli ir ilustratīvi, video paliek kā papildu demonstrācija. Pie sāpēm pārtrauc vingrinājumu. <a href="https://repdb.co" target="_blank" rel="noopener noreferrer">Exercise data by RepDB (repdb.co)</a>.</p></div>';
 };
 renderFitnessNutrition=function(){
  const today=fitToday(),custom=state.customMeals?.[today]||[],idx=(rigaToday().getUTCDay()+6)%7;
