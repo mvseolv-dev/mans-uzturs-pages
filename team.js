@@ -1,5 +1,5 @@
 /* MANS UZTURS ACTIVE: Basketball Team Studio. Local-first, no server, no AI API required. */
-let tmTab="generate",tmFocusDrill=null,tmCategory="all",tmSearch="",tmFavoritesOnly=false;
+let tmTab="generate",tmFocusDrill=null,tmCategory="all",tmSearch="",tmFavoritesOnly=false,tmGuideStep=0,tmShotType="all",tmTermQuery="";
 function tmState(){
  state.teamStudio??={players:4,balls:2,hoops:1,minutes:75,intensity:"medium",mode:"regular",focus:["shoot","handle"],date:dateISO(rigaToday()),seed:0,favorites:[],draft:null,plans:[]};
  const s=state.teamStudio;
@@ -84,7 +84,7 @@ function tmSave(){
 function tmMatchingDrills(){
  const s=tmState(),search=tmSearch.trim().toLocaleLowerCase("lv-LV");
  return TEAM_DRILLS.filter(d=>tmEligible(d,s)&&
- (tmCategory==="all"||d.category===tmCategory)&&(!tmFavoritesOnly||s.favorites.includes(d.id))&&
+ (tmCategory==="all"||d.category===tmCategory)&&(tmCategory!=="shoot"||tmShotType==="all"||d.shotType===tmShotType)&&(!tmFavoritesOnly||s.favorites.includes(d.id))&&
  (!search||(d.title+" "+d.action+" "+d.setup+" "+tmCat(d.category)).toLocaleLowerCase("lv-LV").includes(search)));
 }
 function tmControlSelect(key,choices){
@@ -96,7 +96,7 @@ function tmHeader(){
  return '<section class="tm-hero"><div class="tm-hero-copy"><span>BUKI / TEAM TRAINING STUDIO</span><h1>LABĀKS<br><em>TRENIŅŠ.</em></h1><p>Pielāgo vingrinājumus cilvēku skaitam, slodzei un spēles dienai.</p><div class="tm-hero-tags"><b>'+s.players+' SPĒLĒTĀJI</b><b>'+s.minutes+' MIN</b><b>'+TEAM_DRILLS.length+' VINGRINĀJUMI</b></div></div><div class="tm-hero-court">'+tmCourt("threevthree",true)+'</div></section>';
 }
 function tmTabs(){
- return '<div class="tm-tabs" role="group" aria-label="Komandas treniņu sadaļas">'+[["generate","Ģenerators"],["library","Bibliotēka"],["saved","Saglabātie"]].map(([val,label])=>'<button type="button" data-tm="tab" data-value="'+val+'" class="'+(tmTab===val?'current':'')+'" aria-pressed="'+(tmTab===val)+'">'+label+(val==="saved"?'<small>'+tmState().plans.length+'</small>':'')+'</button>').join('')+'</div>';
+ return '<div class="tm-tabs" role="group" aria-label="Komandas treniņu sadaļas">'+[["generate","Ģenerators"],["library","Bibliotēka"],["saved","Saglabātie"],["glossary","Termini"]].map(([val,label])=>'<button type="button" data-tm="tab" data-value="'+val+'" class="'+(tmTab===val?'current':'')+'" aria-pressed="'+(tmTab===val)+'">'+label+(val==="saved"?'<small>'+tmState().plans.length+'</small>':'')+'</button>').join('')+'</div>';
 }
 function tmCriteria(){
  const s=tmState(),focus=s.focus;
@@ -114,13 +114,13 @@ function tmCriteria(){
 }
 function tmCard(d,opts={}){
  const s=tmState(),inPlan=(s.draft?.items||[]).some(x=>x.id===d.id),favorite=s.favorites.includes(d.id);
- return '<article class="tm-drill-card"><button type="button" class="tm-drill-open" data-tm="detail" data-id="'+d.id+'"><div class="tm-drill-preview">'+tmCourt(d.diagram,true)+'</div><div class="tm-drill-text"><span>'+tmCat(d.category)+' · '+TEAM_LEVELS[d.intensity]+'</span><h3>'+safe(d.title)+'</h3><p>'+d.minPlayers+'+ spēlētāji · '+d.minutes+' min · '+(d.minBalls?'ar bumbu':'bez bumbas')+'</p></div></button>'+
+ return '<article class="tm-drill-card"><button type="button" class="tm-drill-open" data-tm="detail" data-id="'+d.id+'"><div class="tm-drill-preview">'+tmCourt(d.diagram,true,{drill:d,step:2})+'</div><div class="tm-drill-text"><span>'+tmCat(d.category)+' · '+TEAM_LEVELS[d.intensity]+'</span><h3>'+safe(d.title)+'</h3><p>'+d.minPlayers+'+ spēlētāji · '+d.minutes+' min · '+(d.minBalls?'ar bumbu':'bez bumbas')+'</p></div></button>'+
  '<div class="tm-drill-footer"><button type="button" data-tm="favorite" data-id="'+d.id+'" aria-label="'+(favorite?'Izņemt no favorītiem':'Pievienot favorītiem')+'" class="tm-fave '+(favorite?'on':'')+'">'+(favorite?'♥':'♡')+'</button>'+
  '<button type="button" data-tm="add" data-id="'+d.id+'" class="tm-add '+(inPlan?'added':'')+'">'+(inPlan?'✓ Plānā':'+ Pievienot')+'</button></div></article>';
 }
 function tmPlanCard(item,i,total){
  const d=TEAM_BY_ID[item.id];if(!d)return '';
- return '<article class="tm-plan-item"><div class="tm-plan-index">'+String(i+1).padStart(2,"0")+'</div><button class="tm-plan-main" data-tm="detail" data-id="'+d.id+'"><div class="tm-plan-diagram">'+tmCourt(d.diagram,true)+'</div><div class="tm-plan-copy"><span>'+tmCat(d.category)+' · '+TEAM_LEVELS[d.intensity]+'</span><strong>'+safe(d.title)+'</strong><small>'+safe(d.action)+'</small></div></button>'+
+ return '<article class="tm-plan-item"><div class="tm-plan-index">'+String(i+1).padStart(2,"0")+'</div><button class="tm-plan-main" data-tm="detail" data-id="'+d.id+'"><div class="tm-plan-diagram">'+tmCourt(d.diagram,true,{drill:d,step:2})+'</div><div class="tm-plan-copy"><span>'+tmCat(d.category)+' · '+TEAM_LEVELS[d.intensity]+'</span><strong>'+safe(d.title)+'</strong><small>'+safe(d.action)+'</small></div></button>'+
  '<div class="tm-plan-edit"><label>MIN<input type="number" data-tm-duration="'+i+'" min="3" max="30" value="'+item.minutes+'" inputmode="numeric"></label><div><button type="button" data-tm="up" data-index="'+i+'" '+(i===0?'disabled':'')+' aria-label="Pārvietot uz augšu">↑</button><button type="button" data-tm="down" data-index="'+i+'" '+(i===total-1?'disabled':'')+' aria-label="Pārvietot uz leju">↓</button><button type="button" data-tm="remove" data-index="'+i+'" aria-label="Izņemt vingrinājumu">×</button></div></div></article>';
 }
 function tmDraftPanel(){
