@@ -4,23 +4,35 @@
  * Video previews are sourced from YouTube and loaded only for display.
  */
 const ACTIVE_VIDEOS={
- squat:{id:"rvpC9QkTc3Y",source:"Margaret Martin, Physical Therapist",title:"Pietupiens pie krēsla"},
- push:{id:"G_c3QztMZNQ",source:"Sheffield Aches and Pains",title:"Atspiešanās pret sienu"},
- bridge:{id:"iU423T5b99w",source:"University of Maryland URecFit",title:"Gurnu tiltiņš"},
- bird:{id:"LaLKNS7mxrk",source:"Margaret Martin, Physical Therapist",title:"Bird-dog"},
- deadbug:{id:"nB09okiCz0Y",source:"University of Maryland URecFit",title:"Dead bug"},
- ankle:{id:"9n4Mrej5s3s",source:"Motus Physiotherapy",title:"Potīšu mobilitātes pārbaude"},
+ reverse:{id:"beGBOkX8Cp0",source:"Keele University Sport",title:"Izklupiens atpakaļ"},
+ push:{id:"WDIpL0pjun0",source:"National Academy of Sports Medicine",title:"Atspiešanās no grīdas"},
+ rdl:{id:"IJDw_imNzw8",source:"Keele University Sport",title:"Rumāņu vilkme uz vienas kājas"},
+ bulgarian:{id:"QJ8CHHY4A3w",source:"Keele University Sport",title:"Bulgāru pietupiens"},
+ sideplank:{id:"yPFBx64XHbs",source:"Keele University Sport",title:"Sānu planks"},
+ lateral:{id:"JE8y33m0Lf0",source:"Keele University Sport",title:"Sānu izklupiens"},
+ calf:{id:"LFfmd7lzVWQ",source:"Keele University Sport",title:"Ikru pacelšanās"},
+ planktap:{id:"lwQHInWHKrs",source:"Keele University Sport",title:"Planks ar plecu pieskārieniem"},
+ deadbug:{id:"Gse7WT-spEQ",source:"Keele University Sport",title:"Dead bug"},
+ ankle:{id:"9n4Mrej5s3s",source:"Motus Physiotherapy",title:"Potīšu mobilitāte"},
  hips:{id:"RHA3eCUQkQ4",source:"Rehab and Revive Physical Therapy",title:"Gurnu saliecēja stiepšana"}
 };
 const ACTIVE_PROGRAMS=[
- {id:"mobility",label:"RECOVERY",title:"Atjaunošanās un mobilitāte",minutes:12,level:"VIEGLS",summary:"Pēc basketbola vai dienā, kad ķermenis ir noguris.",moves:["ankle","hips","bird"]},
- {id:"core",label:"CORE",title:"Stabils korpuss",minutes:18,level:"VIEGLS",summary:"Mazāk noguruma, labāka ķermeņa kontrole laukumā.",moves:["bird","bridge","deadbug"]},
- {id:"strength",label:"STRENGTH",title:"Spēks bez inventāra",minutes:20,level:"VIDĒJS",summary:"Kustību kvalitāte un spēks bez papildu aprīkojuma.",moves:["squat","push","bridge"]}
+ {id:"strength",label:"STRENGTH",title:"Basketbolista spēks",minutes:28,level:"VIDĒJS+",summary:"Pilns ķermenis: vienas kājas spēks, atspiešanās, stabilitāte un ikri. Vienu reizi nedēļā, ja jūties atjaunojies.",moves:["reverse","push","rdl","calf","sideplank"]},
+ {id:"core",label:"ATHLETIC",title:"Stabilitāte un kustību kontrole",minutes:22,level:"VIDĒJS",summary:"Sānu kustības, vienas kājas kontrole un spēcīgs korpuss basketbolam. Vari izmantot kā otro vieglāko spēka dienu.",moves:["lateral","planktap","bulgarian","deadbug"]},
+ {id:"mobility",label:"RECOVERY",title:"Mobilitāte un atjaunošanās",minutes:12,level:"VIEGLS",summary:"Potītes, gurni un korpusa kontrole pēc treniņiem. Tā nav obligāta papildu slodze.",moves:["ankle","hips","deadbug"]}
 ];
 const ACTIVE_TIPS={
- deadbug:{name:"Dead bug",sets:"2 x 8 katrā pusē",tip:"Guļus uz muguras izstiep pretējo roku un kāju, noturot vēderu sasprindzinātu.",cues:["Mugura stabili uz grīdas","Nekustini kājas pārāk strauji","Izelpo, izstiepjoties"]},
- ankle:{name:"Potītes kustīgums",sets:"1 x 8 katrai kājai",tip:"Celi virzi pāri pēdai sienas virzienā. Papēdis paliek uz grīdas. Video demonstrē kustīguma testu.",cues:["Papēdis uz grīdas","Celis pārvietojas pēdas virzienā","Bez sāpēm"]},
- hips:{name:"Gurnu priekšpuses stiepšana",sets:"1-2 x 30 sekundes katrā pusē",tip:"Viegli savelc vēdera un sēžas muskuļus un pārvieto gurnus uz priekšu. Video paskaidro pareizu iegurņa pozīciju.",cues:["Mugura nav pārlieku izliekta","Stiep tikai līdz komfortablai sajūtai","Elpo mierīgi"]}
+ reverse:{name:"Izklupiens atpakaļ",sets:"3 x 8 katrai kājai",tip:"No stāvus pozīcijas sper soli atpakaļ un nolaid aizmugurējo celi gandrīz līdz grīdai. Ar priekšējo kāju atgriezies sākumā. Sāc bez svara.",cues:["Priekšējās kājas pēda uz grīdas","Celis seko pēdas virzienam","8-10 atkārtojumi ar kontroli"]},
+ push:{name:"Atspiešanās no grīdas",sets:"3 x 8-15",tip:"Plaukstas nedaudz platāk par pleciem. Sasprindzini vēderu, nolaid krūtis līdz ērtam dziļumam un spiedies augšup. Kad kļūst viegli, palielini atkārtojumus.",cues:["Ķermenis taisnā līnijā","Elkoņi aptuveni 30-45° no ķermeņa","Neieliec muguras lejasdaļu"]},
+ rdl:{name:"Rumāņu vilkme uz vienas kājas",sets:"2 x 8 katrai kājai",tip:"Stāvi uz vienas kājas ar viegli saliektu celi. Virzi gurnus atpakaļ, otru kāju stiepjot aiz sevis. Mugura paliek neitrāla, gurni vērsti uz leju.",cues:["Kustība notiek gurnos, ne mugurā","Lēni 2-3 sekundes uz leju","Svarīgāka stabilitāte, ne dziļums"]},
+ bulgarian:{name:"Bulgāru pietupiens",sets:"2 x 6-8 katrai kājai",tip:"Aizmugurējo pēdu atbalsti uz stabila, ne pārāk augsta paaugstinājuma. Nolaid gurnus lejup un pacelies ar priekšējās kājas spēku. Sāc tikai ar ķermeņa svaru.",cues:["Atbalsts nedrīkst slīdēt","Ceļgals priekšējās pēdas virzienā","Neizpildi līdz spēku izsīkumam"]},
+ sideplank:{name:"Sānu planks",sets:"2 x 25-40 s katrā pusē",tip:"Atbalsties uz apakšdelma, elkonis zem pleca. Pacel gurnus un noturi ķermeni vienā līnijā. Ja viegli, palielini laiku.",cues:["Plecs virs elkoņa","Gurni nenokrīt","Elpo vienmērīgi"]},
+ lateral:{name:"Sānu izklupiens",sets:"2 x 8 katrā pusē",tip:"Sper platu soli sānis, saliec soļa kāju un virzi gurnus atpakaļ, otru kāju atstājot taisnāku. Spiedies atpakaļ stāvus.",cues:["Pēdas vērstas uz priekšu","Svars vairāk uz saliektās kājas","Kusties kontrolēti, bez rāviena"]},
+ calf:{name:"Ikru pacelšanās",sets:"3 x 12-15",tip:"Stāvus lēni pacelies uz pirkstgaliem, augšā noturi sekundi un kontrolēti nolaid papēžus. Ja ar abām kājām viegli, pārej uz vienu kāju.",cues:["2 sekundes augšup, 2 lejup","Nelek un neatsperies","Vajadzības gadījumā pieturies"]},
+ planktap:{name:"Planks ar plecu pieskārieniem",sets:"2 x 10 katrai rokai",tip:"Augstā plankā pārmaiņus pieskaries pretējam plecam. Kājas nedaudz platāk, lai gurni nešūpotos.",cues:["Sasprindzini vēdera muskuļus","Gurnus turi paralēli grīdai","Nešūpo ķermeni sānis"]},
+ deadbug:{name:"Dead bug",sets:"2 x 10 katrā pusē",tip:"Guļus uz muguras, rokas un kājas paceltas. Lēni izstiep pretējo roku un kāju, muguras lejasdaļai paliekot stabilai.",cues:["Muguru neizliec","Kusties lēni","Izelpo izstiepjoties"]},
+ ankle:{name:"Potīšu mobilitāte",sets:"1 x 10 katrai kājai",tip:"Virzi celi uz priekšu virs pēdas, neatraujot papēdi. Video parāda potītes kustīguma pārbaudi, nevis atsevišķu spēka treniņu.",cues:["Papēdis uz grīdas","Bez sāpēm","Lēns un kontrolēts ritms"]},
+ hips:{name:"Gurnu saliecēju stiepšana",sets:"1-2 x 30 s katrā pusē",tip:"Pusceļos maigi virzi gurnus uz priekšu, turot vēderu un sēžas muskuļus sasprindzinātus. Jājūt neliela stiepšanās gurna priekšpusē.",cues:["Neizliec muguru","Nepārspīlē stiepšanās dziļumu","Mierīgi elpo"]}
 };
 const ACTIVE_COVER="https://images.pexels.com/photos/974525/pexels-photo-974525.jpeg?auto=compress&cs=tinysrgb&w=1250";
 function activeImg(id){return "https://i.ytimg.com/vi/"+ACTIVE_VIDEOS[id].id+"/hqdefault.jpg"}
@@ -91,7 +103,7 @@ renderFitnessHome=function(){
  '<div class="ap-highlight"><div><span>MOVE BETTER / FEEL BETTER</span><h2>YOUR<br>BODY.<br><em>YOUR POWER.</em></h2><p>Sāc ar 12-20 minūtēm.</p></div><img src="'+activeImg("squat")+'" alt="Vingrinājuma video priekšskatījums" loading="lazy" referrerpolicy="no-referrer"/></div>'+
  activeSection("CHOOSE A WORKOUT","Programmas",activeTag("3 PROGRAMMAS","lime"))+
  '<div class="ap-workout-list">'+ACTIVE_PROGRAMS.map(r=>'<button class="ap-workout-row" data-ap-open="'+r.id+'"><img src="'+activeImg(r.moves[0])+'" alt="" loading="lazy" referrerpolicy="no-referrer"><div><small>'+r.label+'</small><strong>'+safe(r.title)+'</strong><span>'+r.minutes+' MIN · '+r.moves.length+' VINGRINĀJUMI · '+r.level+'</span><p>'+r.summary+'</p></div><b>↗</b></button>').join('')+'</div>'+
- '<div class="ap-notice"><b>Ne vairāk, bet gudrāk</b><p>Pie vairākām basketbola slodzēm nedēļā vispirms izvēlies atjaunošanās sesiju. Intensīvu papildu treniņu nevajag katru dienu.</p></div></div>';
+ '<div class="ap-notice"><b>Izvēlies pēc basketbola slodzes</b><p>Sāc ar vienu spēka vai stabilitātes sesiju nedēļā. Starp smagu kāju slodzi un spēli atstāj atjaunošanās laiku; ja ir vairākas intensīvas basketbola dienas, izvēlies tikai mobilitāti. Spēka vingrinājumos atstāj 2-3 atkārtojumus rezervē.</p></div></div>';
 };
 function activeExercise(id,routine,index){
  const ex=activeT(id),meta=ACTIVE_VIDEOS[id],done=!!state.exerciseChecks?.[fitToday()+"|"+routine+"|"+id];
@@ -105,7 +117,7 @@ renderFitnessRoutine=function(id){
  activeSection("EXERCISES","Video demonstrācijas",activeTag("REĀLI VIDEO","lime"))+
  '<div class="ap-ex-list">'+routine.moves.map((m,i)=>activeExercise(m,routine.id,i)).join('')+'</div>'+
  '<button class="ap-cta-wide" data-ap-finish="'+routine.id+'">'+(done?'✓ ATCELT PAVEIKTO':'✓ ATZĪMĒT TRENIŅU KĀ PAVEIKTU')+'</button>'+
- '<p class="ap-disclaimer">Video demonstrācijas veidojuši to autori (fizioterapeiti un treneri). Pieejamība atkarīga no YouTube. Ja rodas sāpes, pārtrauc vingrinājumu.</p></div>';
+ '<p class="ap-disclaimer">Ieteicamā atpūta starp piegājieniem: 45-90 sekundes. Sāc ar mazāku apjomu un uzturi labu tehniku. Video ir ārējo autoru demonstrācijas, to pieejamība atkarīga no YouTube. Pie sāpēm pārtrauc vingrinājumu.</p></div>';
 };
 renderFitnessNutrition=function(){
  const today=fitToday(),custom=state.customMeals?.[today]||[],idx=(rigaToday().getUTCDay()+6)%7;
