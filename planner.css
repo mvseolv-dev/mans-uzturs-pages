@@ -1,0 +1,49 @@
+/* MANS UZTURS ACTIVE - mobile training editor */
+.ap-planner{gap:17px}
+.ap-planner-add{width:100%;display:flex;align-items:center;justify-content:space-between;gap:15px;text-align:left;border:0;background:#c7fa39!important;color:#142210!important;border-radius:15px;padding:15px 17px;font-weight:900;font-size:14px}
+.ap-planner-add>span{font-size:22px;line-height:1}
+.ap-planner-selected-list{display:grid;gap:12px}
+.ap-planner-card{background:#172019;border:1px solid #394a39;border-radius:19px;padding:19px;color:#eff8ee;min-width:0;display:grid;gap:14px}
+.ap-planner-card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.ap-planner-category{font-size:10px;letter-spacing:.11em;font-weight:850;color:#bafb80}
+.ap-planner-card h3{font-size:clamp(18px,4.4vw,24px);font-weight:860;letter-spacing:-.04em;color:#f5faf3;margin:0;line-height:1.2;overflow-wrap:anywhere}
+.ap-planner-detail{font-size:12px;line-height:1.6;color:#bacfba;margin:0;overflow-wrap:anywhere}
+.ap-planner-card-actions{display:grid;grid-template-columns:1fr auto auto;gap:8px;border-top:1px solid #334334;padding-top:15px}
+.ap-planner-card-actions button{border:1px solid #526851;background:#29372b;color:#dbe9d6;border-radius:11px;padding:11px 12px;font-size:11px;font-weight:850;line-height:1.25;white-space:normal}
+.ap-planner-card-actions button:first-child{background:#c7fa39;color:#15230f;border-color:#c7fa39}
+.ap-planner-card-actions .ap-planner-danger{color:#f5b2a9;background:#382721;border-color:#73413a}
+.ap-planner-card .ap-location-toggle{margin-top:3px}
+.ap-planner-sunday .fit-input-label{display:grid;gap:8px;font-size:11px;font-weight:800;color:#b6c8b4}
+.ap-planner-sunday .fit-input-label select{border:1px solid #51664e;border-radius:12px;background:#29382a;color:#f0f6ef;width:100%;min-height:44px;font-size:16px;padding:10px;color-scheme:dark}
+.ap-planner-list{display:grid;gap:8px}
+.ap-planner-list-row{display:flex;align-items:center;gap:12px;text-align:left;border:1px solid #364335;background:#141c16;padding:13px 14px;border-radius:15px;min-width:0}
+.ap-planner-list-row>span{display:grid;place-items:center;flex:0 0 38px;width:38px;height:41px;background:#2b3b2c;border-radius:11px;color:#d5faab;font-size:12px;font-weight:900}
+.ap-planner-list-row>div{flex:1;min-width:0;display:grid;gap:5px}
+.ap-planner-list-row strong{display:block;color:#f5faf3;font-size:13px;line-height:1.3;overflow-wrap:anywhere}
+.ap-planner-list-row small{display:block;color:#9caf9c;font-size:11px;line-height:1.35;overflow-wrap:anywhere}
+.ap-planner-list-row .ap-tag{flex:0 0 auto}
+.ap-planner-empty{padding:30px 20px;background:#131b15;border:1px dashed #40513c;border-radius:19px;text-align:center;display:grid;gap:9px;justify-items:center}
+.ap-planner-empty>span{font-size:30px;color:#c7fa39}
+.ap-planner-empty h3{font-size:17px;line-height:1.3;margin:0;color:#f7f9f3}
+.ap-planner-empty p{max-width:285px;font-size:12px;line-height:1.6;color:#a0b1a0;margin:0}
+.ap-planner-empty button{margin-top:11px;background:#263b28;border:1px solid #6e925b;border-radius:13px;color:#d2ff92;font-size:12px;font-weight:850;padding:11px 15px}
+.ap-planner-restore{width:100%;font-size:12px;font-weight:780;background:#263929;color:#d6ffc2;border:1px solid #5b8155;border-radius:12px;padding:13px}
+.ap-planner-none{color:#9daf99;font-size:12px;padding:16px}
+.ap-planner-note{font-size:11px;color:#829884;line-height:1.65}
+.ap-planner-form{background:#1b271d;border:1px solid #5b7b4a;border-radius:22px;padding:19px;display:grid;gap:17px;box-shadow:0 16px 36px #0003;scroll-margin-top:85px}
+.ap-planner-form-head{display:flex;align-items:start;justify-content:space-between;gap:12px}
+.ap-planner-form-head>div small{font-size:10px;letter-spacing:.12em;color:#c7fa39;font-weight:800}
+.ap-planner-form-head h3{color:#f7faf3;margin:6px 0 0;font-size:22px}
+.ap-planner-form-head>button{width:36px;height:36px;flex:0 0 36px;border-radius:50%;background:#324335;border:1px solid #526651;color:#eff6ed;font-size:23px}
+.ap-planner-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 12px}
+.ap-planner-fields label{display:grid;gap:7px;font-size:11px;font-weight:800;color:#b5cbb2;min-width:0}
+.ap-planner-fields .ap-field-wide{grid-column:1/-1}
+.ap-planner-fields input:not([type=checkbox]),.ap-planner-fields select{background:#293a2b;border:1px solid #536c50;border-radius:12px;min-height:45px;padding:10px 12px;font-size:16px;color:#f5fff0;width:100%;min-width:0;max-width:100%;color-scheme:dark;box-sizing:border-box}
+.ap-planner-fields input:read-only{opacity:.75}
+.ap-planner-fields select option{background:#293a2b;color:#f5fff0}
+.ap-planner-fields .ap-repeat{display:flex;flex-direction:row;align-items:center;gap:10px;font-size:12px;line-height:1.45}
+.ap-repeat input{accent-color:#c7fa39;width:18px;height:18px;flex:0 0 18px}
+.ap-planner-help{margin:0;font-size:11px;line-height:1.6;color:#a9c5a1}
+.ap-planner-save{min-height:47px;border:0;border-radius:12px;background:#c7fa39;color:#15220c!important;font-weight:900;font-size:13px}
+@media(max-width:430px){.ap-planner-card{padding:14px;gap:12px}.ap-planner-card-actions{grid-template-columns:1fr 1fr}.ap-planner-card-actions button:first-child{grid-column:1/-1}.ap-planner-card-actions button{padding:12px 8px}.ap-planner-list-row{gap:8px;padding:11px}.ap-planner-list-row>span{flex-basis:33px;width:33px}.ap-planner-list-row .ap-tag{font-size:8px;padding:6px}.ap-planner-form{padding:15px}.ap-planner-fields{gap:12px 9px}.ap-planner-fields label{font-size:10px}.ap-planner-empty{padding:25px 14px}}
+@media(max-width:360px){.ap-planner-fields{grid-template-columns:1fr}.ap-planner-fields .ap-field-wide{grid-column:auto}}
