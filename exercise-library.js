@@ -50,7 +50,7 @@ function lbThumb(x){return '<div class="lb-thumb"><img loading="lazy" decoding="
 function lbActivityLabel(){const today=fitToday(),items=(typeof plannerSessions==='function'?plannerSessions():sportItems()).filter(s=>s.date===today&&fitPossible(s));return items.some(s=>/basket|spēle|buki/i.test((s.type||'')+' '+s.title))?'Pēc basketbola izvēlies mobilitāti':items.length?'Šodien jau ir ieplānota aktivitāte':'Šodien vari izvēlēties mājas treniņu'}
 function lbHero(){
  const selected=lbDay().ids.length;
- return '<div class="lb-hero"><div><span class="lb-kicker">MANS UZTURS · WORKOUT STUDIO</span><h1>Tavs treniņš.<br><em>Tavi noteikumi.</em></h1><p>36 vingrinājumi ar attēliem, gatavas programmas un savs treniņu komplekts.</p><div class="lb-hero-foot"><span>🏀 '+safe(lbActivityLabel())+'</span><span>✓ '+selected+' izvēlēti šodien</span></div></div><div class="lb-hero-art"><img src="'+lbImage('reverse','peak')+'" alt="" loading="lazy"></div></div>'
+ return '<div class="lb-hero"><div><span class="lb-kicker">MANS UZTURS · WORKOUT STUDIO</span><h1>Tavs treniņš.<br><em>Tavi noteikumi.</em></h1><p>36 vingrinājumi ar attēliem, gatavas programmas un savs treniņu komplekts.</p><div class="lb-hero-foot"><span>🏀 '+safe(lbActivityLabel())+'</span><span>✓ '+selected+' izvēlēti izvēlētajai dienai</span></div></div><div class="lb-hero-art"><img src="'+lbImage('reverse','peak')+'" alt="" loading="lazy"></div></div>'
 }
 function lbTabs(){const items=[["library","Vingrinājumi"],["programs","Programmas"],["mine","Mans treniņš"]];return '<div class="lb-tabs" role="group" aria-label="Treniņu sadaļas">'+items.map(([v,l])=>'<button type="button" data-lb="tab" data-value="'+v+'" aria-pressed="'+(lbTab===v)+'" class="'+(lbTab===v?'current':'')+'">'+l+(v==='mine'?'<span>'+lbDay().ids.length+'</span>':'')+'</button>').join('')+'</div>'}
 function lbCard(x){
@@ -90,7 +90,7 @@ function lbSelectedDay(){
 function lbMyCard(id,index){
  const x=lbEntry(id);if(!x)return '';
  const checked=lbDay().checked.includes(id);
- return '<div class="lb-my-row"><img src="'+lbImage(id)+'" loading="lazy" alt="" width="512" height="512"><div class="lb-my-copy"><span>'+String(index+1).padStart(2,"0")+' · '+lbLevelName(x.level)+'</span><strong>'+safe(x.name)+'</strong><small>'+safe(x.sets)+' · '+x.minutes+' min</small></div><div class="lb-my-controls"><button data-lb="my-check" data-id="'+id+'" class="'+(checked?'done':'')+'" aria-label="Atzīmēt vingrinājumu">'+(checked?'✓':'○')+'</button><button data-lb="my-remove" data-id="'+id+'" aria-label="Izņemt vingrinājumu">×</button></div></div>';
+ return '<div class="lb-my-row"><img src="'+lbImage(id)+'" loading="lazy" alt="" width="512" height="512"><div class="lb-my-copy"><span>'+String(index+1).padStart(2,"0")+' · '+lbLevelName(x.level)+'</span><strong>'+safe(x.name)+'</strong><small>'+safe(x.sets)+' · '+x.minutes+' min</small><button type="button" class="lb-my-technique" data-lb="view" data-id="'+id+'">Skatīt izpildi ↗</button></div><div class="lb-my-controls"><button data-lb="my-check" data-id="'+id+'" class="'+(checked?'done':'')+'" aria-label="Atzīmēt vingrinājumu">'+(checked?'✓':'○')+'</button><button data-lb="my-remove" data-id="'+id+'" aria-label="Izņemt vingrinājumu">×</button></div></div>';
 }
 function lbMyWorkout(){
  const workout=lbCheckWorkout(lbDay()),ids=workout.ids,total=ids.reduce((n,id)=>n+(lbEntry(id)?.minutes||0),0);
@@ -99,7 +99,7 @@ function lbMyWorkout(){
  '<div class="lb-build-inputs"><label>Mērķis<select data-lb-select="focus"><option value="basket" '+(lbBuildFocus==='basket'?'selected':'')+'>Basketbolam</option><option value="strength" '+(lbBuildFocus==='strength'?'selected':'')+'>Spēks</option><option value="core" '+(lbBuildFocus==='core'?'selected':'')+'>Core</option><option value="recovery" '+(lbBuildFocus==='recovery'?'selected':'')+'>Atjaunošanās</option></select></label><label>Līmenis<select data-lb-select="build-level">'+[['easy','Viegli'],['medium','Vidēji'],['hard','Sarežģīti']].map(([k,v])=>'<option value="'+k+'" '+(lbBuildLevel===k?'selected':'')+'>'+v+'</option>').join('')+'</select></label></div>'+
  '<div class="lb-duration">'+[15,25,40].map(m=>'<button data-lb="duration" data-value="'+m+'" class="'+(lbTarget===m?'selected':'')+'">'+m+' min</button>').join('')+'</div><button class="lb-generate" data-lb="generate">✦ Salikt man treniņu</button></div>'+
  (ids.length?'<div class="lb-current-list">'+ids.map(lbMyCard).join('')+'</div>'+
- '<div class="lb-my-bottom"><div><span>KOPĀ</span><strong>'+ids.length+' vingrinājumi · ~'+total+' min</strong></div><button data-lb="complete" class="'+(workout.completed?'completed':'')+'">'+(workout.completed?'✓ Treniņš paveikts':'✓ Pabeigt treniņu')+'</button></div>'+
+ '<div class="lb-my-bottom"><div><span>KOPĀ</span><strong>'+ids.length+' vingrinājumi · ~'+total+' min</strong></div><button data-lb="complete" '+(lbWorkDate>fitToday()?'disabled':'')+' class="'+(workout.completed?'completed':'')+'">'+(lbWorkDate>fitToday()?'Ieplānots nākamajai dienai':workout.completed?'✓ Treniņš paveikts':'✓ Pabeigt treniņu')+'</button></div>'+
  '<button class="lb-clear-workout" data-lb="clear-workout">Notīrīt šodienas treniņu</button>':
  '<div class="lb-empty lb-my-empty"><span>＋</span><h3>Izvēlētās dienas treniņš ir tukšs</h3><p>Izvēlies vingrinājumus no bibliotēkas vai saliec programmu automātiski.</p><button data-lb="tab" data-value="library">Apskatīt vingrinājumus</button></div>')+
  '<p class="lb-safety">Tava izvēle saglabājas šajā ierīcē. Smagākas sesijas neplāno tieši pirms basketbola spēles.</p></div>';
@@ -170,7 +170,7 @@ document.addEventListener('click',event=>{
  if(act==="generate"){lbGenerate();return}
  if(act==="my-remove"){lbToggleSelected(id);return}
  if(act==="my-check"){const d=lbDay(),k=d.checked.indexOf(id);if(k>=0)d.checked.splice(k,1);else d.checked.push(id);d.completed=false;if(state.homeSessions)delete state.homeSessions[lbWorkDate+'|custom'];lbSave();render();return}
- if(act==="complete"){const d=lbDay();if(!d.ids.length)return;d.completed=!d.completed;
+ if(act==="complete"){if(lbWorkDate>fitToday()){toast('Nākotnes treniņu vēl nevar atzīmēt kā paveiktu.');return}const d=lbDay();if(!d.ids.length)return;d.completed=!d.completed;
   state.homeSessions??={};if(d.completed){state.homeSessions[lbWorkDate+'|custom']=true;d.checked=[...d.ids];
   state.exerciseHistory??=[];for(const key of d.ids){state.exerciseHistory=state.exerciseHistory.filter(x=>x.id!==key);state.exerciseHistory.unshift({id:key,date:lbWorkDate})}
   state.exerciseHistory=state.exerciseHistory.slice(0,60);
