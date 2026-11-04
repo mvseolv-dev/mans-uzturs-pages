@@ -262,3 +262,12 @@ body:has(.fit-subnav) .footer-text{color:#6a7d6a}
  .ap-pose figcaption{font-size:8px}
  .ap-exercise-visual .ap-ex-actions button{font-size:9px}
 }
+
+/* Team shortcut on Māra dashboard */
+.ap-team-shortcut{display:flex;align-items:center;gap:12px;text-align:left;padding:15px 16px;border:1px solid #52734a;border-radius:17px;background:linear-gradient(120deg,#223824,#18261c);color:#eaf7dc;min-width:0}
+.ap-team-shortcut-icon{display:grid;place-items:center;font-size:26px;width:48px;height:48px;flex:0 0 48px;background:#344d2b;border-radius:13px}
+.ap-team-shortcut>span:nth-child(2){flex:1;min-width:0;display:grid;gap:6px}
+.ap-team-shortcut strong{color:#f6f9ec;font-size:15px;font-weight:850}
+.ap-team-shortcut small{color:#a9c7a0;font-size:11px;line-height:1.4}
+.ap-team-shortcut>b{color:#c7fa39;font-size:22px}
+.tm-shortfall{border:1px solid #977149;background:#382c20;color:#f1d3a6;border-radius:13px;padding:13px;font-size:12px;line-height:1.6}
