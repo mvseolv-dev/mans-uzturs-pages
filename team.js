@@ -168,7 +168,7 @@ function tmDetail(){
  '<div class="tm-step-tabs">'+stepButtons+'</div>'+
  '<div class="tm-large-diagram">'+tmCourt(d.diagram,false,{drill:d,step:idx})+tmLegend()+'</div>'+
  '<div class="tm-step-explain"><span>'+step.label+'</span><h3>'+step.title+'</h3><p>'+safe(step.text)+'</p>'+
- (idx===0?'<div class="tm-role-list">'+roles+'</div>':'<small>'+safe(step.extra)+'</small>')+
+ '<div class="tm-role-list">'+roles+'</div>'+(idx===0?'':'<small>'+safe(step.extra)+'</small>')+
  (idx===2&&d.goal?'<strong class="tm-target">MĒRĶIS: '+safe(d.goal)+'</strong>':'')+
  '</div><div class="tm-step-actions"><button type="button" data-tm="step" data-index="'+Math.max(0,idx-1)+'" '+(idx===0?'disabled':'')+'>← Iepriekšējais</button>'+
  '<span>'+(idx+1)+' / 3</span><button type="button" data-tm="step" data-index="'+Math.min(2,idx+1)+'" '+(idx===2?'disabled':'')+'>Nākamais solis →</button></div></div>'+
