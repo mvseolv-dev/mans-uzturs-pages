@@ -65,13 +65,24 @@ renderFitnessDashboard=function(){
  activeSection("BODY METRICS","Svara tendence",'<button class="ap-text-btn" data-nav="progress">Progress ↗</button>')+
  '<div class="ap-metrics-panel"><div><span>PAŠREIZĒJAIS SVARS</span><h3>'+(last?fmt(last.weight,1):'--')+' <small>kg</small></h3><p>Mērķis: '+fmt(state.config.goal,0)+' kg</p></div>'+activeChart()+'</div></div>';
 };
+function activeSelectedSession(s){
+ const isWalk=s.type==='Pastaiga',done=fitDone(s),label=s.type==='Atcelts'?'Nenotiek':done?'Paveikts':s.type==='Iespējams'||(s.day===6&&!s.choice)?'Jāprecizē':'Ieplānots';
+ const duration=Math.max(5,Math.min(300,Number(state.sportLog?.[s.date]?.minutes)||s.minutes));
+ const thursday=s.day===3?'<div class="ap-selected-options"><span>TRENIŅA VIETA</span><div class="ap-location-toggle"><button type="button" data-ap-choice="garden" data-date="'+s.date+'" class="'+(s.choice!=='veterans'?'selected':'')+'" aria-pressed="'+(s.choice!=='veterans')+'">Gardene <small>19:00</small></button><button type="button" data-ap-choice="veterans" data-date="'+s.date+'" class="'+(s.choice==='veterans'?'selected':'')+'" aria-pressed="'+(s.choice==='veterans')+'">Veterānu treniņš <small>19:00</small></button></div></div>':'';
+ const other=s.day===2||s.day===6?'<div class="ap-selected-options">'+fitChoice(s)+'</div>':'';
+ return '<article class="ap-selected-card">'+
+ '<div class="ap-selected-meta"><span>'+s.name.toUpperCase()+' · '+fitD(s.date)+'</span><span class="ap-selected-state '+(done?'done':s.type==='Iespējams'?'pending':'')+'">'+label+'</span></div>'+
+ '<div class="ap-selected-title"><div class="ap-selected-symbol">'+(isWalk?'◉':'🏀')+'</div><div><h3>'+safe(s.title)+'</h3><p>'+safe(s.time)+(s.place?' · '+safe(s.place):'')+'</p></div></div>'+
+ thursday+other+
+ '<div class="ap-selected-footer"><label>ILGUMS, MIN<input type="number" inputmode="numeric" min="5" max="300" data-fit-minutes="'+s.date+'" value="'+duration+'"></label><button type="button" class="ap-selected-confirm" data-fit="toggle-activity" data-date="'+s.date+'" '+(s.type==='Atcelts'?'disabled':'')+'>'+(done?'✓ Atcelt paveikto':'✓ Atzīmēt kā paveiktu')+'</button></div></article>';
+}
 renderFitnessSchedule=function(){
  if(fitSelectedDay===null)fitSelectedDay=(rigaToday().getUTCDay()+6)%7;
  const week=fitWeek(),current=week[fitSelectedDay]||week[0];
  return '<div class="ap-screen">'+activeTitle("YOUR CALENDAR","Treniņu grafiks","Basketbols, pastaigas un atjaunošanās vienā plānā.")+
  '<div class="ap-week-header"><div><span>WEEKLY SCHEDULE</span><h2>'+fitD(week[0].date)+' - '+fitD(week[6].date)+'</h2></div><div><button data-fit="week-prev" aria-label="Iepriekšējā nedēļa">‹</button><button data-fit="week-next" aria-label="Nākamā nedēļa">›</button></div></div>'+
  '<div class="ap-day-strip">'+week.map(x=>'<button data-fit="day" data-day="'+x.day+'" class="'+(fitSelectedDay===x.day?'now ':'')+(fitDone(x)?'marked':'')+'"><span>'+x.name.slice(0,2)+'</span><b>'+x.date.slice(-2)+'</b><small>'+(fitDone(x)?'✓':'·')+'</small></button>').join('')+'</div>'+
- activeWeeklyStats()+activeSection("SELECTED DAY","Izvēlētā aktivitāte",activeTag(fitD(current.date),"lime"))+fitSession(current,true)+
+ activeWeeklyStats()+activeSection("SELECTED DAY","Izvēlētā aktivitāte",activeTag(fitD(current.date),"lime"))+activeSelectedSession(current)+
  activeSection("UPCOMING","Nedēļas aktivitātes")+'<div class="ap-week-list">'+week.filter(x=>x.day!==fitSelectedDay).map(activeWeekLine).join('')+'</div>'+
  '<div class="ap-notice"><b>Atjaunošanās ir daļa no treniņa</b><p>60 min pastaigas ir mierīgā tempā. Ja pēc spēles vai treniņa jūties noguris, saīsini pastaigu vai izvēlies atpūtu.</p></div></div>';
 };
@@ -124,7 +135,8 @@ function activeOpenVideo(id){
  document.body.style.overflow='hidden';
 }
 document.addEventListener('click',event=>{
- const btn=event.target.closest('[data-ap-open],[data-ap-video],[data-ap-check],[data-ap-finish],[data-ap-close]');if(!btn)return;
+ const btn=event.target.closest('[data-ap-choice],[data-ap-open],[data-ap-video],[data-ap-check],[data-ap-finish],[data-ap-close]');if(!btn)return;
+ if(btn.dataset.apChoice){const date=btn.dataset.date;state.sportChoices??={};state.sportChoices[date]=btn.dataset.apChoice;save();render();return}
  if(btn.dataset.apOpen){window.fitOpenRoutine=btn.dataset.apOpen;go('fitroutine');return}
  if(btn.dataset.apVideo){activeOpenVideo(btn.dataset.apVideo);return}
  if(btn.hasAttribute('data-ap-close')){closeModal();return}
