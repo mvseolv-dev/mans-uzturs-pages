@@ -7,8 +7,8 @@ function tmState(){
  if(!Array.isArray(s.favorites))s.favorites=[];
  if(!Array.isArray(s.plans))s.plans=[];
  s.players=Math.max(1,Math.min(16,Number(s.players)||4));
- s.balls=Math.max(0,Math.min(8,Number(s.balls)??2));
- s.hoops=Math.max(0,Math.min(2,Number(s.hoops)||1));
+ s.balls=Math.max(0,Math.min(8,Number.isFinite(Number(s.balls))?Number(s.balls):2));
+ s.hoops=Math.max(0,Math.min(2,Number.isFinite(Number(s.hoops))?Number(s.hoops):1));
  s.minutes=Math.max(25,Math.min(150,Number(s.minutes)||75));
  return s;
 }
@@ -247,3 +247,6 @@ document.addEventListener('change',event=>{
   }
  }
 });
+
+// Restore a direct #komanda link after all Team Studio modules have loaded.
+if(typeof render==='function'&&page==='komanda'&&activeProfile==='maris')render();
