@@ -59,8 +59,8 @@ function plannerStartDate(day=fitSelectedDay){
 function plannerShowEditor(mode,day,date,id){
  const target=mode==='edit'?(id?plannerRecords().find(e=>e.id===id):plannerDaySessions(day).find(e=>!e.custom&&e.date===date)):null;
  const key=date||plannerStartDate(day);
- const recurring=!!target&&(target.repeat==='weekly'||(!!target.custom===false&&!!state.trainingOverrides?.['date:'+key]));
- plannerEditor={mode,id:id||'',date:key,day:day??(new Date(key+'T12:00:00Z').getUTCDay()+6)%7,title:target?.title||'',type:target?.type==='BUKI'?'Basketbols':target?.type||'Basketbols',time:target?.time&&/^\d{2}:\d{2}$/.test(target.time)?target.time:'19:00',place:target?.place||'',minutes:target?.minutes||90,repeat:recurring,base:!!target&&!target.custom};
+ const recurring=!!target&&(target.repeat==='weekly'||(!id&&!state.trainingOverrides?.['date:'+key]));
+ plannerEditor={mode,id:id||'',date:key,day:day??(new Date(key+'T12:00:00Z').getUTCDay()+6)%7,title:target?.title||'',type:target?.type==='BUKI'?'Basketbols':target?.type||'Basketbols',time:target?.time&&/^\d{2}:\d{2}$/.test(target.time)?target.time:'19:00',place:target?.place||'',minutes:target?.minutes||90,repeat:recurring,base:mode==='edit'&&!id&&!!target};
  render();
  const el=document.getElementById('planner-form');
  if(el&&typeof el.scrollIntoView==='function')el.scrollIntoView({behavior:'smooth',block:'center'});
