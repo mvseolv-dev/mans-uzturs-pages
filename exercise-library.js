@@ -3,7 +3,7 @@
  * User selections are saved in existing per-profile local storage.
  */
 let lbTab="library",lbLevel="all",lbGroup="Visi",lbSearch="",lbFavOnly=false,lbRecentOnly=false,lbFocusId=null;
-let lbTarget=25,lbBuildLevel="medium",lbBuildFocus="basket";
+let lbTarget=25,lbBuildLevel="medium",lbBuildFocus="basket",lbWorkDate=fitToday();
 const LB_GROUPS=["Visi","Basketbolam","Kājas","Augšdaļa","Core","Mobilitāte","Pilns ķermenis","Stabilitāte","Kondīcija"];
 const LB_LEVELS=[["all","Visi"],["easy","Viegli"],["medium","Vidēji"],["hard","Sarežģīti"]];
 const LB_LOOKUP=Object.fromEntries(WORKOUT_LIBRARY.map(x=>[x.id,x]));
@@ -11,10 +11,10 @@ function lbEntry(id){return LB_LOOKUP[id]||null}
 function lbImage(id,pose){const parts=WORKOUT_MEDIA[id]||["main"];return './assets/exercises/'+id+'-'+(pose||parts[0])+'.webp'}
 function lbFaves(){return Array.isArray(state.exerciseFavorites)?state.exerciseFavorites:[]}
 function lbRecent(){return Array.isArray(state.exerciseHistory)?state.exerciseHistory:[]}
-function lbDay(date=fitToday()){state.customDayWorkouts??={};return state.customDayWorkouts[date]||(state.customDayWorkouts[date]={ids:[],checked:[],completed:false})}
+function lbDay(date=lbWorkDate){state.customDayWorkouts??={};return state.customDayWorkouts[date]||(state.customDayWorkouts[date]={ids:[],checked:[],completed:false})}
 function lbCheckWorkout(obj){if(!Array.isArray(obj.ids))obj.ids=[];if(!Array.isArray(obj.checked))obj.checked=[];obj.ids=obj.ids.filter(id=>!!lbEntry(id));obj.checked=obj.checked.filter(id=>obj.ids.includes(id));return obj}
 function lbSave(){save()}
-function lbResetFinished(day){day.completed=false;day.checked=[];if(state.homeSessions)delete state.homeSessions[fitToday()+'|custom'];}
+function lbResetFinished(day){day.completed=false;day.checked=[];if(state.homeSessions)delete state.homeSessions[lbWorkDate+'|custom'];}
 function lbSelected(id){return lbCheckWorkout(lbDay()).ids.includes(id)}
 function lbToggleSelected(id){
  if(!lbEntry(id))return;
@@ -85,7 +85,7 @@ function lbPrograms(){
 }
 function lbSelectedDay(){
  const ids=lbCheckWorkout(lbDay()).ids,done=lbDay().checked.length,total=ids.reduce((n,id)=>n+(lbEntry(id)?.minutes||0),0);
- return '<div class="lb-custom-top"><div><span>ŠODIENA · '+fitToday()+'</span><h2>Mans treniņš</h2><p>'+ids.length+' vingrinājumi · aptuveni '+total+' min</p></div><div class="lb-my-progress">'+done+'/'+ids.length+'</div></div>';
+ return '<div class="lb-custom-top"><div><span>IZVĒLĒTĀ DIENA</span><h2>Mans treniņš</h2><p>'+ids.length+' vingrinājumi · aptuveni '+total+' min</p></div><div class="lb-my-progress">'+done+'/'+ids.length+'</div></div><div class="lb-date-picker"><label for="lb-date">Treniņa datums</label><input id="lb-date" type="date" value="'+lbWorkDate+'"><button type="button" data-lb="today">Šodiena</button></div>';
 }
 function lbMyCard(id,index){
  const x=lbEntry(id);if(!x)return '';
@@ -101,7 +101,7 @@ function lbMyWorkout(){
  (ids.length?'<div class="lb-current-list">'+ids.map(lbMyCard).join('')+'</div>'+
  '<div class="lb-my-bottom"><div><span>KOPĀ</span><strong>'+ids.length+' vingrinājumi · ~'+total+' min</strong></div><button data-lb="complete" class="'+(workout.completed?'completed':'')+'">'+(workout.completed?'✓ Treniņš paveikts':'✓ Pabeigt treniņu')+'</button></div>'+
  '<button class="lb-clear-workout" data-lb="clear-workout">Notīrīt šodienas treniņu</button>':
- '<div class="lb-empty lb-my-empty"><span>＋</span><h3>Šodienas treniņš ir tukšs</h3><p>Izvēlies vingrinājumus no bibliotēkas vai saliec programmu automātiski.</p><button data-lb="tab" data-value="library">Apskatīt vingrinājumus</button></div>')+
+ '<div class="lb-empty lb-my-empty"><span>＋</span><h3>Izvēlētās dienas treniņš ir tukšs</h3><p>Izvēlies vingrinājumus no bibliotēkas vai saliec programmu automātiski.</p><button data-lb="tab" data-value="library">Apskatīt vingrinājumus</button></div>')+
  '<p class="lb-safety">Tava izvēle saglabājas šajā ierīcē. Smagākas sesijas neplāno tieši pirms basketbola spēles.</p></div>';
 }
 function lbExerciseDetail(){
@@ -113,7 +113,7 @@ function lbExerciseDetail(){
  '<div class="lb-detail-photo">'+lbPoseImages(x.id,true)+'</div>'+
  '<div class="lb-detail-copy"><span>IZPILDE</span><p>'+safe(x.guide)+'</p><h3>Tehnikas atgādne</h3><ul>'+x.cues.map(c=>'<li>✓ '+safe(c)+'</li>').join('')+'</ul></div>'+
  (x.level==='hard'?'<div class="lb-hard-warning"><strong>Paaugstināta slodze.</strong> Šo vingrinājumu izvēlies tikai tad, ja tam ir pietiekama spēka un kustību kontroles bāze. Neveic līdz spēku izsīkumam vai pirms spēles.</div>':'')+
- '<div class="lb-detail-buttons"><button class="lb-detail-add '+(selected?'selected':'')+'" data-lb="add" data-id="'+x.id+'">'+(selected?'✓ Izņemt no šodienas':'＋ Pievienot šodienas treniņam')+'</button><button class="lb-detail-fav" data-lb="favorite" data-id="'+x.id+'">'+(fav?'♥ Favorītos':'♡ Pievienot favorītiem')+'</button>'+(video?'<button data-ap-video="'+x.id+'" class="lb-detail-video">▶ Video demonstrācija</button>':'')+'</div></div>';
+ '<div class="lb-detail-buttons"><button class="lb-detail-add '+(selected?'selected':'')+'" data-lb="add" data-id="'+x.id+'">'+(selected?'✓ Izņemt no izvēlētās dienas':'＋ Pievienot izvēlētajai dienai')+'</button><button class="lb-detail-fav" data-lb="favorite" data-id="'+x.id+'">'+(fav?'♥ Favorītos':'♡ Pievienot favorītiem')+'</button>'+(video?'<button data-ap-video="'+x.id+'" class="lb-detail-video">▶ Video demonstrācija</button>':'')+'</div></div>';
 }
 function lbReadiness(){
  return '<div class="lb-tips"><div><span>ĀTRĀ IZVĒLE</span><h2>Ko gribi darīt šodien?</h2></div><div class="lb-choice-row"><button data-lb="quick" data-value="recovery"><span>◌</span><strong>Viegli pēc spēles</strong><small>Mobilitāte un atjaunošanās</small></button><button data-lb="quick" data-value="strength"><span>↗</span><strong>Normāli pastrādāt</strong><small>Spēks un kontrole</small></button><button data-lb="quick" data-value="movement"><span>⬡</span><strong>Basketbola forma</strong><small>Sānu kustības un stabilitāte</small></button></div></div>';
@@ -154,6 +154,7 @@ document.addEventListener('click',event=>{
  const target=event.target.closest('[data-lb]');if(!target)return;
  const act=target.dataset.lb,id=target.dataset.id;
  if(act==="tab"){lbTab=target.dataset.value;lbFocusId=null;render();return}
+ if(act==="today"){lbWorkDate=fitToday();render();return}
  if(act==="level"){lbLevel=target.dataset.value;render();return}
  if(act==="group"){lbGroup=target.dataset.value;render();return}
  if(act==="fav-filter"){lbFavOnly=!lbFavOnly;render();return}
@@ -168,14 +169,14 @@ document.addEventListener('click',event=>{
  if(act==="duration"){lbTarget=Number(target.dataset.value);render();return}
  if(act==="generate"){lbGenerate();return}
  if(act==="my-remove"){lbToggleSelected(id);return}
- if(act==="my-check"){const d=lbDay(),k=d.checked.indexOf(id);if(k>=0)d.checked.splice(k,1);else d.checked.push(id);d.completed=false;if(state.homeSessions)delete state.homeSessions[fitToday()+'|custom'];lbSave();render();return}
+ if(act==="my-check"){const d=lbDay(),k=d.checked.indexOf(id);if(k>=0)d.checked.splice(k,1);else d.checked.push(id);d.completed=false;if(state.homeSessions)delete state.homeSessions[lbWorkDate+'|custom'];lbSave();render();return}
  if(act==="complete"){const d=lbDay();if(!d.ids.length)return;d.completed=!d.completed;
-  state.homeSessions??={};if(d.completed){state.homeSessions[fitToday()+'|custom']=true;d.checked=[...d.ids];
-  state.exerciseHistory??=[];for(const key of d.ids){state.exerciseHistory=state.exerciseHistory.filter(x=>x.id!==key);state.exerciseHistory.unshift({id:key,date:fitToday()})}
+  state.homeSessions??={};if(d.completed){state.homeSessions[lbWorkDate+'|custom']=true;d.checked=[...d.ids];
+  state.exerciseHistory??=[];for(const key of d.ids){state.exerciseHistory=state.exerciseHistory.filter(x=>x.id!==key);state.exerciseHistory.unshift({id:key,date:lbWorkDate})}
   state.exerciseHistory=state.exerciseHistory.slice(0,60);
-  }else{delete state.homeSessions[fitToday()+'|custom'];d.checked=[]}
+  }else{delete state.homeSessions[lbWorkDate+'|custom'];d.checked=[]}
   lbSave();render();toast(d.completed?'Treniņš paveikts!':'Treniņa atzīme atcelta.');return}
- if(act==="clear-workout"){if(!confirm("Notīrīt šodienas vingrinājumu izvēli?"))return;const d=lbDay();d.ids=[];lbResetFinished(d);lbSave();render();return}
+ if(act==="clear-workout"){if(!confirm("Notīrīt izvēlētās dienas vingrinājumu izvēli?"))return;const d=lbDay();d.ids=[];lbResetFinished(d);lbSave();render();return}
 });
 document.addEventListener('input',event=>{
  if(event.target?.id!=="lb-search")return;
@@ -185,6 +186,7 @@ document.addEventListener('input',event=>{
  if(count)count.textContent=lbFiltered().length+" rezultāti";
 });
 document.addEventListener('change',event=>{
+ if(event.target?.id==='lb-date'){const date=event.target.value;if(/^\d{4}-\d{2}-\d{2}$/.test(date)){lbWorkDate=date;render()}return}
  const key=event.target?.dataset?.lbSelect;
  if(key==='focus'){lbBuildFocus=event.target.value;render()}
  if(key==='build-level'){lbBuildLevel=event.target.value;render()}
