@@ -8,8 +8,8 @@ const LIVA_DEFAULT = {config:{kcal:null,protein:null,goal:null,extraProtein:0},w
 const PREF_DEFAULT={meat:true,eggs:true,dairy:true,soy:true,legumes:true,fish:false,seafood:false,dislikes:'',completed:false};
 let activeProfile=localStorage.getItem(PROFILE_KEY)==='liva'?'liva':'maris';
 let state=load();
-let page=['dashboard','trenini','majasha','fitroutine','uzturs','diena','nedela','iepirkumi','gatavosana','progress'].includes(location.hash.slice(1))?location.hash.slice(1):(activeProfile==='liva'?'diena':'dashboard');
-if(activeProfile==='liva'&&['dashboard','trenini','majasha','fitroutine','uzturs'].includes(page))page='diena';
+let page=['dashboard','trenini','komanda','majasha','fitroutine','uzturs','diena','nedela','iepirkumi','gatavosana','progress'].includes(location.hash.slice(1))?location.hash.slice(1):(activeProfile==='liva'?'diena':'dashboard');
+if(activeProfile==='liva'&&['dashboard','trenini','komanda','majasha','fitroutine','uzturs'].includes(page))page='diena';
 let selectedDay = (rigaToday().getUTCDay()+6)%7;
 let weekShift=0;
 const fmt = (n, digits=0) => Number(n).toLocaleString('lv-LV',{minimumFractionDigits:digits,maximumFractionDigits:digits});
@@ -191,10 +191,10 @@ function renderSport(){
 function render(){
  const isMaris=activeProfile==='maris';
  const innerPages=['diena','nedela','iepirkumi','gatavosana'];
- const shownMaris=['dashboard','trenini','majasha','uzturs','progress'];
+ const shownMaris=['dashboard','trenini','komanda','majasha','uzturs','progress'];
  document.querySelectorAll('.bottom-nav [data-nav]').forEach(n=>{
   const section=n.dataset.nav;
-  n.hidden=isMaris?!shownMaris.includes(section):['dashboard','trenini','majasha','uzturs'].includes(section);
+  n.hidden=isMaris?!shownMaris.includes(section):['dashboard','trenini','komanda','majasha','uzturs'].includes(section);
   n.classList.toggle('active',section===page||(isMaris&&section==='uzturs'&&innerPages.includes(page))||(isMaris&&section==='majasha'&&page==='fitroutine'));
  });
  const selector=document.getElementById('profile-select');if(selector)selector.value=activeProfile;
@@ -203,6 +203,7 @@ function render(){
  if(activeProfile==='liva'&&(!state.configured||!state.preferences?.completed)){app.innerHTML=renderProfileSetup();return;}
  let content;
  if(isMaris&&page==='dashboard')content=renderFitnessDashboard();
+ else if(isMaris&&page==='komanda')content=typeof renderTeamStudio==='function'?renderTeamStudio():renderFitnessDashboard();
  else if(isMaris&&page==='trenini')content=renderFitnessSchedule();
  else if(isMaris&&page==='majasha')content=renderFitnessHome();
  else if(isMaris&&page==='fitroutine')content=renderFitnessRoutine(window.fitOpenRoutine);
@@ -245,7 +246,7 @@ document.addEventListener('change',async e=>{if(e.target.id==='profile-select'){
 document.addEventListener('submit',e=>{if(e.target.id==='add-shopping'){e.preventDefault();const fd=new FormData(e.target),name=String(fd.get('name')||'').trim(),quantity=String(fd.get('quantity')||'').trim();if(!name)return;state.extraShopping??=[];state.extraShopping.push({id:'extra-'+Date.now(),name:name.slice(0,90),quantity:quantity.slice(0,40)});save();render();toast('Prece pievienota.');}else if(e.target.id==='dietary-settings'){e.preventDefault();state.preferences=readDietaryPrefs(new FormData(e.target));save();render();toast('Līvas ēdienkarte atjaunināta.');}else if(e.target.id==='profile-setup'){e.preventDefault();const fd=new FormData(e.target),kcal=Number(fd.get('kcal')),protein=Number(fd.get('protein')),goal=Number(fd.get('goal'));if(kcal<1200||kcal>4000||protein<40||protein>250||goal<35||goal>200){toast('Pārbaudi ievadītos mērķus.');return;}state.config={kcal,protein,goal,extraProtein:0};state.preferences=readDietaryPrefs(fd);state.configured=true;save();render();toast('Līvas profils izveidots.');}else if(e.target.id==='custom-meal-form'){e.preventDefault();const fd=new FormData(e.target),name=String(fd.get('name')||'').trim(),guess=estimateMeal(name),kcal=String(fd.get('kcal')||'').trim()===''?guess.kcal:Number(fd.get('kcal')),protein=String(fd.get('protein')||'').trim()===''?guess.protein:Number(fd.get('protein'));if(!name||!Number.isFinite(kcal)||kcal<0||kcal>4000||!Number.isFinite(protein)||protein<0||protein>250){toast('Pārbaudi ēdienu un uzturvērtības.');return;}const date=dateISO(dayDate(selectedDay));state.customMeals??={};state.customMeals[date]??=[];state.customMeals[date].push({id:String(Date.now())+'-'+Math.random().toString(36).slice(2,7),name,kcal,protein});save();render();toast('Apēstais ēdiens pievienots.');}else if(e.target.id==='weight-form'){e.preventDefault();const fd=new FormData(e.target),date=fd.get('date'),rawWeight=String(fd.get('weight')||'').trim().replace(',', '.'),weight=Number(rawWeight);if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!/^\d{2,3}(?:\.\d{1,2})?$/.test(rawWeight)||!Number.isFinite(weight)||weight<30||weight>300||date>dateISO(rigaToday())){toast('Ievadi derīgu datumu un svaru.');return}state.weights=state.weights.filter(x=>x.date!==date);state.weights.push({date,weight});save();render();toast('Rīta svars saglabāts.')}else if(e.target.id==='settings-form'){e.preventDefault();const fd=new FormData(e.target),kcal=Number(fd.get('kcal')),protein=Number(fd.get('protein')),goal=Number(fd.get('goal')),extraProtein=Number(fd.get('extraProtein'));if(kcal<1400||kcal>4000||protein<50||protein>250||goal<40||goal>200||![0,1,2].includes(extraProtein)){toast('Pārbaudi iestatījumu vērtības.');return}state.config={kcal,protein,goal,extraProtein};save();render();toast('Iestatījumi saglabāti.')}});
 document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
-window.addEventListener('hashchange',()=>{let hash=location.hash.slice(1);if(['dashboard','trenini','majasha','fitroutine','uzturs','diena','nedela','iepirkumi','gatavosana','progress'].includes(hash)){page=activeProfile==='liva'&&['dashboard','trenini','majasha','fitroutine','uzturs'].includes(hash)?'diena':hash;render()}});
+window.addEventListener('hashchange',()=>{let hash=location.hash.slice(1);if(['dashboard','trenini','komanda','majasha','fitroutine','uzturs','diena','nedela','iepirkumi','gatavosana','progress'].includes(hash)){page=activeProfile==='liva'&&['dashboard','trenini','komanda','majasha','fitroutine','uzturs'].includes(hash)?'diena':hash;render()}});
 if('serviceWorker' in navigator && /^https?:/.test(location.protocol))navigator.serviceWorker.register('./sw.js').catch(()=>{});
 let lastRigaDate=dateISO(rigaToday());
 function refreshRigaDay(){const today=dateISO(rigaToday());if(today!==lastRigaDate){lastRigaDate=today;if(weekShift===0){selectedDay=(rigaToday().getUTCDay()+6)%7;}render();}}
