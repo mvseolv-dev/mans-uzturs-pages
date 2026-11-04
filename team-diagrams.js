@@ -48,8 +48,8 @@ function tmScene(kind){
  };
  return extra[kind]||t[kind]||t.spot;
 }
-function tmCourt(diagram,small=false){
- const sc=tmScene(diagram),safePath=str=>String(str).replace(/"/g,"&quot;");
+function tmCourt(diagram,small=false,guide=null){
+ const sc=guide?.drill?tmRoleScene(guide.drill):tmScene(diagram),step=guide?.step??-1,safePath=str=>String(str).replace(/"/g,"&quot;");
  const drawPaths=(lines,type,marker)=> (lines||[]).map(path=>'<path d="'+safePath(path)+'" fill="none" class="tm-route tm-'+type+'"'+(marker?' marker-end="url(#tm-'+type+'-arrow)"':'')+'/>').join('');
  const players=(arr,type)=>(arr||[]).map(([x,y,n])=>'<g class="tm-person tm-'+type+'"><circle cx="'+x+'" cy="'+y+'" r="'+(small?12:14)+'"/><text x="'+x+'" y="'+(y+4)+'" text-anchor="middle">'+(type==='defense'?'X':'')+n+'</text></g>').join('');
  const cones=(sc.cones||[]).map(([x,y])=>'<path d="M'+x+' '+(y-7)+' l7 13 h-14z" fill="#ffc884" stroke="#322d1c" stroke-width="1.2"/>').join('');
@@ -62,7 +62,7 @@ function tmCourt(diagram,small=false){
  '<g stroke="#53705e" stroke-width="1.5" fill="none"><path d="M42 17V76 M328 17V76 M42 76 A143 143 0 0 0 328 76"/>'+
  '<rect x="139" y="16" width="92" height="113"/><path d="M139 129 A46 46 0 0 0 231 129 M23 268 H347"/>'+
  '<path d="M139 57 H231" stroke="#6e8d73"/><circle cx="185" cy="63" r="10" stroke="#a2c8a0"/><path d="M167 42H203" stroke="#e5f0db" stroke-width="3"/></g>'+
- drawPaths(sc.run,'run',true)+drawPaths(sc.pass,'pass',true)+drawPaths(sc.def,'def',true)+drawPaths(sc.shot,'shot',false)+drawPaths(sc.pass2,'pass',true)+cones+rings+
+ (step===0?'':step===1?(drawPaths((sc.run||[]).length?sc.run:sc.pass,'run',true)+drawPaths(sc.def,'def',true)):drawPaths(sc.run,'run',true)+drawPaths(sc.pass,'pass',true)+drawPaths(sc.def,'def',true)+drawPaths(sc.shot,'shot',false)+drawPaths(sc.pass2,'pass',true))+cones+rings+
  players(sc.o,'offense')+players(sc.x,'defense')+'<text x="32" y="273" fill="#8cae8f" font-size="10" font-weight="700">PUSLAUKUMS</text></svg>';
 }
 function tmLegend(){
