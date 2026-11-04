@@ -203,7 +203,7 @@ function render(){
  if(activeProfile==='liva'&&(!state.configured||!state.preferences?.completed)){app.innerHTML=renderProfileSetup();return;}
  let content;
  if(isMaris&&page==='dashboard')content=renderFitnessDashboard();
- else if(isMaris&&page==='komanda')content=typeof renderTeamStudio==='function'?renderTeamStudio():renderFitnessDashboard();
+ else if(isMaris&&page==='komanda')content=window.teamStudioReady&&typeof renderTeamStudio==='function'?renderTeamStudio():renderFitnessDashboard();
  else if(isMaris&&page==='trenini')content=renderFitnessSchedule();
  else if(isMaris&&page==='majasha')content=renderFitnessHome();
  else if(isMaris&&page==='fitroutine')content=renderFitnessRoutine(window.fitOpenRoutine);
