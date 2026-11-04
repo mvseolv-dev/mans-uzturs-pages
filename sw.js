@@ -1,4 +1,4 @@
-const CACHE = 'mans-uzturs-v19';
+const CACHE = 'mans-uzturs-v20';
 const FILES = ['./','./index.html','./styles.css','./fitness.css','./active-v2.css','./active-v2.js','./planner.css','./planner.js','./fitness.js','./app.js','./data.js','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES)).then(() => self.skipWaiting())));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())));
