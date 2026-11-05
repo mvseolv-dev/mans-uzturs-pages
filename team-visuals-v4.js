@@ -30,6 +30,20 @@ const scene=(drill)=>{
     event('run','5. Metiens no loka augšas','No 2 dodies pie 1 un met pēdējo metienu.','O1','arc',{path:'M490 143 Q444 310 280 331',finish:true}));
   return s;
  }
+ // Warm-up descriptions require their own physical setup rather than a generic court.
+ if(d.id==='w01'){
+  A('O1',[160,490]);E(go('Viegls skrējiens','O1',[160,280]),go('Sānu soļi','O1',[385,280]));return s;
+ }
+ if(d.id==='w02'){
+  A('O1',[280,400]);[[175,400],[385,400],[280,300],[280,510]].forEach((p,i)=>M(i+1,p,'point'));
+  E(go('Uz priekšu','O1',[280,300]),go('Sānis pēc signāla','O1',[385,400]),go('Atpakaļ','O1',[280,510]),go('Pa diagonāli','O1',[175,400]));return s;
+ }
+ if(d.id==='w05'){
+  A('O1','llay');['llay',[280,162],'rlay'].forEach((p,i)=>{M(i+1,p,'point');E(event('spot','Metieni no '+(i+1)+'. tuvās pozīcijas',action,'O1',p));});return s;
+ }
+ if(d.id==='w06'){
+  A('O1',[215,375]);A('O2',[345,375]);E(go('Pirmais vada sānu soli','O1',[155,375]),go('Partneris atkārto','O2',[285,375]));return s;
+ }
  // Exercises that change bounce height or stance, not court position.
  if(/dribla augstuma|zems - vidējs - augsts|divu bumbu koordinācij|spoguļdribl|redzes signāli/.test(source)){
   A('O1','mid');if(d.minPlayers>=2)A('O2',[385,435]);
@@ -104,6 +118,10 @@ const scene=(drill)=>{
    E(event('rebound','Savāc atlēkušo bumbu',action,'O1'));if(/outlet/.test(source)){A('O2','rwing');E(pass('Piespēle uz sānu','O1','O2'));}return s;}
   return game(d,s);
  }
+ if(cat==='tactics'&&d.id==='a06'){
+  A('O1',[280,31]);A('O2',[220,164]);A('O3',[430,260]);
+  E(go('O2 veido aizsegu','O2',[390,235],'screen'),go('O3 izskrien metiena vietā','O3','rwing'),pass('Iemetiens no gala līnijas','O1','O3'));return s;
+ }
  if(cat==='small'||cat==='tactics'){
   if(/give and go|pass - cut|nogriezien/.test(source)&&!/3 pret 3|4 pret 4/.test(source)){
    A('O1','arc');A('O2','lwing');if(d.minPlayers>=3)A('O3','rwing');
@@ -111,16 +129,37 @@ const scene=(drill)=>{
   if(/3x3 clear/.test(source)){A('O1','under');A('O2','lwing');A('O3','rwing');E(go('Izved bumbu aiz trīspunktu līnijas','O1','arc','dribble'));return s;}
   return game(d,s);
  }
+ if(cat==='transition'){
+  s.full=true;
+  if(d.id==='t05'){A('O1',[280,719]);A('O2',[432,632]);E(event('rebound','Atlēkusī bumba pie sava groza',action,'O1'),pass('Outlet piespēle','O1','O2'),go('Sprints uz pretējo grozu','O2',[310,136],'dribble',{finish:true}));return s;}
+  if(d.id==='t07'){A('X1',[280,435]);A('O1',[420,236]);E(go('Aizsargs atgriežas starp bumbu un grozu','X1',[320,180],'def'));return s;}
+  if(['t03','t04','t06','t08'].includes(d.id)){
+   const n=d.id==='t03'?[2,1]:d.id==='t04'?[3,2]:d.id==='t06'?[4,3]:[3,3];
+   const sx=[95,225,345,465],dx=[150,280,410];
+   for(let i=0;i<n[0];i++)A('O'+(i+1),[sx[i],685]);
+   for(let i=0;i<n[1];i++)A('X'+(i+1),[dx[i],250]);
+   E(go('Pāreja uzbrukumā','O1',[220,360]),event('live','Izvēlies piespēli vai finišu pēc aizsargu izvietojuma',action,'O1'));return s;
+  }
+ }
  if(cat==='transition'||kind==='weave'){
   s.full=true;A('O1',[135,705]);A('O2',[420,705]);if(d.minPlayers>=3)A('O3',[280,705]);
   if(/weave/.test(source))E(pass('Pirmā piespēle','O1','O3'),go('Apskrien saņēmēju','O1',[375,520]),pass('Piespēle tālāk','O3','O2'),go('Maini joslu','O3',[155,340]));
   else if(/aizsardz/.test(source))E(go('Atgriezies starp bumbu un grozu','O1',[280,255],'def'));
   else E(go('Sprints uzbrukumā','O1',[270,230]),/piespēl|outlet/.test(source)?pass('Piespēle partnerim','O1','O2'):event('live','Lēmums spēles situācijā',action,'O1'));return s;
  }
+ if(cat==='fitness'&&d.id!=='k03'){
+  if(d.id==='k01'){A('O1',[220,470]);M(1,[220,470],'point');M(2,[220,285],'point');E(go('Sprints uz otro atzīmi','O1',[220,285]));return s;}
+  if(d.id==='k02'){A('O1',[200,425]);M(1,[200,425],'point');M(2,[355,425],'point');M(3,[355,290],'point');E(go('Sānu soļi','O1',[355,425]),go('Sprints pēc signāla','O1',[355,290]));return s;}
+  if(d.id==='k04'){A('O1',[220,430]);A('O2',[360,430]);E(go('Sprints pēc partnera signāla','O1',[220,290]));return s;}
+  if(d.id==='k05'){A('O1','rwing');A('O2','under');M(1,[440,430],'point');E(shoot('Pirmais metiens'),go('Sprints līdz atzīmei','O1',[440,430]),go('Atgriezies uz metiena vietu','O1','rwing'),shoot('Otrais metiens'));return s;}
+  if(d.id==='k06'){A('O1',[220,375]);A('X1',[320,375]);E(event('live','Aizsardzības reakcija uz partneri',action,'X1'));return s;}
+  if(d.id==='k07'){A('O1',[220,400]);E(go('Lēns dribls brīvā maršrutā','O1',[340,320],'dribble'));return s;}
+ }
  if(cat==='fitness'){
   A('O1',[280,485]);if(/5-10-5/.test(source)){M(1,[190,445],'point');M(2,[280,445],'point');M(3,[370,445],'point');
    E(go('5 m pa labi','O1',[370,445]),go('10 m pa kreisi','O1',[190,445]),go('5 m atpakaļ','O1',[280,445]));}
-  else{M(1,[280,300],'point');E(go('Pārvietošanās līdz atzīmei','O1',[280,300]));}return s;
+  else if(/atzīm|līnij|konus|koridor|5-10 m|sprint/.test(source)){M(1,[280,300],'point');E(go('Pārvietošanās līdz atzīmei','O1',[280,300]));}
+  else E(event('practice','Izpildi vingrinājumu pēc norādes',action,'O1'));return s;
  }
  A('O1','arc');E(event('live','Izpilde pēc uzdevuma',action,'O1'));return s;
 };
@@ -152,7 +191,7 @@ const pos=p=>at(p);
 const allSteps=d=>{const s=scene(d),steps=[{label:'SĀKUMS',title:'Novietošanās',text:d.setup||'Sagatavo laukumu.',extra:'Sākuma izvietojums'}];
  s.events.forEach((a,i)=>steps.push({label:(i+1)+'. DARBĪBA',title:a.label,text:a.text||d.action,extra:d.action||''}));
  steps.push({label:'UZSVARS',title:'Ko ievērot?',text:(d.goal?'Mērķis: '+d.goal+'. ':'')+(d.coach||'Atkārto vingrinājumu.'),extra:'Kustību ceļi ir shēmiski; precīzus attālumus nosaka treniņa uzdevums.'});return steps;};
-function court(full){const h=full?812:574;let s='<rect x="25" y="14" width="510" height="'+h+'" rx="14" fill="#f1e1c5" stroke="#bb9464" stroke-width="3"/>';
+function court(full,compact=false){const h=full?812:compact?412:574;let s='<rect x="25" y="14" width="510" height="'+h+'" rx="14" fill="#f1e1c5" stroke="#bb9464" stroke-width="3"/>';
  for(let y=27;y<14+h;y+=23)s+='<path d="M28 '+y+'H532" stroke="#dfc8a4" stroke-width="1"/>';
  s+='<g fill="none" stroke="#a7885c" stroke-width="2.6"><path d="M75 144V177 A225 225 0 0 0 485 177V144"/>'+
  '<rect x="213" y="19" width="134" height="211"/><path d="M213 230A67 67 0 0 0 347 230"/><circle cx="280" cy="230" r="65" stroke-dasharray="5 7"/></g>'+
@@ -169,7 +208,8 @@ function board(d,step,mini=false){
  const start=active&&players[active.who]?[...players[active.who]]:null;
  if(active)advance(active);
  const end=active&&players[active.who]?players[active.who]:null;
- const uid='tm4'+(++counter),height=sc.full?865:626;
+ const compact=!sc.full&&sc.people.every(p=>p.pos[1]<=385)&&sc.marks.every(m=>m.pos[1]<=385)&&sc.events.every(a=>!a.to||at(a.to)[1]<=385);
+ const uid='tm4'+(++counter),height=sc.full?865:compact?466:626;
  const arrow=Object.entries(INK).map(([name,color])=>'<marker id="'+uid+name+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1L9 5L1 9" fill="none" stroke="'+color+'" stroke-width="2"/></marker>').join('');
  const marks=sc.marks.map(m=>{const [x,y]=m.pos;if(m.kind==='point')return '<g><circle cx="'+x+'" cy="'+y+'" r="16" fill="#fff8ef" stroke="#ce8329" stroke-width="3"/><text x="'+x+'" y="'+(y+5)+'" text-anchor="middle" font-size="14" fill="#71451c" font-weight="900">'+esc(m.n)+'</text></g>';
   return '<g><path d="M'+x+' '+(y-16)+'l15 27h-30z" fill="#e89127" stroke="#aa611e" stroke-width="2"/><text x="'+x+'" y="'+(y+7)+'" text-anchor="middle" font-size="13" font-weight="900" fill="#573012">'+esc(m.n)+'</text></g>';}).join('');
@@ -183,9 +223,11 @@ function board(d,step,mini=false){
   if(active.finish&&active.type!=='shoot'&&end)line+='<path d="M'+end[0]+' '+end[1]+'L280 89" fill="none" stroke="#e78a21" stroke-width="3" stroke-dasharray="5 6"/>';
  }
  const people=sc.people.map(p=>{const [x,y]=players[p.id],c=p.id.startsWith('X')?'#d24b3b':'#1466a3';return '<g><circle cx="'+x+'" cy="'+y+'" r="22" fill="#fff"/><circle cx="'+x+'" cy="'+y+'" r="19" fill="'+c+'"/><text x="'+x+'" y="'+(y+5)+'" text-anchor="middle" fill="#fff" font-size="14" font-weight="900">'+esc(p.id)+'</text></g>';}).join('');
- const first=sc.people.find(p=>p.id.startsWith('O')),bp=first&&players[first.id];const ball=d.minBalls>0&&bp?'<g transform="translate('+(bp[0]+18)+' '+(bp[1]-17)+')"><circle r="10" fill="#f5a037" stroke="#fff" stroke-width="2"/><path d="M-10 0H10M0-10V10M-8-6Q4 0-8 6M8-6Q-4 0 8 6" stroke="#8c4d19" fill="none"/></g>':'';
+ let holder=sc.events.find(a=>a.type==='pass')?.who||sc.people.find(p=>p.id.startsWith('O'))?.id;
+ for(let i=0;i<Math.min(phase,sc.events.length);i++)if(sc.events[i].type==='pass')holder=sc.events[i].receiver;
+ const bp=holder&&players[holder];const ball=d.minBalls>0&&bp?'<g transform="translate('+(bp[0]+18)+' '+(bp[1]-17)+')"><circle r="10" fill="#f5a037" stroke="#fff" stroke-width="2"/><path d="M-10 0H10M0-10V10M-8-6Q4 0-8 6M8-6Q-4 0 8 6" stroke="#8c4d19" fill="none"/></g>':'';
  const label=phase===0?'<rect x="40" y="38" width="118" height="34" rx="9" fill="#166cab"/><text x="99" y="61" font-size="15" fill="#fff" font-weight="900" text-anchor="middle">STARTS</text>':phase<=total?'<rect x="40" y="38" width="137" height="34" rx="9" fill="#162f45"/><text x="108" y="60" font-size="14" fill="#fff" font-weight="800" text-anchor="middle">SOLIS '+phase+' / '+total+'</text>':'';
- return '<svg class="tm-v4-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+esc(d.title+' - '+(active?.label||'sākuma pozīcija'))+'" viewBox="0 0 560 '+height+'"><defs>'+arrow+'</defs>'+court(sc.full)+marks+line+people+ball+label+'</svg>';
+ return '<svg class="tm-v4-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+esc(d.title+' - '+(active?.label||'sākuma pozīcija'))+'" viewBox="0 0 560 '+height+'"><defs>'+arrow+'</defs>'+court(sc.full,compact)+marks+line+people+ball+label+'</svg>';
 }
 function display(d,step,small){return '<div class="tm-v4-frame'+(small?' tm-v4-mini':'')+'">'+board(d,step,small)+'</div>';}
 const legend='<div class="tm-v4-legend"><span><b class="tm-v4-player">O</b> Uzbrucējs</span><span><b class="tm-v4-player tm-v4-def">X</b> Aizsargs</span><span><b>▲</b> Konuss</span><span><i></i> Kustība</span><span><i class="tm-v4-dash"></i> Dribls</span><span><i class="tm-v4-pass"></i> Piespēle</span></div>';
