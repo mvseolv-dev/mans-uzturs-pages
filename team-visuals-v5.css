@@ -1,0 +1,43 @@
+/* Coachboard v5 - clean coaching diagram, not decorative game posters */
+.tm-app .tm-v5-main{display:grid;gap:12px;min-width:0}
+.tm-app .tm-v5-frame{width:100%;overflow:hidden;padding:10px;border-radius:15px;border:1px solid #486858;background:#102923}
+.tm-app .tm-v5-frame .tm-coach-v5-svg{display:block;width:100%;height:auto}
+.tm-app .tm-v5-mini{padding:3px;border-radius:9px;border-color:#627b66;background:#e7dbbe}
+.tm-app .tm-v5-mini .tm-coach-v5-svg{width:100%;height:125px;object-fit:contain}
+.tm-app .tm-step-thumb{background:#122920}
+.tm-app .tm-step-thumb .tm-v5-mini{padding:0;border:0;border-radius:0}
+.tm-app .tm-drill-preview .tm-v5-frame,.tm-app .tm-plan-diagram .tm-v5-frame{border:0;padding:0}
+.tm-app .tm-v5-status{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:9px 12px;background:#1a2c22;border:1px solid #456148;border-radius:12px;padding:11px 13px}
+.tm-app .tm-v5-status strong{font-size:10px;letter-spacing:.08em;color:#ecffb1;white-space:nowrap}
+.tm-app .tm-v5-status span{color:#d0dfd0;font-size:12px;line-height:1.4}
+.tm-app .tm-v5-legend{display:flex;flex-wrap:wrap;gap:9px 15px;align-items:center;padding:11px 13px;border:1px solid #435a48;background:#1b3023;border-radius:12px}
+.tm-app .tm-v5-legend span{font-size:11px;display:flex;align-items:center;gap:7px;color:#e2efe0;font-weight:650}
+.tm-app .tm-v5-badge{display:grid;place-items:center;width:21px;height:21px;border-radius:50%;font-size:11px;font-weight:900;color:white}
+.tm-app .tm-v5-badge.offense{background:#126bb3}
+.tm-app .tm-v5-badge.defense{background:#c74742}
+.tm-app .tm-v5-cone{font-size:19px;line-height:1;color:#f39c35}
+.tm-app .tm-v5-line{width:27px;border-top:4px solid #1768bb}
+.tm-app .tm-v5-line.dribble{border-top-style:dotted;border-color:#0f7ebc}
+.tm-app .tm-v5-line.pass{border-top-style:dashed;border-color:#7847b2}
+.tm-app .tm-v5-line.shot{border-color:#d58021}
+.tm-app .tm-v5-under{display:grid;gap:9px}
+.tm-app .tm-v5-under>div{display:grid;gap:5px;padding:12px 14px;border:1px solid #3b5740;border-radius:12px;background:#1a2e21}
+.tm-app .tm-v5-under strong{font-size:12px;color:#caff7e}
+.tm-app .tm-v5-under p{font-size:13px;line-height:1.55;margin:0;color:#e4efe1}
+.tm-app .tm-step-tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px}
+.tm-app .tm-step-tabs button{min-height:0;padding:7px 8px;gap:6px;justify-content:flex-start}
+.tm-app .tm-step-tabs button b{font-size:11px;line-height:1.35}
+.tm-app .tm-step-tabs button .tm-step-thumb{min-height:105px}
+.tm-app .tm-step-tabs button .tm-v5-mini svg{max-height:130px}
+.tm-app .tm-large-diagram{padding:11px}
+@media(max-width:600px){
+ .tm-app .tm-step-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .tm-app .tm-v5-frame{padding:5px}
+ .tm-app .tm-v5-status{align-items:flex-start}
+ .tm-app .tm-v5-under p{font-size:12px}
+}
+@media print{
+ .tm-app .tm-v5-frame{background:white;border:1px solid #777}
+ .tm-app .tm-v5-under>div,.tm-app .tm-v5-status{background:white;color:black}
+ .tm-app .tm-v5-under p,.tm-app .tm-v5-status span{color:#222}
+}
