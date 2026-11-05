@@ -157,15 +157,15 @@ function tmDetail(){
  if(!d){tmFocusDrill=null;return tmLibrary()}
  const steps=tmStepInfo(d),idx=Math.max(0,Math.min(2,tmGuideStep)),step=steps[idx];
  const diff=tmFriendlyTitle(d),terms=tmGlossaryTermsFor(d);
- const stepButtons=steps.map((st,i)=>'<button type="button" data-tm="step" data-index="'+i+'" aria-pressed="'+(i===idx)+'" class="'+(i===idx?'active':'')+'"><span>'+String(i+1).padStart(2,'0')+'</span>'+st.title+'</button>').join('');
+ const stepButtons=steps.map((st,i)=>'<button type="button" data-tm="step" data-index="'+i+'" aria-pressed="'+(i===idx)+'" class="'+(i===idx?'active':'')+'"><span>'+String(i+1).padStart(2,'0')+'</span><div class="tm-step-thumb">'+tmCourt(d.diagram,true,{drill:d,step:i})+'</div><b>'+safe(st.title)+'</b></button>').join('');
  const roles=tmRoleLabels(d).map(x=>'<span>'+safe(x)+'</span>').join('');
  const related=terms.length?'<div class="tm-inline-glossary"><div class="tm-section-title"><span>BASKETBOLA TERMINI</span><h2>Ko tie nozīmē?</h2></div>'+terms.map(([word,lat,explain])=>'<div><strong>'+safe(word)+' <span>= '+safe(lat)+'</span></strong><p>'+safe(explain)+'</p></div>').join('')+'<button type="button" data-tm="open-terms">Atvērt visu terminu vārdnīcu ↗</button></div>':'';
  return '<div class="tm-detail"><button data-tm="back" class="tm-back">‹ Atpakaļ uz treniņiem</button>'+
  '<div class="tm-detail-title"><span>'+tmCat(d.category)+' · '+TEAM_LEVELS[d.intensity]+'</span><h1>'+safe(diff)+'</h1>'+
  (diff!==d.title?'<div class="tm-original-term">Oriģinālais nosaukums: '+safe(d.title)+'</div>':'')+
  '<p>'+d.minPlayers+'+ spēlētāji · '+d.minutes+' min · '+d.minBalls+' bumbas</p></div>'+
- '<div class="tm-step-studio"><div class="tm-section-title"><span>VIZUĀLĀ PAMĀCĪBA</span><h2>Izpilde pa soļiem</h2><p>Izvēlies soli un izlasi, kas jādara katram spēlētājam.</p></div>'+
- '<div class="tm-step-tabs">'+stepButtons+'</div>'+
+ '<div class="tm-step-studio"><div class="tm-section-title"><span>VIZUĀLĀ PAMĀCĪBA</span><h2>Izpilde pa soļiem</h2><p>Trīs atsevišķi kadri: sākuma vietas, pirmā darbība un turpinājums. Spied uz kadra, lai apskatītu to lielāku.</p></div>'+
+ '<div class="tm-step-tabs" aria-label="Trīs ilustrēti izpildes posmi">'+stepButtons+'</div>'+
  '<div class="tm-large-diagram">'+tmCourt(d.diagram,false,{drill:d,step:idx})+tmLegend()+'</div>'+
  '<div class="tm-step-explain"><span>'+step.label+'</span><h3>'+step.title+'</h3><p>'+safe(step.text)+'</p>'+
  '<div class="tm-role-list">'+roles+'</div>'+(idx===0?'':'<small>'+safe(step.extra)+'</small>')+
