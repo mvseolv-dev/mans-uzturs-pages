@@ -48,23 +48,111 @@ function tmScene(kind){
  };
  return extra[kind]||t[kind]||t.spot;
 }
+
+/* Tris secigi kadri: nostasanas, galvena darbiba, noslegums. */
+function tmPathEnds(path){
+ const m=String(path).match(/^M\s*(-?\d+(?:\.\d+)?)\s*[ ,]\s*(-?\d+(?:\.\d+)?)/i);
+ const nums=(String(path).match(/-?\d+(?:\.\d+)?/g)||[]).map(Number);
+ return {start:m?[Number(m[1]),Number(m[2])]:[185,180],end:nums.length>=2?nums.slice(-2):[185,180]};
+}
+function tmStoryboard(scene,d,diagram){
+ const kind=String(diagram||"");
+ const dribble=!!d&&d.minBalls>0&&(d.category==="handle"||["dribble","cones","pullup","drive"].includes(kind));
+ const byType={
+  run:(scene.run||[]).map(path=>({type:dribble?"dribble":"run",path})),
+  pass:(scene.pass||[]).map(path=>({type:"pass",path})),
+  pass2:(scene.pass2||[]).map(path=>({type:"pass",path})),
+  shot:(scene.shot||[]).map(path=>({type:"shot",path})),
+  def:(scene.def||[]).map(path=>({type:"def",path}))
+ };
+ if(["triangle","givego","weave","diamond"].includes(kind)&&byType.pass.length>1){
+  return [byType.pass.slice(0,1),[...byType.run,...byType.pass.slice(1),...byType.shot,...byType.def,...byType.pass2]];
+ }
+ if(kind==="drivekick"){
+  return [[...byType.run], [...byType.pass,...byType.shot,...byType.def,...byType.pass2]];
+ }
+ const passFirst=["shootpass","pairs","relocate","curl","cut","fourout","threeout","fourvfour","fivevfive","handoff","handoffbare","diamond","triangle","weave","outlet"].includes(kind);
+ const defenseFirst=["defslide","closeout","boxout"].includes(kind);
+ const order=defenseFirst?["def","run","pass","shot","pass2"]:passFirst?["pass","run","shot","def","pass2"]:["run","pass","shot","def","pass2"];
+ let groups=order.map(k=>byType[k]).filter(a=>a.length);
+ if(!groups.length)return [[],[]];
+ if(groups.length===1&&groups[0].length>1){
+  return [groups[0].slice(0,1),groups[0].slice(1)];
+ }
+ if(groups.length===1)return [groups[0],[]];
+ return [groups[0],groups.slice(1).flat()];
+}
+function tmShiftPlayers(players,actions,type){
+ const moved=players.map(p=>[...p]),used=new Set();
+ for(const action of actions){
+  if(type==="offense"&&!["run","dribble"].includes(action.type))continue;
+  if(type==="defense"&&action.type!=="def")continue;
+  const ends=tmPathEnds(action.path);
+  let index=-1,dist=42;
+  moved.forEach((p,i)=>{
+   if(used.has(i))return;
+   const dd=Math.hypot(p[0]-ends.start[0],p[1]-ends.start[1]);
+   if(dd<dist){dist=dd;index=i;}
+  });
+  if(index>=0){
+   moved[index][0]=Math.max(40,Math.min(330,ends.end[0]));
+   moved[index][1]=Math.max(55,Math.min(251,ends.end[1]));
+   used.add(index);
+  }
+ }
+ return moved;
+}
+function tmBallPosition(scene,actions,step,hasBall){
+ if(!hasBall)return null;
+ const all=[...(scene.o||[])];
+ const paths=[...(scene.pass||[]),...(scene.shot||[]),...(scene.run||[])];
+ const first=tmPathEnds(paths[0]||"M185 160 L185 160").start;
+ let ball=all.length?all.reduce((best,p)=>Math.hypot(p[0]-first[0],p[1]-first[1])<Math.hypot(best[0]-first[0],best[1]-first[1])?p:best,all[0]).slice(0,2):first;
+ if(step===0)return ball;
+ for(const a of actions){
+  if(["pass","shot","dribble"].includes(a.type))ball=tmPathEnds(a.path).end;
+ }
+ return ball;
+}
+let tmCourtNumber=0;
 function tmCourt(diagram,small=false,guide=null){
- const sc=guide?.drill?tmRoleScene(guide.drill):tmScene(diagram),step=guide?.step??-1,safePath=str=>String(str).replace(/"/g,"&quot;");
- const drawPaths=(lines,type,marker)=> (lines||[]).map(path=>'<path d="'+safePath(path)+'" fill="none" class="tm-route tm-'+type+'"'+(marker?' marker-end="url(#tm-'+type+'-arrow)"':'')+'/>').join('');
- const players=(arr,type)=>(arr||[]).map(([x,y,n])=>'<g class="tm-person tm-'+type+'"><circle cx="'+x+'" cy="'+y+'" r="'+(small?12:14)+'"/><text x="'+x+'" y="'+(y+4)+'" text-anchor="middle">'+(type==='defense'?'X':'')+n+'</text></g>').join('');
- const cones=(sc.cones||[]).map(([x,y])=>'<path d="M'+x+' '+(y-7)+' l7 13 h-14z" fill="#ffc884" stroke="#322d1c" stroke-width="1.2"/>').join('');
- const rings=(sc.screens||[]).map(([x,y])=>'<circle cx="'+x+'" cy="'+y+'" r="21" fill="none" stroke="#ffc884" stroke-dasharray="5 3" stroke-width="2"/>').join('');
- return '<svg class="tm-court-svg '+(small?'tm-court-mini':'')+'" viewBox="0 0 370 289" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Puslaukuma shēma: zaļie O ir uzbrucēji, oranžie X ir aizsargi; līnijas rāda kustību un piespēles">'+
- '<defs><marker id="tm-run-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6" fill="none" stroke="#c7fa39" stroke-width="1.2"/></marker>'+
- '<marker id="tm-pass-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6" fill="none" stroke="#f7f5e7" stroke-width="1.2"/></marker>'+
- '<marker id="tm-def-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6" fill="none" stroke="#ff9b7e" stroke-width="1.2"/></marker></defs>'+
- '<rect x="23" y="12" width="324" height="268" rx="12" fill="#172720" stroke="#43594a" stroke-width="2"/>'+
- '<g stroke="#53705e" stroke-width="1.5" fill="none"><path d="M42 17V76 M328 17V76 M42 76 A143 143 0 0 0 328 76"/>'+
- '<rect x="139" y="16" width="92" height="113"/><path d="M139 129 A46 46 0 0 0 231 129 M23 268 H347"/>'+
- '<path d="M139 57 H231" stroke="#6e8d73"/><circle cx="185" cy="63" r="10" stroke="#a2c8a0"/><path d="M167 42H203" stroke="#e5f0db" stroke-width="3"/></g>'+
- (step===0?'':step===1?(drawPaths((sc.run||[]).length?sc.run:sc.pass,'run',true)+drawPaths(sc.def,'def',true)):drawPaths(sc.run,'run',true)+drawPaths(sc.pass,'pass',true)+drawPaths(sc.def,'def',true)+drawPaths(sc.shot,'shot',false)+drawPaths(sc.pass2,'pass',true))+cones+rings+
- players(sc.o,'offense')+players(sc.x,'defense')+'<text x="32" y="273" fill="#8cae8f" font-size="10" font-weight="700">PUSLAUKUMS</text></svg>';
+ const d=guide?.drill||null,scene=d?tmRoleScene(d):tmScene(diagram);
+ const step=guide&&Number.isInteger(guide.step)?Math.max(0,Math.min(2,guide.step)):-1;
+ const groups=tmStoryboard(scene,d,diagram);
+ const uid="tmv"+(++tmCourtNumber);
+ const pathSafe=value=>String(value).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+ const active=step===0?[]:step===1?groups[0]:step===2?(groups[1].length?groups[1]:groups[0]):[...groups[0],...groups[1]];
+ const previous=step===2&&groups[1].length?groups[0]:[];
+ const until=step===2?[...groups[0],...groups[1]]:active;
+ const startO=scene.o||[],startX=scene.x||[];
+ const moveO=tmShiftPlayers(startO,until,"offense"),moveX=tmShiftPlayers(startX,until,"defense");
+ const lines=(items,ghost=false)=>items.map(a=>{
+  const cl=a.type;
+  return '<path d="'+pathSafe(a.path)+'" class="tm-route tm-'+cl+(ghost?' tm-route-ghost':'')+'" fill="none"'+(!ghost?' marker-end="url(#'+uid+'-'+(cl==="dribble"?"run":cl)+'-arrow)"':'')+'/>';
+ }).join("");
+ const players=(arr,type,ghost=false)=>(arr||[]).map(([x,y,n])=>'<g class="tm-person tm-'+type+(ghost?' tm-person-ghost':'')+'"><circle cx="'+x+'" cy="'+y+'" r="'+(small?13:15)+'"/><text x="'+x+'" y="'+(y+4)+'" text-anchor="middle">'+(type==="defense"?"X":"O")+pathSafe(n)+'</text></g>').join("");
+ const cones=(scene.cones||[]).map(([x,y],i)=>'<g class="tm-cone"><path d="M'+x+' '+(y-9)+'l9 17h-18z"/><text x="'+x+'" y="'+(y+4)+'" text-anchor="middle">'+(i+1)+'</text></g>').join("");
+ const screens=(scene.screen||scene.screens||[]).map(([x,y])=>'<circle cx="'+x+'" cy="'+y+'" r="24" fill="none" stroke="#ffce80" stroke-dasharray="4 5" stroke-width="2"/>').join("");
+ const ball=tmBallPosition(scene,step===2?[...groups[0],...groups[1]]:active,step,d&&d.minBalls>0);
+ const ballSVG=ball?'<g class="tm-ball" transform="translate('+(ball[0]+17)+' '+(ball[1]-16)+')"><circle r="9"/><path d="M-8 0H8M0-8V8M-6-6Q2 0-6 6M6-6Q-2 0 6 6"/></g>':'';
+ const title=step<0?"":step===0?"01  SĀKUMA VIETAS":step===1?"02  PIRMĀ DARBĪBA":"03  TURPINĀJUMS";
+ const aria=step<0?"Vingrinājuma laukuma shēma":title+". "+(d?.title||"")+"; O - uzbrucējs, X - aizsargs. Katrs kadrs rāda vienu izpildes posmu.";
+ const showGhost=step>0&&(moveO.some((p,i)=>p[0]!==startO[i][0]||p[1]!==startO[i][1])||moveX.some((p,i)=>p[0]!==startX[i][0]||p[1]!==startX[i][1]));
+ const markers=[["run","#c7fa39"],["pass","#f7f5e7"],["def","#ff9b7e"],["shot","#ffcb85"]].map(([name,color])=>'<marker id="'+uid+'-'+name+'-arrow" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7" fill="none" stroke="'+color+'" stroke-width="1.6"/></marker>').join("");
+ const court='<rect x="23" y="12" width="324" height="268" rx="12" fill="#172720" stroke="#43594a" stroke-width="2"/>'+
+ '<g stroke="#53705e" stroke-width="1.5" fill="none"><path d="M42 17V76 M328 17V76 M42 76 A143 143 0 0 0 328 76"/><rect x="139" y="16" width="92" height="113"/><path d="M139 129 A46 46 0 0 0 231 129 M23 268 H347"/><path d="M139 57 H231" stroke="#6e8d73"/><circle cx="185" cy="63" r="10" stroke="#a2c8a0"/><path d="M167 42H203" stroke="#e5f0db" stroke-width="3"/></g>';
+ return '<svg class="tm-court-svg tm-court-v2 '+(small?'tm-court-mini':'')+'" viewBox="0 0 370 289" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+pathSafe(aria)+'"><defs>'+markers+'</defs>'+court+
+ lines(previous,true)+lines(active)+cones+screens+
+ (showGhost?players(startO,"offense",true)+players(startX,"defense",true):"")+
+ players(moveO,"offense")+players(moveX,"defense")+ballSVG+
+ (title?'<rect x="36" y="244" rx="9" width="172" height="26" fill="#0b1712" stroke="#5e8158"/><text x="47" y="262" font-size="11" font-weight="900" fill="#e2ffae">'+title+'</text>':'')+
+ '</svg>';
 }
 function tmLegend(){
- return '<div class="tm-legend"><span><b class="tm-dot offense">O</b> Uzbrucējs</span><span><b class="tm-dot defense">X</b> Aizsargs</span><span><i class="tm-route-key"></i> Kustība</span><span><i class="tm-pass-key"></i> Piespēle</span></div>';
+ return '<div class="tm-legend" aria-label="Shēmas apzīmējumi">'+
+ '<span><b class="tm-dot offense">O</b> Uzbrucējs</span><span><b class="tm-dot defense">X</b> Aizsargs</span>'+
+ '<span><b class="tm-ball-legend">●</b> Bumba</span>'+
+ '<span><i class="tm-route-key"></i> Skrējiens</span><span><i class="tm-dribble-key"></i> Dribls</span>'+
+ '<span><i class="tm-pass-key"></i> Piespēle</span><span><i class="tm-shot-key"></i> Metiens</span>'+
+ '<span><i class="tm-def-key"></i> Aizsarga kustība</span></div>';
 }
