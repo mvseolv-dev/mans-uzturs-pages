@@ -3,8 +3,8 @@
    by drill setup/action; free-play decisions are not presented as fixed routes. */
 (function(){
 'use strict';
-const PT={basket:[280,89],ft:[280,230],arc:[280,404],lcorner:[70,143],rcorner:[490,143],
- lwing:[110,327],rwing:[450,327],lelbow:[214,228],relbow:[346,228],
+const PT={basket:[280,89],ft:[280,230],arc:[280,317],lcorner:[70,143],rcorner:[490,143],
+ lwing:[110,246],rwing:[450,246],lelbow:[214,228],relbow:[346,228],
  llay:[249,130],rlay:[313,130],under:[280,144],mid:[280,435],
  backL:[135,520],backR:[425,520]};
 const INK={run:'#1571bf',dribble:'#0877b4',pass:'#7256b6',shoot:'#d9871d',def:'#d34e44',screen:'#ad791f'};
@@ -27,7 +27,7 @@ const scene=(drill)=>{
     event('dribble','2. Apkārt konusam 0, otrais lay-up','Apskrien 0 un veic caurgājienu no otras puses.','O1','rlay',{path:'M249 130 C170 220 206 286 280 283 C360 280 376 182 313 130',finish:true}),
     event('run','3. Kreisais stūris, metiens','Pārvietojies pie 3 konusa un met.','O1','lcorner',{path:'M313 130 Q175 105 70 143',finish:true}),
     event('run','4. Gar gala līniju no 3 uz 2','No kreisā stūra uz labo skrien pa gala līniju, tad met.','O1','rcorner',{path:'M70 143 C172 118 388 118 490 143',finish:true}),
-    event('run','5. Metiens no loka augšas','No 2 dodies pie 1 un met pēdējo metienu.','O1','arc',{path:'M490 143 Q444 350 280 404',finish:true}));
+    event('run','5. Metiens no loka augšas','No 2 dodies pie 1 un met pēdējo metienu.','O1','arc',{path:'M490 143 Q444 320 280 317',finish:true}));
   return s;
  }
  // Warm-up descriptions require their own physical setup rather than a generic court.
