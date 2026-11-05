@@ -156,3 +156,37 @@ function tmLegend(){
  '<span><i class="tm-pass-key"></i> Piespēle</span><span><i class="tm-shot-key"></i> Metiens</span>'+
  '<span><i class="tm-def-key"></i> Aizsarga kustība</span></div>';
 }
+
+/* Basketball illustration atlas: generated images with distinct tactic stages. */
+function tmVisualScene(drill,stage=1){
+ const k=drill?.diagram||"",c=drill?.category||"";
+ if(["pnrbare","pnr","pnrgame"].includes(k))return [
+  {n:0,label:"Sākuma pozīcija",alt:"Uzbrucējs ar bumbu, partneris un aizsargi aizsega sākumā"},
+  {n:1,label:"Aizsegs un dribls",alt:"Uzbrucējs driblē gar partnera aizsegu"},
+  {n:2,label:"Uzbrukuma turpinājums",alt:"Basketbolists izpilda metienu pēc aizsega"}
+ ][Math.max(0,Math.min(2,stage))];
+ if(c==="shoot")return {n:2,label:"Metiena piemērs",alt:"Basketbolists izpilda metienu pāri aizsargam"};
+ if(c==="handle")return {n:3,label:"Dribla piemērs",alt:"Basketbolists driblē zemā stājā pret pretspēlētāju"};
+ if(c==="screen")return {n:4,label:"Sadarbības piemērs",alt:"Divi basketbolisti veido sadarbību ar aizsegu"};
+ if(c==="small")return {n:3,label:"Uzbrukuma piemērs",alt:"Uzbrucējs ar bumbu cenšas apiet pretspēlētāju"};
+ if(c==="def"&&["onevone","twovtwo","threevthree","fourvfour","fivevfive"].includes(k))return {n:4,label:"Aizsardzības piemērs",alt:"Basketbolisti viens pret otru spēles situācijā"};
+ if(c==="finish"&&["drive","finish"].includes(k))return {n:3,label:"Caurgājiena piemērs",alt:"Uzbrucējs ar driblu dodas garām pretspēlētājam"};
+ return null;
+}
+function tmVisualImage(v,small=false){
+ if(!v)return "";
+ return '<div class="tm-pro-photo tm-photo-'+v.n+(small?' tm-pro-mini':'')+'" role="img" aria-label="'+String(v.alt).replace(/"/g,"&quot;")+'"></div>';
+}
+function tmCoachPreview(drill){
+ return tmVisualImage(tmVisualScene(drill,1),true)||tmCourt(drill.diagram,true,{drill,step:1});
+}
+function tmCoachStepThumb(drill,stage){
+ return ["pnrbare","pnr","pnrgame"].includes(drill?.diagram)?tmVisualImage(tmVisualScene(drill,stage),true):tmCourt(drill.diagram,true,{drill,step:stage});
+}
+function tmCoachMain(drill,stage){
+ const v=tmVisualScene(drill,stage);
+ if(!v)return tmCourt(drill.diagram,false,{drill,step:stage})+tmLegend();
+ return '<div class="tm-coach-presentation">'+tmVisualImage(v)+
+ '<div class="tm-coach-info"><span>VIZUĀLS TEHNIKAS PIEMĒRS</span><strong>'+v.label+'</strong><p>Skaties spēlētāju darbību. Precīzu vingrinājuma izpildi lasi zem attēla.</p></div></div>'+
+ '<details class="tm-coach-map"><summary>Parādīt laukuma izvietojuma shēmu</summary><div>'+tmCourt(drill.diagram,false,{drill,step:stage})+tmLegend()+'</div></details>';
+}
