@@ -165,7 +165,7 @@ function tmDetail(){
  (diff!==d.title?'<div class="tm-original-term">Oriģinālais nosaukums: '+safe(d.title)+'</div>':'')+
  '<p>'+d.minPlayers+'+ spēlētāji · '+d.minutes+' min · '+d.minBalls+' bumbas</p></div>'+
  '<div class="tm-step-studio"><div class="tm-section-title"><span>VIZUĀLĀ PAMĀCĪBA</span><h2>Izpilde pa soļiem</h2><p>Izvēlies posmu, apskati ilustrāciju un izpildi zem tās aprakstīto darbību.</p></div>'+
- '<div class="tm-step-tabs" aria-label="Trīs ilustrēti izpildes posmi">'+stepButtons+'</div>'+
+ '<div class="tm-step-tabs" aria-label="Vingrinājuma izpildes posmi">'+stepButtons+'</div>'+
  '<div class="tm-large-diagram">'+tmCoachMain(d,idx)+'</div>'+
  '<div class="tm-step-explain"><span>'+step.label+'</span><h3>'+step.title+'</h3><p>'+safe(step.text)+'</p>'+
  '<div class="tm-role-list">'+roles+'</div>'+(idx===0?'':'<small>'+safe(step.extra)+'</small>')+
