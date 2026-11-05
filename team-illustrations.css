@@ -1,0 +1,31 @@
+/* MANS UZTURS ACTIVE: Professional basketball visual guides v3 */
+.tm-app .tm-court-pro{display:block;width:100%;height:auto;filter:none}
+.tm-app .tm-drill-preview,.tm-app .tm-plan-diagram{background:#f1eee4}
+.tm-app .tm-large-diagram{background:#172b25;padding:10px}
+.tm-app .tm-large-diagram .tm-court-svg{width:100%;max-height:520px}
+.tm-app .tm-step-tabs{display:flex!important;grid-template-columns:none!important;gap:10px;overflow-x:auto;scrollbar-width:thin;scroll-snap-type:x proximity;padding:2px 2px 12px}
+.tm-app .tm-step-tabs button{flex:0 0 148px;min-height:0;min-width:135px;display:flex;flex-direction:column;align-items:stretch;gap:8px;padding:9px;text-align:left;scroll-snap-align:start;border-radius:13px;background:#26382c;color:#d6e4d3;border:1px solid #5a705e}
+.tm-app .tm-step-tabs button.active{background:#d4fb6b;border-color:#d4fb6b;color:#142314;box-shadow:inset 0 0 0 1px #ddff80}
+.tm-app .tm-step-tabs button span{height:25px;width:25px;flex:0 0 25px;margin:0;display:grid;place-items:center;background:#45614b;color:#e5f9cd;font-size:10px}
+.tm-app .tm-step-tabs button.active span{background:#214529;color:#e6ffbf}
+.tm-app .tm-step-tabs button b{font-size:12px;line-height:1.32;letter-spacing:0;font-weight:800;min-height:31px;overflow-wrap:normal}
+.tm-app .tm-step-thumb{background:#f1eee4;border-radius:10px;border:1px solid #a7b4a3;overflow:hidden}
+.tm-app .tm-step-thumb .tm-court-svg{display:block;width:100%;height:auto}
+.tm-app .tm-step-tabs button.active .tm-step-thumb{border-color:#234e2e;box-shadow:0 0 0 2px #234e2e}
+.tm-app .tm-pro-legend{display:flex!important;flex-wrap:wrap;gap:8px 15px;padding:12px 8px 6px;border-color:#52614d}
+.tm-app .tm-pro-legend span{display:flex;align-items:center;gap:5px;white-space:nowrap;color:#dce7d9;font-size:11px}
+.tm-app .tm-pro-legend .tm-dot{color:#fff;width:20px;height:20px;font-weight:900}
+.tm-app .tm-pro-legend .tm-dot.offense{background:#125e70}
+.tm-app .tm-pro-legend .tm-dot.defense{background:#b94c35}
+.tm-app .tm-pro-legend .tm-vball-icon{display:grid;place-items:center;background:#f3a43e;border:1px solid #814916;color:#754014;width:20px;height:20px;border-radius:50%;font-size:12px}
+.tm-app .tm-pro-legend .tm-vline{width:20px;border-top:3px solid;display:inline-block}
+.tm-app .tm-pro-legend .tm-vrun{border-color:#16936d}
+.tm-app .tm-pro-legend .tm-vdribble{border-color:#0685c3;border-top-style:dotted}
+.tm-app .tm-pro-legend .tm-vpass{border-color:#685ac3;border-top-style:dashed}
+.tm-app .tm-pro-legend .tm-vshot{border-color:#d68816;border-top-style:dashed}
+.tm-app .tm-pro-legend .tm-vdef{border-color:#d5573f;border-top-style:dashed}
+.tm-app .tm-step-explain{border-color:#63805f;background:#263b2b}
+.tm-app .tm-step-explain h3{font-size:clamp(17px,3vw,23px);line-height:1.22}
+.tm-app .tm-step-explain p{font-size:14px;line-height:1.65}
+.tm-app .tm-step-actions button{min-height:45px}
+@media(max-width:540px){.tm-app .tm-step-tabs button{flex-basis:128px;min-width:125px;padding:7px;gap:6px}.tm-app .tm-step-tabs button b{font-size:11px;min-height:29px}.tm-app .tm-pro-legend{gap:7px 10px}.tm-app .tm-pro-legend span{font-size:10px}}
