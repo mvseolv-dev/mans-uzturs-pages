@@ -300,3 +300,26 @@ body:has(.tm-app) .tm-plan-copy small{color:#333}
  .tm-legend{gap:8px}
  .tm-legend span{font-size:10px}
 }
+
+
+/* Generated basketball coaching images v28 */
+.tm-pro-photo{display:block;width:100%;aspect-ratio:300/187;background-image:url("assets/coaching-atlas.svg");background-size:300% 200%;background-repeat:no-repeat;background-color:#172a1f;border-radius:14px}
+.tm-photo-0{background-position:0% 0%}.tm-photo-1{background-position:50% 0%}.tm-photo-2{background-position:100% 0%}
+.tm-photo-3{background-position:0% 100%}.tm-photo-4{background-position:50% 100%}.tm-photo-5{background-position:100% 100%}
+.tm-pro-mini{aspect-ratio:1.6;border-radius:9px}
+.tm-drill-preview:has(.tm-pro-photo),.tm-plan-diagram:has(.tm-pro-photo){background:#192b20}
+.tm-drill-preview .tm-pro-mini,.tm-plan-diagram .tm-pro-mini{height:100%;min-height:94px}
+.tm-step-thumb .tm-pro-mini{height:auto;min-height:0}
+.tm-coach-presentation{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(160px,1fr);gap:12px}
+.tm-coach-presentation>.tm-pro-photo{min-width:0;align-self:stretch}
+.tm-coach-info{background:linear-gradient(145deg,#273f2c,#14261c);border:1px solid #557252;border-radius:14px;display:flex;flex-direction:column;justify-content:center;gap:9px;padding:17px}
+.tm-coach-info span{font-weight:900;letter-spacing:.1em;font-size:10px;color:#c7fa39}
+.tm-coach-info strong{font-size:clamp(17px,2.3vw,24px);line-height:1.2;color:#fff}
+.tm-coach-info p{font-size:12px;line-height:1.6;color:#cddfcb;margin:0}
+.tm-coach-map{background:#16271c;border:1px solid #49654a;border-radius:13px;margin-top:12px;overflow:hidden}
+.tm-coach-map summary{display:flex;align-items:center;justify-content:space-between;cursor:pointer;list-style:none;padding:13px 15px;font-size:12px;font-weight:800;color:#e2f3dc}
+.tm-coach-map summary:after{content:"+";font-size:18px;color:#c7fa39}.tm-coach-map[open] summary:after{content:"-"}
+.tm-coach-map summary::-webkit-details-marker{display:none}
+.tm-coach-map>div{border-top:1px solid #415b43;padding:8px}
+.tm-coach-map .tm-legend{display:flex!important}
+@media(max-width:680px){.tm-coach-presentation{grid-template-columns:1fr}.tm-coach-info{padding:13px}.tm-coach-info strong{font-size:18px}}
