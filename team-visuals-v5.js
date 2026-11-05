@@ -38,6 +38,113 @@ const scene=d=>{
     who:'O1',to:P.arc,path:'M490 143 Q435 310 280 317',finish:true}
   ];
  }
+
+ // Correct athlete counts and real roles for workouts previously collapsed by a generic category renderer.
+ const A=(id,pos)=>({id,pos:typeof pos==='string'?core.at(pos):pos});
+ const E=(type,label,who,to=null,extra={})=>({type,label,text:label,who,to,...extra});
+ const setup=(people,events,marks=[])=>{base.people=people;base.events=events;base.marks=marks;base.approx=true;return base;};
+ if(['s12','q036'].includes(d.id)){
+  return setup([A('O1','arc'),A('O2','rcorner'),A('O3','under')],[
+   E('dribble','O1 caurgājiens līdz soda laukumam','O1','rlay'),
+   E('pass','O1 piespēlē stūrī esošajam O2','O1',null,{receiver:'O2'}),
+   E('shoot','O2 met no stūra','O2'),
+   E('practice','O3 savāc atlēkušo bumbu, mainiet lomas','O3')
+  ]);
+ }
+ if(d.id==='s08'){
+  return setup([A('O1','rwing'),A('O2','arc')],[
+   E('pass','O2 piespēlē O1','O2',null,{receiver:'O1'}),
+   E('live','O1 lasa brīvo vietu: met vai veic vienu driblu garām','O1')
+  ]);
+ }
+ if(d.id==='q008'){
+  return setup([A('O1','arc'),A('O2','lwing')],[
+   E('pass','O2 piespēlē metējam O1','O2',null,{receiver:'O1'}),
+   E('shoot','O1 nostabilizē pēdas un met bez dribla','O1'),
+   E('practice','Pēc astoņiem metieniem mainiet lomas','O1')
+  ]);
+ }
+ if(d.id==='q029'){
+  return setup([A('O1','rwing'),A('X1',[392,216])],[
+   E('dribble','O1 apiet pasīvo aizsargu ar driblu','O1',[335,178]),
+   E('shoot','O1 met no brīvās pozīcijas','O1')
+  ]);
+ }
+ if(['q045','q046','q048'].includes(d.id)){
+  return setup([A('O1','rwing'),A('X1',[419,230])],[
+   E('live','Uzbrucējs un aizsargs izspēlē aprakstīto situāciju','O1')
+  ]);
+ }
+ if(d.id==='q050'){
+  return setup([A('O1','arc'),A('O2','lwing'),A('X1',[279,269]),A('X2',[151,235])],[
+   E('live','Divi uzbrucēji veido metienu 8 sekundēs pret diviem aizsargiem','O1'),
+   E('practice','Pēc uzbrukuma mainiet uzbrukuma un aizsardzības lomas','O1')
+  ]);
+ }
+ if(d.id==='q053'){
+  return setup([A('O1','lwing'),A('O2',[160,168]),A('O3','rwing'),A('O4',[395,168])],[
+   E('shoot','Pirmais pāris: O1 met, O2 vāc bumbu','O1'),
+   E('shoot','Otrais pāris: O3 met, O4 vāc bumbu','O3'),
+   E('practice','Pēc 10 metieniem pāros mainiet metēju un bumbas vācēju','O1')
+  ]);
+ }
+ if(d.id==='q057'){
+  return setup([A('O1','lwing'),A('O2',[160,170]),A('O3','rwing'),A('O4',[400,170])],
+   [E('practice','Divi pāri sāk vienādos četros metienu punktos','O1'),
+    ...[1,2,3,4].map(i=>E('shoot','Abi pāri cenšas trāpīt 3 reizes no '+i+'. punkta','O1'))],
+   [P.lcorner,P.lwing,P.rwing,P.rcorner].map((pos,i)=>({n:String(i+1),pos,kind:'point'})));
+ }
+ if(d.id==='p03'){
+  return setup([A('O1','lwing'),A('O2','rwing'),A('X1','ft')],[
+   E('pass','O1 piespēlē O2, lai saglabātu bumbu','O1',null,{receiver:'O2'}),
+   E('live','Aizsargs mēģina pārķert piespēles, uzbrucēji meklē brīvu leņķi 20 sekundes','X1')
+  ]);
+ }
+ if(d.id==='p07'){
+  return setup([A('O1',[130,490]),A('O2',[130,340]),A('O3',[430,490]),A('O4',[430,340])],[
+   E('pass','Kreisais pāris piespēlē kustībā','O1',null,{receiver:'O2'}),
+   E('pass','Labais pāris piespēlē kustībā','O3',null,{receiver:'O4'}),
+   E('practice','Abi pāri turpina kustību pa saviem koridoriem','O1')
+  ]);
+ }
+ if(d.id==='p09'){
+  return setup([A('O1','lwing'),A('X1','ft')],[
+   E('practice','O1 ar plecu un skatienu māna vienā virzienā','O1'),
+   E('live','O1 izvēlas brīvo piespēles virzienu pret partnera izstieptajām rokām','O1')
+  ]);
+ }
+ if(d.id==='r04'||d.id==='r05'){
+  const n=d.id==='r04'?2:3;
+  const z=['llay','rlay','arc'];
+  const people=[];
+  for(let i=0;i<n;i++){const p=core.at(z[i]);people.push(A('O'+(i+1),p),A('X'+(i+1),[p[0]+18,p[1]+42]));}
+  return setup(people,[
+   E('rebound','Visi pāri ieņem atlēkušās bumbas pozīcijas','O1'),
+   E('live',d.id==='r04'?'Cīnieties 2 pret 2 par atlēkušo bumbu':'3 pret 3 uzbrukums turpinās tikai pēc savas atlēkušās','O1')
+  ]);
+ }
+ if(d.id==='a06'){
+  return setup([A('O1',[280,43]),A('O2','llay'),A('O3','rwing')],[
+   E('screen','O2 nostājas nekustīgā aizsegā','O2',[369,240]),
+   E('run','O3 izskrien līdz metiena vietai','O3',[424,286]),
+   E('pass','O1 ievada bumbu O3','O1',null,{receiver:'O3'})
+  ]);
+ }
+ if(d.id==='a07'){
+  const places=['arc','lwing','rwing','lcorner'];
+  const p=[];
+  places.forEach((where,i)=>{const pt=core.at(where);p.push(A('O'+(i+1),pt),A('X'+(i+1),[pt[0]+(pt[0]<280?19:-19),pt[1]-40]));});
+  return setup(p,[
+   E('pass','O1 piespēlē O2','O1',null,{receiver:'O2'}),
+   E('screen','O3 veido nekustīgu aizsegu bez bumbas','O3',[387,232]),
+   E('live','Pēc katras nākamās piespēles atkārtojiet aizsegu bez bumbas','O1')
+  ]);
+ }
+ if(d.id==='q017'){
+  const a=base.events.find(e=>e.type==='run');
+  if(a)a.path='M280 144 C348 122 433 120 490 143';
+ }
+
  // No fixed path for a live read-and-react drill. Keep setup and options visible instead.
  if(/^(g|d|a)/.test(d.id)&&base.events.some(e=>e.type==='live'))base.approx=true;
  return base;
