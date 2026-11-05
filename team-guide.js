@@ -30,6 +30,51 @@ function tmRoleLabels(d){
  return ["O1, O2, O3... - dalībnieki","Pēc sērijas mainiet lomas"];
 }
 function tmStepInfo(d){
+ const specific={
+  c01:[
+   "O1 ar bumbu nostājas virs trīspunktu līnijas. O2 nostājas blakus O1 aizsargam, sagatavojoties aizsegam.",
+   "O2 apstājas stabilā stājā un uzliek aizsegu. O1 ar driblu iet cieši gar O2 plecu, izmantojot aizsegu.",
+   "O2 pēc aizsega pagriežas pret grozu un skrien uz stīpu. O1 izvēlas metienu vai piespēli O2."
+  ],
+  f08:[
+   "O1 sāk ar bumbu perimetrā. O2 ieņem stabilu pozīciju pie iedomātā aizsarga.",
+   "O2 uzliek aizsegu, O1 driblē gar to. Pēc kontakta ar aizsega pozīciju O2 pagriežas uz grozu.",
+   "O1 piespēlē skrienošajam O2. O2 saņem bumbu kustībā un pabeidz uzbrukumu pie groza."
+  ],
+  c02:[
+   "O1 ir ar bumbu perimetrā. O2 nostājas blakus aizsargam aizsega uzlikšanai.",
+   "O2 apstājas un uzliek aizsegu. O1 driblē cieši gar aizsegu, piesaistot aizsarga uzmanību.",
+   "O2 nevis skrien uz grozu, bet atkāpjas brīvā metiena pozīcijā (pop). O1 piespēlē O2, kurš met."
+  ],
+  c03:[
+   "O1 kontrolē bumbu. O2 uzliek aizsegu, kamēr garais aizsargs X2 turas tuvāk grozam (drop).",
+   "O1 driblē gar O2 aizsegu un vēro, cik dziļi atkāpjas X2.",
+   "Ja X2 atkāpjas dziļi, O1 var mest no brīvās zonas. Ja X2 iznāk priekšā, O1 piespēlē O2, kurš skrien uz grozu."
+  ],
+  c04:[
+   "O1 ir ar bumbu, O2 uzliek aizsegu. Katram uzbrucējam sākumā ir savs aizsargs X1 un X2.",
+   "Pēc aizsega aizsargi apmainās ar sedzamajiem: X2 pārņem O1, bet X1 paliek ar O2.",
+   "O1 novērtē, kuram uzbrucējam ir izdevīgāka pretspēlētāja attiecība, un izvēlas caurgājienu vai piespēli."
+  ],
+  d11:[
+   "X1 sedz driblētāju O1. X2 sedz aizsega licēju O2 un skaļi brīdina par aizsegu.",
+   "Trenējiet divus atšķirīgus variantus: drop gadījumā X2 atkāpjas pie groza; switch gadījumā X1 un X2 apmainās ar sedzamajiem.",
+   "Pēc aizsega aizsargi nosedz bumbu un iespējamo piespēli zem groza, saglabājot savstarpēju komunikāciju."
+  ],
+  c08:[
+   "O1 kontrolē bumbu. O2 uzliek aizsegu viņa aizsargam. O3 sagatavojas aizsegam zem groza.",
+   "O1 driblē gar O2 aizsegu, O2 pagriežas un dodas uz grozu. Tikmēr O3 uzliek aizsegu O2 aizsargam.",
+   "O1 meklē piespēli brīvajam O2 pie groza. Ja aizsardzība to nosedz, izmanto brīvo metienu."
+  ]
+ };
+ if(specific[d.id]){
+  return specific[d.id].map((text,i)=>({
+   label:(i+1)+". SOLIS",
+   title:["Kur nostāties?","Kāda ir kustību secība?","Kā pabeigt sadarbību?"][i],
+   text,
+   extra:i===0?"O - uzbrucēji, X - aizsargi.":i===1?"Aizsega licējam jānostājas stabilā stājā.":"Atkārtojiet no abām pusēm; pēc sērijas mainiet lomas."
+  }));
+ }
  return [
  {label:"1. SOLIS",title:"Kur nostāties?",text:d.setup,extra:tmRoleLabels(d).join(" | ")},
  {label:"2. SOLIS",title:"Kas katram jādara?",text:d.action,extra:"Zaļā līnija - kustība, oranžā - aizsarga pārvietošanās. Shēmā redzams paraugs."},
