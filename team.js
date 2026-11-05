@@ -155,7 +155,7 @@ function tmSaved(){
 function tmDetail(){
  const d=TEAM_BY_ID[tmFocusDrill],s=tmState();
  if(!d){tmFocusDrill=null;return tmLibrary()}
- const steps=tmStepInfo(d),idx=Math.max(0,Math.min(2,tmGuideStep)),step=steps[idx];
+ const steps=tmVisualSteps(d),idx=Math.max(0,Math.min(steps.length-1,tmGuideStep)),step=steps[idx];
  const diff=tmFriendlyTitle(d),terms=tmGlossaryTermsFor(d);
  const stepButtons=steps.map((st,i)=>'<button type="button" data-tm="step" data-index="'+i+'" aria-pressed="'+(i===idx)+'" class="'+(i===idx?'active':'')+'"><span>'+String(i+1).padStart(2,'0')+'</span><div class="tm-step-thumb">'+tmCourt(d.diagram,true,{drill:d,step:i})+'</div><b>'+safe(st.title)+'</b></button>').join('');
  const roles=tmRoleLabels(d).map(x=>'<span>'+safe(x)+'</span>').join('');
@@ -164,14 +164,14 @@ function tmDetail(){
  '<div class="tm-detail-title"><span>'+tmCat(d.category)+' · '+TEAM_LEVELS[d.intensity]+'</span><h1>'+safe(diff)+'</h1>'+
  (diff!==d.title?'<div class="tm-original-term">Oriģinālais nosaukums: '+safe(d.title)+'</div>':'')+
  '<p>'+d.minPlayers+'+ spēlētāji · '+d.minutes+' min · '+d.minBalls+' bumbas</p></div>'+
- '<div class="tm-step-studio"><div class="tm-section-title"><span>VIZUĀLĀ PAMĀCĪBA</span><h2>Izpilde pa soļiem</h2><p>Trīs atsevišķi kadri: sākuma vietas, pirmā darbība un turpinājums. Spied uz kadra, lai apskatītu to lielāku.</p></div>'+
+ '<div class="tm-step-studio"><div class="tm-section-title"><span>VIZUĀLĀ PAMĀCĪBA</span><h2>Izpilde pa soļiem</h2><p>Katrs kadrs rāda vienu vingrinājuma posmu. Nospied uz kadra, lai redzētu precīzu kustību lielā attēlā.</p></div>'+
  '<div class="tm-step-tabs" aria-label="Trīs ilustrēti izpildes posmi">'+stepButtons+'</div>'+
  '<div class="tm-large-diagram">'+tmCourt(d.diagram,false,{drill:d,step:idx})+tmLegend()+'</div>'+
  '<div class="tm-step-explain"><span>'+step.label+'</span><h3>'+step.title+'</h3><p>'+safe(step.text)+'</p>'+
  '<div class="tm-role-list">'+roles+'</div>'+(idx===0?'':'<small>'+safe(step.extra)+'</small>')+
- (idx===2&&d.goal?'<strong class="tm-target">MĒRĶIS: '+safe(d.goal)+'</strong>':'')+
+ (idx===steps.length-1&&d.goal?'<strong class="tm-target">MĒRĶIS: '+safe(d.goal)+'</strong>':'')+
  '</div><div class="tm-step-actions"><button type="button" data-tm="step" data-index="'+Math.max(0,idx-1)+'" '+(idx===0?'disabled':'')+'>← Iepriekšējais</button>'+
- '<span>'+(idx+1)+' / 3</span><button type="button" data-tm="step" data-index="'+Math.min(2,idx+1)+'" '+(idx===2?'disabled':'')+'>Nākamais solis →</button></div></div>'+
+ '<span>'+(idx+1)+' / '+steps.length+'</span><button type="button" data-tm="step" data-index="'+Math.min(steps.length-1,idx+1)+'" '+(idx===steps.length-1?'disabled':'')+'>Nākamais solis →</button></div></div>'+
  '<div class="tm-detail-steps"><div><b>01</b><div><h3>Novietošanās</h3><p>'+safe(d.setup)+'</p></div></div>'+
  '<div><b>02</b><div><h3>Ko darīt</h3><p>'+safe(d.action)+'</p></div></div>'+
  '<div><b>03</b><div><h3>Trenera uzsvars</h3><p>'+safe(d.coach)+'</p></div></div></div>'+
@@ -213,7 +213,7 @@ document.addEventListener('click',async event=>{
  const act=target.dataset.tm,s=tmState(),id=target.dataset.id,idx=Number(target.dataset.index);
  if(act==="tab"){tmTab=target.dataset.value;tmFocusDrill=null;render();return}
  if(act==="open-terms"){tmTab="glossary";tmFocusDrill=null;render();return}
- if(act==="step"){tmGuideStep=Math.max(0,Math.min(2,Number(target.dataset.index)||0));render();return}
+ if(act==="step"){const max=tmFocusDrill&&TEAM_BY_ID[tmFocusDrill]?tmVisualSteps(TEAM_BY_ID[tmFocusDrill]).length-1:2;tmGuideStep=Math.max(0,Math.min(max,Number(target.dataset.index)||0));render();return}
  if(act==="shot-type"){tmShotType=target.dataset.value;render();return}
  if(act==="focus"){const i=s.focus.indexOf(id);if(i>=0)s.focus.splice(i,1);else s.focus.push(id);save();render();return}
  if(act==="category"){tmCategory=target.dataset.value;render();return}
