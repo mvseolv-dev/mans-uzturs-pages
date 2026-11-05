@@ -1,0 +1,23 @@
+/* MANS UZTURS ACTIVE - coach board 4.0 */
+.tm-app .tm-v4-view{display:grid;gap:10px;min-width:0}
+.tm-app .tm-v4-frame{background:#152920;border:1px solid #517154;border-radius:16px;overflow:hidden;padding:8px;min-width:0}
+.tm-app .tm-v4-svg{width:100%;height:auto;display:block}
+.tm-app .tm-v4-mini{padding:1px;border-radius:8px;border-color:#415947}
+.tm-app .tm-step-tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(113px,1fr));gap:8px}
+.tm-app .tm-step-tabs button{padding:8px;min-height:0;display:flex;flex-direction:column;text-align:left;gap:6px}
+.tm-app .tm-step-tabs button b{font-size:11px;line-height:1.4}
+.tm-app .tm-step-thumb{width:100%;min-width:0;overflow:hidden;border:1px solid #4c704c;border-radius:8px}
+.tm-app .tm-step-thumb .tm-v4-frame{border:0;padding:0}
+.tm-app .tm-drill-preview .tm-v4-mini,.tm-app .tm-plan-diagram .tm-v4-mini{padding:1px;border:0}
+.tm-app .tm-v4-legend{display:flex;gap:10px;flex-wrap:wrap;border:1px solid #425e45;border-radius:12px;background:#1b3024;padding:10px}
+.tm-app .tm-v4-legend span{display:flex;align-items:center;gap:5px;color:#dcecd7;font-size:11px;font-weight:750}
+.tm-app .tm-v4-player{background:#1466a3;border-radius:50%;display:inline-grid;place-items:center;width:22px;height:22px;color:#fff;font-style:normal}
+.tm-app .tm-v4-def{background:#d24b3b}
+.tm-app .tm-v4-legend span>b:not(.tm-v4-player){color:#f5a037}
+.tm-app .tm-v4-legend i{width:19px;border-top:3px solid #1571bf}
+.tm-app .tm-v4-legend .tm-v4-dash{border-top:3px dashed #0877b4}
+.tm-app .tm-v4-legend .tm-v4-pass{border-top:3px dashed #7256b6}
+.tm-app .tm-v4-note{padding:12px 13px;margin:0;border:1px solid #405e43;border-radius:10px;background:#1c3023;color:#e0efdd;font-size:13px;line-height:1.55}
+.tm-app .tm-v4-note strong{color:#dbffa0}
+.tm-app .tm-v4-view small{color:#bacdb8;font-size:11px;line-height:1.55;padding:0 3px}
+@media(max-width:550px){.tm-app .tm-step-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.tm-app .tm-step-tabs button{padding:6px}.tm-app .tm-step-tabs button b{font-size:10px}}
