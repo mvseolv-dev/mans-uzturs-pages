@@ -293,6 +293,7 @@ tmCoachMain=function(d,index){
 window.TeamCoachAuditV5={
  drills:()=>TEAM_DRILLS.map(d=>({
   id:d.id,title:d.title,category:d.category,
+  minPlayers:d.minPlayers,people:scene(d).people.length,
   steps:steps(d).length,cones:scene(d).marks.filter(m=>m.kind==='cone').length,
   status:status(d)[0],svgOk:draw(d,0).startsWith('<svg') && draw(d,Math.max(1,scene(d).events.length)).endsWith('</svg>')
  })),
