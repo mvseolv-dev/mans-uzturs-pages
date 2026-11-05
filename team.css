@@ -195,7 +195,7 @@ body:has(.tm-app) .bottom-nav button{font-size:9px}
 @media(max-width:345px){.tm-drill-grid{grid-template-columns:1fr}.tm-drill-preview{aspect-ratio:1.7}.tm-hero h1{font-size:34px}.tm-config-grid{grid-template-columns:1fr}}
 @media print{
 body:has(.tm-app){background:white!important;color:#111!important}
-body:has(.tm-app) :is(.site-header,.bottom-nav,.tm-hero,.tm-tabs,.tm-config,.tm-resource,.tm-plan-actions,.tm-plan-edit,.tm-legend,.tm-footnote){display:none!important}
+body:has(.tm-app) :is(.site-header,.bottom-nav,.tm-hero,.tm-tabs,.tm-config,.tm-resource,.tm-plan-actions,.tm-plan-edit,.tm-footnote){display:none!important}
 body:has(.tm-app) .app-shell{max-width:none;padding:0}
 body:has(.tm-app) .tm-plan-item{break-inside:avoid;border:1px solid #888;background:white;color:#111}
 body:has(.tm-app) :is(.tm-plan-copy strong,.tm-plan-copy span,.tm-draft-head h2){color:#111!important}
@@ -258,4 +258,45 @@ body:has(.tm-app) .tm-plan-copy small{color:#333}
 @media(max-width:355px){
 .tm-step-tabs button{font-size:9px;letter-spacing:-.01em}
 .tm-tabs button{font-size:9px}
+}
+
+
+/* Skaidri, vizuali kadri basketbola vingrinajumiem - v27 */
+.tm-court-v2 .tm-route{stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.tm-court-v2 .tm-route.tm-dribble{stroke:#65d7ff;stroke-dasharray:3 8;stroke-width:4.4}
+.tm-court-v2 .tm-route.tm-run{stroke:#c7fa39}
+.tm-court-v2 .tm-route.tm-pass{stroke:#f7f5e7;stroke-dasharray:8 5}
+.tm-court-v2 .tm-route.tm-shot{stroke:#ffcb85;stroke-dasharray:3 5;stroke-width:3.4}
+.tm-court-v2 .tm-route.tm-def{stroke:#fb997b;stroke-dasharray:5 5}
+.tm-court-v2 .tm-route.tm-route-ghost{opacity:.22;stroke-width:3.1}
+.tm-court-v2 .tm-person.tm-person-ghost{opacity:.22}
+.tm-court-v2 .tm-person circle{stroke-width:2.6}
+.tm-court-v2 .tm-person text{font-weight:900;font-size:10px}
+.tm-court-v2 .tm-ball circle{fill:#f69c3b;stroke:#fff4ca;stroke-width:1.5}
+.tm-court-v2 .tm-ball path{fill:none;stroke:#774215;stroke-width:1.15}
+.tm-court-v2 .tm-cone path{fill:#fcb45c;stroke:#292c17;stroke-width:1.5}
+.tm-court-v2 .tm-cone text{fill:#3a220a;font-size:8px;font-weight:900}
+.tm-legend{display:flex!important;flex-wrap:wrap;gap:10px 13px;align-items:center;padding:12px 10px 7px}
+.tm-legend span{white-space:nowrap;color:#d0e2c8;font-size:11px}
+.tm-legend .tm-ball-legend{display:grid;place-items:center;border-radius:50%;width:18px;height:18px;background:#f69c3b;color:#774215}
+.tm-legend .tm-dribble-key{width:22px;border-top:3px dotted #65d7ff}
+.tm-legend .tm-shot-key{width:22px;border-top:3px dashed #ffcb85}
+.tm-legend .tm-def-key{width:22px;border-top:3px dashed #fb997b}
+.tm-step-tabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.tm-step-tabs button{min-height:0;align-items:stretch;display:flex;flex-direction:column;text-align:left;padding:10px 8px;gap:7px}
+.tm-step-tabs button>span{flex:0 0 26px;width:26px;height:26px}
+.tm-step-tabs button b{font-size:11px;line-height:1.35;font-weight:800}
+.tm-step-thumb{width:100%;min-width:0;border-radius:10px;background:#14221a;overflow:hidden;border:1px solid #455b47}
+.tm-step-thumb .tm-court-svg{display:block;width:100%;height:auto}
+.tm-step-tabs button.active .tm-step-thumb{border-color:#2b5423;box-shadow:0 0 0 2px #2b5423}
+.tm-step-studio>.tm-large-diagram{padding:11px}
+.tm-step-studio>.tm-large-diagram .tm-court-svg{max-height:none}
+@media(max-width:540px){
+ .tm-step-tabs{gap:5px}
+ .tm-step-tabs button{padding:7px 4px;gap:6px}
+ .tm-step-tabs button b{font-size:10px}
+ .tm-step-tabs button>span{width:23px;height:23px;flex-basis:23px}
+ .tm-step-thumb{border-radius:6px}
+ .tm-legend{gap:8px}
+ .tm-legend span{font-size:10px}
 }
