@@ -13,7 +13,7 @@ let serial=0;
 const scene=d=>{
  const base=core.scene(d);
  // One player starts at the free throw lane side, not on cone 0.
- // Court: y=19 is the far baseline, the rim is y=89, and the arc top is y~402.
+ // Court: y=19 is the far baseline, the rim is y=89, and the arc top is y~309.
  if(d.id==='s54321'){
   const s=base;
   s.approx=false;
@@ -35,7 +35,7 @@ const scene=d=>{
     who:'O1',to:P.rcorner,path:'M70 143 C177 119 383 119 490 143',finish:true},
    {type:'run',label:'Metiens no 1 loka augšā',
     text:'Pēc metiena no labā stūra pārvietojies pie 1 konusa trīspunktu loka augšā un met.',
-    who:'O1',to:P.arc,path:'M490 143 Q435 363 280 404',finish:true}
+    who:'O1',to:P.arc,path:'M490 143 Q435 310 280 317',finish:true}
   ];
  }
  // No fixed path for a live read-and-react drill. Keep setup and options visible instead.
