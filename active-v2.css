@@ -15,7 +15,7 @@ body:has(.ap-screen) .bottom-nav .nav-icon svg,body:has(.fit-subnav) .bottom-nav
 .ap-screen{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;display:grid;gap:17px;max-width:100%;min-width:0;color:var(--ap-white);padding:0 0 10px}
 .ap-screen *{box-sizing:border-box;min-width:0}
 .ap-screen h1,.ap-screen h2,.ap-screen h3,.ap-screen p{margin-top:0}
-.ap-screen button{cursor:pointer;touch-action:manipulation;color:inherit}
+:where(.ap-screen) button{cursor:pointer;touch-action:manipulation;color:inherit}
 .ap-screen :where(p,span,strong,h1,h2,h3,small){overflow-wrap:anywhere}
 .ap-screen h1{font-weight:900;letter-spacing:-.055em;line-height:1.03}
 .ap-screen h2{font-weight:850;letter-spacing:-.04em}
