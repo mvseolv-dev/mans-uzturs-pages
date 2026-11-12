@@ -63,12 +63,8 @@ function activeWeekLine(s){
  const done=fitDone(s),kind=s.type==="Pastaiga"?"walking":s.type==="Iespējams"?"maybe":"basket";
  return '<div class="ap-week-item '+(done?'done':'')+'"><span class="ap-week-date"><b>'+s.name.slice(0,2)+'</b><small>'+s.date.slice(-2)+'</small></span><div class="ap-week-content"><span>'+kind.toUpperCase()+' · '+fitD(s.date)+'</span><strong>'+safe(s.title)+'</strong><small>'+safe(s.time)+' · '+safe(s.place)+'</small></div>'+activeTag(done?'PAVEIKTS':kind==="maybe"?"IESPĒJAMS":"PLĀNĀ",done?'lime':'')+'</div>';
 }
-function activeWeeklyStats(){
- const s=fitSummary();return '<div class="ap-stats">'+
-  '<div><span>PAVEIKTS</span><strong>'+s.done+'<small> / '+s.planned+'</small></strong><em>treniņi šonedēļ</em></div>'+
-  '<div><span>AKTĪVAIS LAIKS</span><strong>'+s.minutes+'<small> min</small></strong><em>atzīmētā slodze</em></div>'+
-  '<div><span>MĀJĀS</span><strong>'+s.home+'</strong><em>papildus sesijas</em></div></div>';
-}
+function activeWeeklyStats(){return '';}
+
 function activeChart(){
  const a=latestWeights().slice(-12);
  if(a.length<2)return '<div class="ap-chart-empty">Vēl viens svara ieraksts, un te būs tava progresa līkne.</div>';
