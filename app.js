@@ -191,7 +191,8 @@ function renderSport(){
 function render(){
  const isMaris=activeProfile==='maris';
  const innerPages=['diena','nedela','iepirkumi','gatavosana'];
- const shownMaris=['dashboard','trenini','komanda','majasha','uzturs','progress'];
+ if(isMaris&&['trenini','komanda'].includes(page))page='majasha';
+ const shownMaris=['dashboard','majasha','uzturs','progress'];
  document.querySelectorAll('.bottom-nav [data-nav]').forEach(n=>{
   const section=n.dataset.nav;
   n.hidden=isMaris?!shownMaris.includes(section):['dashboard','trenini','komanda','majasha','uzturs'].includes(section);
