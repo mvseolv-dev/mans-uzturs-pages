@@ -2,7 +2,7 @@
  * Runs after exercise-data.js, active-v2.js and planner.js.
  * User selections are saved in existing per-profile local storage.
  */
-let lbTab="library",lbLevel="all",lbGroup="Visi",lbSearch="",lbFavOnly=false,lbRecentOnly=false,lbFocusId=null;
+let lbTab="library",lbLevel="all",lbGroup="Visi",lbSearch="",lbFavOnly=false,lbRecentOnly=false,lbFocusId=null,lbProgramFavOnly=false;
 let lbTarget=25,lbBuildLevel="medium",lbBuildFocus="basket",lbWorkDate=fitToday();
 const LB_GROUPS=["Visi","Basketbolam","Kājas","Augšdaļa","Core","Mobilitāte","Pilns ķermenis","Stabilitāte","Kondīcija"];
 const LB_LEVELS=[["all","Visi"],["easy","Viegli"],["medium","Vidēji"],["hard","Sarežģīti"]];
@@ -73,14 +73,20 @@ function lbLibrary(){
  '<div class="lb-subfilters"><button type="button" class="'+(lbFavOnly?'active':'')+'" data-lb="fav-filter">♥ Favorīti</button><button type="button" class="'+(lbRecentOnly?'active':'')+'" data-lb="recent-filter">↺ Nesen izmantotie</button><span id="lb-count">'+lbFiltered().length+' rezultāti</span></div>'+
  '<div id="lb-list">'+lbListContent()+'</div></div>';
 }
+function lbProgramFavoriteButton(id){
+ const fav=Array.isArray(state.programFavorites)&&state.programFavorites.includes(id);
+ return '<button type="button" class="lb-detail-fav" data-lb="program-favorite" data-id="'+id+'" aria-pressed="'+fav+'">'+(fav?'♥ Programma favorītos':'♡ Pievienot programmu favorītiem')+'</button>';
+}
 function lbProgramCard(p){
  const x=lbEntry(p.moves[0]),level=p.level,done=!!state.homeSessions?.[fitToday()+'|'+p.id];
- return '<article class="lb-program-card"><div class="lb-program-img"><img src="'+lbImage(x?.id||'reverse')+'" alt="" loading="lazy" width="512" height="512"><span>'+p.label+'</span></div><div class="lb-program-body"><div class="lb-program-top"><span>'+p.minutes+' MIN · '+p.moves.length+' VINGRINĀJUMI</span>'+ (done?'<span class="lb-pdone">✓ PAVEIKTS</span>':'')+'</div><h3>'+safe(p.title)+'</h3><p>'+safe(p.summary)+'</p><button type="button" data-lb="program" data-id="'+p.id+'">Atvērt programmu <span>↗</span></button></div></article>';
+ return '<article class="lb-program-card"><div class="lb-program-img"><img src="'+lbImage(x?.id||'reverse')+'" alt="" loading="lazy" width="512" height="512"><span>'+p.label+'</span></div><div class="lb-program-body"><div class="lb-program-top"><span>'+p.minutes+' MIN · '+p.moves.length+' VINGRINĀJUMI</span>'+ (done?'<span class="lb-pdone">✓ PAVEIKTS</span>':'')+'</div><h3>'+safe(p.title)+'</h3>'+lbProgramFavoriteButton(p.id)+'<p>'+safe(p.summary)+'</p><button type="button" data-lb="program" data-id="'+p.id+'">Atvērt programmu <span>↗</span></button></div></article>';
 }
 function lbPrograms(){
  return '<div class="lb-panel">'+
  '<div class="lb-head"><div><span>GATAVAS SESIJAS</span><h2>Izvēlies treniņa veidu</h2></div><div class="lb-head-count">6 PROGRAMMAS</div></div>'+
- '<div class="lb-program-grid">'+WORKOUT_PRESETS.map(lbProgramCard).join('')+'</div>'+
+ '<div class="lb-subfilters"><button type="button" data-lb="program-fav-filter" aria-pressed="'+lbProgramFavOnly+'" class="'+(lbProgramFavOnly?'active':'')+'">♥ Programmu favorīti</button></div>'+
+ '<div class="lb-program-grid">'+WORKOUT_PRESETS.filter(p=>!lbProgramFavOnly||(state.programFavorites||[]).includes(p.id)).map(lbProgramCard).join('')+'</div>'+
+ (lbProgramFavOnly&&!WORKOUT_PRESETS.some(p=>(state.programFavorites||[]).includes(p.id))?'<p>Vēl nav saglabātu programmu. Pievieno programmu ar sirsniņu.</p>':'')+
  '<p class="lb-safety">Pēc intensīva basketbola vai pirms spēles izvēlies atjaunošanos. Lēcienu programmu veic tikai svaigā stāvoklī, bez sāpēm un ar pietiekamu atpūtu.</p></div>';
 }
 function lbSelectedDay(){
@@ -133,6 +139,7 @@ activeExercise=function(id,routine,index){
  return '<article class="ap-exercise ap-exercise-visual">'+lbProgramGallery(id)+
  '<div class="ap-ex-info"><span>'+x.sets+' · '+lbLevelName(x.level)+'</span><h3>'+safe(x.name)+'</h3><div class="ap-ex-instruction-label">KĀ IZPILDĪT</div><p>'+safe(x.guide)+'</p><ul>'+x.cues.map(t=>'<li>✓ '+safe(t)+'</li>').join('')+'</ul>'+
  '<div class="ap-ex-actions">'+(hasVideo?'<button data-ap-video="'+id+'">▶ VIDEO</button>':'')+
+ '<button type="button" class="lb-detail-fav" data-lb="favorite" data-id="'+id+'" aria-pressed="'+lbFaves().includes(id)+'">'+(lbFaves().includes(id)?'♥ Favorītos':'♡ Favorītiem')+'</button>'+
  '<button class="'+(done?'done':'')+'" data-ap-check="'+id+'" data-ap-routine="'+routine+'">'+(done?'✓ PAVEIKTS':'○ ATZĪMĒT')+'</button></div></div></article>';
 };
 ACTIVE_PROGRAMS.splice(0,ACTIVE_PROGRAMS.length,...WORKOUT_PRESETS);
@@ -153,6 +160,8 @@ function lbGenerate(){
 document.addEventListener('click',event=>{
  const target=event.target.closest('[data-lb]');if(!target)return;
  const act=target.dataset.lb,id=target.dataset.id;
+ if(act==="program-fav-filter"){lbProgramFavOnly=!lbProgramFavOnly;render();return}
+ if(act==="program-favorite"){if(!WORKOUT_PRESETS.some(p=>p.id===id))return;state.programFavorites=Array.isArray(state.programFavorites)?state.programFavorites:[];const i=state.programFavorites.indexOf(id);if(i>=0)state.programFavorites.splice(i,1);else state.programFavorites.push(id);save();render();return}
  if(act==="tab"){lbTab=target.dataset.value;lbFocusId=null;render();return}
  if(act==="today"){lbWorkDate=fitToday();render();return}
  if(act==="level"){lbLevel=target.dataset.value;render();return}
