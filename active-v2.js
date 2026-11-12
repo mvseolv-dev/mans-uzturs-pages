@@ -81,15 +81,13 @@ renderFitnessDashboard=function(){
  const today=fitToday(),next=fitNext(),week=sportItems(),s=fitSummary(week),last=latestWeights().at(-1);
  const percent=s.planned?Math.round(100*s.done/s.planned):0;
  return '<div class="ap-screen"><div class="ap-welcome"><div class="ap-avatar">MV</div><div><span>MANS UZTURS ACTIVE</span><strong>Laiks kustēties <i>✳</i></strong></div><div class="ap-welcome-date">'+fitD(today)+'</div></div>'+
- '<section class="ap-hero" style="--ap-photo:url('+ACTIVE_COVER+')"><div class="ap-hero-dim"></div><div class="ap-hero-info"><div class="ap-hero-pill">✦ GAME MODE / ON</div><h1>TRAIN.<br>PLAY.<br><em>REPEAT.</em></h1><p>Tavs basketbols, tavs ritms.<br>Gudrāka slodze un atjaunošanās.</p><button data-nav="trenini">SKATĪT GRAFIKU <b>↗</b></button></div></section>'+
+ '<section class="ap-hero" style="--ap-photo:url('+ACTIVE_COVER+')"><div class="ap-hero-dim"></div><div class="ap-hero-info"><div class="ap-hero-pill">✦ GAME MODE / ON</div><h1>TRAIN.<br>PLAY.<br><em>REPEAT.</em></h1><p>Tavs basketbols, tavs ritms.<br>Gudrāka slodze un atjaunošanās.</p><button data-nav="majasha">IZVĒLĒTIES TRENIŅU <b>↗</b></button></div></section>'+
  activeSection("TODAY","Nākamā aktivitāte",activeTag("NEXT UP","lime"))+
- '<div class="ap-next"><div class="ap-next-icon">🏀</div><div><small>'+next.name.toUpperCase()+' · '+fitD(next.date)+'</small><h3>'+safe(next.title)+'</h3><p>'+safe(next.time)+' · '+safe(next.place)+'</p></div><button data-nav="trenini">↗</button></div>'+
+ '<div class="ap-next"><div class="ap-next-icon">🏀</div><div><small>'+next.name.toUpperCase()+' · '+fitD(next.date)+'</small><h3>'+safe(next.title)+'</h3><p>'+safe(next.time)+' · '+safe(next.place)+'</p></div><button data-nav="majasha">↗</button></div>'+
  activeSection("THIS WEEK","Nedēļas ritms",'<div class="ap-mini-ring" style="--ap-percent:'+percent+'%">'+percent+'%</div>')+
- '<div class="ap-day-strip">'+week.map(x=>'<button data-nav="trenini" class="'+(x.date===today?'now ':'')+(fitDone(x)?'marked':'')+'"><span>'+x.name.slice(0,2)+'</span><b>'+x.date.slice(-2)+'</b><small>'+(fitDone(x)?'✓':x.type==='Pastaiga'?'◉':'·')+'</small></button>').join('')+'</div>'+
+ '<div class="ap-day-strip">'+week.map(x=>'<button data-nav="majasha" class="'+(x.date===today?'now ':'')+(fitDone(x)?'marked':'')+'"><span>'+x.name.slice(0,2)+'</span><b>'+x.date.slice(-2)+'</b><small>'+(fitDone(x)?'✓':x.type==='Pastaiga'?'◉':'·')+'</small></button>').join('')+'</div>'+
  activeWeeklyStats()+
- activeSection("TEAM / BUKI","Komandas treniņi",'<button class="ap-text-btn" data-nav="komanda">Atvērt ↗</button>')+
- '<button class="ap-team-shortcut" data-nav="komanda"><span class="ap-team-shortcut-icon">🏀</span><span><strong>Ko trenēsim ar zēniem?</strong><small>169 vingrinājumi · cilvēku skaits · metieni · dribls · aizsardzība</small></span><b>↗</b></button>'+
- activeSection("TRAINING LIBRARY","Vingrojumi mājās",'<button class="ap-text-btn" data-nav="majasha">Visi ↗</button>')+
+ activeSection("TRAINING LIBRARY","Treniņu programmas",'<button class="ap-text-btn" data-nav="majasha">Visi ↗</button>')+
  '<div class="ap-program-grid">'+ACTIVE_PROGRAMS.slice(0,2).map(activeCard).join('')+'</div>'+
  activeSection("BODY METRICS","Svara tendence",'<button class="ap-text-btn" data-nav="progress">Progress ↗</button>')+
  '<div class="ap-metrics-panel"><div><span>PAŠREIZĒJAIS SVARS</span><h3>'+(last?fmt(last.weight,1):'--')+' <small>kg</small></h3><p>Mērķis: '+fmt(state.config.goal,0)+' kg</p></div>'+activeChart()+'</div></div>';
@@ -131,7 +129,7 @@ function activeExercise(id,routine,index){
 renderFitnessRoutine=function(id){
  const routine=ACTIVE_PROGRAMS.find(x=>x.id===id)||ACTIVE_PROGRAMS[0],key=fitToday()+"|"+routine.id,done=!!state.homeSessions?.[key],doneCount=routine.moves.filter(m=>!!state.exerciseChecks?.[fitToday()+"|"+routine.id+"|"+m]).length;
  return '<div class="ap-screen"><button class="ap-back" data-nav="majasha">‹ ATPAKAĻ UZ PROGRAMMĀM</button>'+
- '<div class="ap-routine-cover" style="--ap-photo:url('+activeImg(routine.moves[0])+')"><div><span>'+routine.label+' / '+routine.minutes+' MIN</span><h1>'+safe(routine.title)+'</h1><p>'+safe(routine.summary)+'</p>'+activeTag(routine.level,"lime")+'</div></div>'+
+ '<div class="ap-routine-cover" style="--ap-photo:url('+activeImg(routine.moves[0])+')"><div><span>'+routine.label+' / '+routine.minutes+' MIN</span><h1>'+safe(routine.title)+'</h1><p>'+safe(routine.summary)+'</p>'+activeTag(routine.level,"lime")+'</div></div>'+lbProgramFavoriteButton(routine.id)+
  '<div class="ap-routine-progress"><span>PAVEIKTIE VINGRINĀJUMI <b>'+doneCount+' / '+routine.moves.length+'</b></span><div><i style="width:'+Math.round(doneCount/routine.moves.length*100)+'%"></i></div></div>'+
  activeSection("EXERCISES","Vingrinājumi attēlos",activeTag("ATTĒLI + VIDEO","lime"))+
  '<div class="ap-ex-list">'+routine.moves.map((m,i)=>activeExercise(m,routine.id,i)).join('')+'</div>'+
