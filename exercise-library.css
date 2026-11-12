@@ -150,3 +150,5 @@
 .lb-my-technique{justify-self:start;border:0;background:transparent;color:#c7fa39!important;font-size:10px;font-weight:850;padding:6px 0;text-align:left}
 .lb-my-bottom button:disabled{opacity:.65;cursor:not-allowed;background:#344637;color:#d7ecd0}
 @media(max-width:400px){.lb-date-picker label{flex:0 0 100%}.lb-date-picker input{flex:1 1 140px}.lb-date-picker button{padding:12px 8px}}
+
+.lb-equipment{display:flex;flex-direction:column;gap:8px;font-weight:700;margin:14px 0}.lb-equipment select{width:100%;max-width:100%;padding:12px;border-radius:12px;background:#27392a;color:#eaf5e7;font-size:16px;color-scheme:dark;border:1px solid #52624b}.lb-detail-copy ol{padding-left:24px;line-height:1.65}.lb-detail-copy li{margin-bottom:10px}
