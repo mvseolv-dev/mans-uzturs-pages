@@ -14,3 +14,5 @@ const hgBaseHome=renderFitnessHome;
 renderFitnessHome=function(){if(activeProfile==='maris'&&lbTab==='basket')return '<div class="ap-screen lb-page">'+lbTabs()+renderBasketDrills()+'</div>';return hgBaseHome();};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-hg]');if(!b)return;const act=b.dataset.hg,id=b.dataset.id;if(act==='open'){if(!HG_DRILLS.some(x=>x.id===id))return;hgOpenId=id;window.scrollTo({top:0,behavior:'instant'});}else if(act==='back')hgOpenId=null;else if(act==='category')hgCategory=b.dataset.value;else if(act==='favorites')hgFavoriteOnly=!hgFavoriteOnly;else if(act==='favorite'||act==='select'){if(!HG_DRILLS.some(x=>x.id===id))return;const key=act==='favorite'?'basketDrillFavorites':'basketDrillPlan';state[key]=act==='favorite'?hgFavorites().slice():hgSelected().slice();const at=state[key].indexOf(id);if(at<0)state[key].push(id);else state[key].splice(at,1);save();}render();});
 document.addEventListener('submit',e=>{if(e.target.id!=='hg-filters')return;e.preventDefault();const f=new FormData(e.target);hgSearch=String(f.get('search')||'');hgPlayers=String(f.get('players')||'all');render();});
+
+render();
