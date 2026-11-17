@@ -290,3 +290,6 @@
 
 /* Concise exercise guidance; full technique stays available on demand. */
 .lb-more-guide{margin:8px 0;font-size:12px;color:var(--mu-muted,#97a594)}.lb-more-guide summary{cursor:pointer;padding:9px 0;color:var(--mu-muted,#97a594);font-weight:650}.lb-more-guide[open] summary{margin-bottom:5px}.lb-more-guide ol,.lb-more-guide ul{margin:5px 0 9px!important;padding-left:20px!important}.lb-studio .lb-run-instructions>ol,.lb-studio .ap-ex-info>ol{display:grid;gap:6px;margin:8px 0!important}.lb-studio .lb-run-instructions>ol li,.lb-studio .ap-ex-info>ol li{line-height:1.5}
+
+/* One compact technique paragraph; no duplicated instructions or cues. */
+.lb-studio .lb-compact-guide{font-size:13px;line-height:1.55;margin:5px 0 9px;color:var(--lb-text);overflow-wrap:anywhere}.lb-studio .lb-run-instructions h3{margin:0 0 5px}.lb-studio .lb-detail-copy .lb-compact-guide{margin:2px 0}.lb-studio .lb-balance-block .lb-compact-guide{margin:8px 0}
