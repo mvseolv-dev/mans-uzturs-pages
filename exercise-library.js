@@ -3,6 +3,7 @@
  * User selections are saved in existing per-profile local storage.
  */
 let lbTab="mine",lbLevel="all",lbGroup="Visi",lbSearch="",lbFavOnly=false,lbRecentOnly=false,lbFocusId=null,lbProgramFavOnly=false,lbEquipment="all",lbVisible=24;
+let lbProgramType='all';
 let lbTarget=25,lbBuildLevel="medium",lbBuildFocus="full",lbWorkDate=fitToday(),lbBuildEquipment="none",lbBuilderProfile=null,lbBuildBalance=false;
 const LB_GROUPS=["Visi","Basketbolam","Kājas","Augšdaļa","Korpuss","Mobilitāte","Pilns ķermenis","Stabilitāte","Kondīcija","Mugura","Pleci","Rokas","Krūtis"];
 const LB_LEVELS=[["all","Visi"],["easy","Viegli"],["medium","Vidēji"],["hard","Sarežģīti"]];
@@ -99,7 +100,7 @@ WORKOUT_PRESETS.push(...LIVA_PRESETS);
 function lbIsLiva(){return activeProfile==='liva'}
 function lbAvailablePrograms(){return lbIsLiva()?[...LIVA_PRESETS,...KB_PROGRAMS.filter(p=>['kb-start','kb-full','kb-upper','kb-legs','kb-core','kb-circuit'].includes(p.id))]:WORKOUT_PRESETS.filter(p=>!p.id.startsWith('lv-'))}
 function lbFocusOptions(){return [['full','Pilns ķermenis'],...(lbIsLiva()?[['dance','Tautas dejām'],['weightloss','Svara samazināšanai']]:[['basket','Basketbolam']]),['strength','Spēks'],['core','Korpusa stabilitāte'],['recovery','Mobilitāte / atjaunošanās']]}
-function lbResetProfile(){lbBuilderProfile=null;lbTab='mine';lbFocusId=null;lbLevel='all';lbGroup='Visi';lbSearch='';lbFavOnly=false;lbRecentOnly=false;lbProgramFavOnly=false;lbEquipment='all';lbVisible=24;lbWorkDate=fitToday();window.fitOpenRoutine=null;}
+function lbResetProfile(){lbProgramType='all';lbBuilderProfile=null;lbTab='mine';lbFocusId=null;lbLevel='all';lbGroup='Visi';lbSearch='';lbFavOnly=false;lbRecentOnly=false;lbProgramFavOnly=false;lbEquipment='all';lbVisible=24;lbWorkDate=fitToday();window.fitOpenRoutine=null;}
 function lbDanceTag(x){return new Set(LIVA_PRESETS.flatMap(p=>p.moves)).has(x.id)||['lateral','rdl','single-leg-calf-raise'].includes(x.id)}
 function lbLivaWarning(){return 'Pēc intensīva deju mēģinājuma vai pirms koncerta izvēlies vieglu mobilitāti. Pie sāpēm pārtrauc. Svara samazināšanai nepieciešama ilgtspējīga ēšanas un kustību sistēma.'}
 
@@ -146,11 +147,14 @@ function lbPoseImages(id,full=false){
 }
 function lbThumb(x){return '<div class="lb-thumb"><img loading="lazy" decoding="async" src="'+lbImage(x.id)+'" alt="'+safe(x.name)+' - pozīcijas ilustrācija" width="512" height="512"><span class="lb-thumb-tag '+x.level+'">'+lbLevelName(x.level)+'</span></div>'}
 function lbActivityLabel(){const today=fitToday(),items=(typeof plannerSessions==='function'?plannerSessions():sportItems()).filter(s=>s.date===today&&fitPossible(s));return items.some(s=>/basket|spēle|buki/i.test((s.type||'')+' '+s.title))?'Pēc basketbola izvēlies mobilitāti':items.length?'Šodien jau ir ieplānota aktivitāte':'Šodien vari izvēlēties mājas treniņu'}
-function lbHero(){
- const selected=lbDay().ids.length;
- return '<div class="lb-hero"><div><span class="lb-kicker">MANS UZTURS · TRENIŅU STUDIJA</span><h1>Tavs treniņš.<br><em>Tavi noteikumi.</em></h1><p>'+WORKOUT_LIBRARY.length+' vingrinājumi ar attēliem, gatavas programmas un savs treniņu komplekts.</p><div class="lb-hero-foot"><span>♥ '+lbFaves().length+' favorītos</span><span>✓ '+selected+' izvēlēti izvēlētajai dienai</span></div></div><div class="lb-hero-art"><img src="'+lbImage('reverse','peak')+'" alt="" loading="lazy"></div></div>'
+
+function lbUIIcon(name,size=21){
+ const p={calendar:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M16 3v4M8 3v4M3 10h18"/>',bolt:'<path d="m13 2-9 12h7l-1 8 10-12h-7z"/>',grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',book:'<path d="M4 4h5a3 3 0 0 1 3 3v14a3 3 0 0 0-3-3H4zM20 4h-5a3 3 0 0 0-3 3v14a3 3 0 0 1 3-3h5z"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',barbell:'<path d="M2 9v6m4-9v12m12-12v12m4-9v6M6 12h12"/>',target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',arrow:'<path d="M4 12h15m-6-6 6 6-6 6"/>',heart:'<path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21l8.8-8.3a5 5 0 0 0 0-7.1Z"/>'};
+ return '<svg aria-hidden="true" width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">'+(p[name]||p.target)+'</svg>';
 }
-function lbTabs(){const items=[["mine","Mans treniņš"],["programs","Programmas"],["library","Vingrinājumi"]];return '<div class="lb-tabs" role="group" aria-label="Treniņu sadaļas">'+items.map(([v,l])=>'<button type="button" data-lb="tab" data-value="'+v+'" aria-pressed="'+(lbTab===v)+'" class="'+(lbTab===v?'current':'')+'">'+l+(v==='mine'?'<span>'+lbDay().ids.length+'</span>':'')+'</button>').join('')+'</div>'}
+function lbHero(){return '<header class="lb-studio-header"><div><span class="lb-studio-kicker">MANS UZTURS / TRENIŅU STUDIJA</span><h1>Treniņi</h1><p>'+(lbIsLiva()?'Tautas dejas, spēks un izturība.':'Basketbols, spēks un fiziskā forma.')+'</p></div><span class="lb-studio-mark">'+lbUIIcon('barbell',28)+'</span></header>'}
+function lbTabs(){return '<nav class="lb-tabs lb-studio-tabs" aria-label="Treniņu sadaļas">'+[['mine','Mans treniņš','bolt'],['programs','Programmas','grid'],['library','Vingrinājumi','book']].map(([v,l,i])=>'<button type="button" data-lb="tab" data-value="'+v+'" aria-pressed="'+(lbTab===v)+'" class="'+(lbTab===v?'current':'')+'">'+lbUIIcon(i)+'<strong>'+l+'</strong>'+(v==='mine'&&lbDay().ids.length?'<span>'+lbDay().ids.length+'</span>':'')+'</button>').join('')+'</nav>'}
+
 function lbCard(x){
  const fav=lbFaves().includes(x.id),chosen=lbSelected(x.id);
  return '<article class="lb-ex-card">'+
@@ -176,31 +180,32 @@ function lbProgramFavoriteButton(id){
  const fav=Array.isArray(state.programFavorites)&&state.programFavorites.includes(id);
  return '<button type="button" class="lb-detail-fav" data-lb="program-favorite" data-id="'+id+'" aria-pressed="'+fav+'">'+(fav?'♥ Programma favorītos':'♡ Pievienot programmu favorītiem')+'</button>';
 }
+
+function lbProgramCategory(p){if(kbProgram(p.id))return 'weights';if(p.kind==='recovery'||p.id==='mobility'||/mobilitāte|atjaunošan/i.test(p.title))return 'recovery';if(p.id==='lv-fat-loss'||p.id==='lv-dance-endurance'||p.id==='challenge')return 'fitness';return 'strength'}
 function lbProgramCard(p){
- const x=lbEntry(p.moves[0]),level=p.level,done=!!state.homeSessions?.[fitToday()+'|'+p.id];
- return '<article class="lb-program-card"><div class="lb-program-img"><img src="'+lbImage(x?.id||'reverse')+'" alt="" loading="lazy" width="512" height="512"><span>'+p.label+'</span></div><div class="lb-program-body"><div class="lb-program-top"><span>'+p.minutes+' MIN · '+p.moves.length+' VINGRINĀJUMI</span>'+ (done?'<span class="lb-pdone">✓ PAVEIKTS</span>':'')+'</div><h3>'+safe(p.title)+'</h3>'+lbProgramFavoriteButton(p.id)+'<p>'+safe(p.summary)+'</p>'+(kbProgram(p.id)?'<p><strong>'+p.sets+(p.circuit?' apļi':' piegājieni')+' · '+p.rest+' s atpūta</strong></p><button type="button" data-lb="kb-plan" data-id="'+p.id+'">Pievienot izvēlētās dienas plānam</button>':'')+'<button type="button" data-lb="program" data-id="'+p.id+'">Atvērt programmu <span>↗</span></button></div></article>';
+ const x=lbEntry(p.moves[0]),done=!!state.homeSessions?.[fitToday()+'|'+p.id],fav=(state.programFavorites||[]).includes(p.id),kb=kbProgram(p.id);
+ return '<article class="lb-program-card lb-studio-program"><div class="lb-program-img"><img src="'+lbImage(x?.id||'reverse')+'" alt="" loading="lazy" width="512" height="512"><button type="button" class="lb-program-heart '+(fav?'on':'')+'" data-lb="program-favorite" data-id="'+p.id+'" aria-label="'+(fav?'Izņemt no favorītiem':'Pievienot favorītiem')+'" aria-pressed="'+fav+'">'+lbUIIcon('heart',20)+'</button></div><div class="lb-program-body"><div class="lb-program-label">'+safe(p.label)+'</div><h3>'+safe(p.title)+'</h3><div class="lb-program-meta"><span>'+lbUIIcon('clock',15)+p.minutes+' min</span><span>'+p.moves.length+' vingr.</span><span>'+safe(p.level)+'</span>'+(done?'<span class="lb-pdone">✓ Paveikts</span>':'')+'</div><p>'+safe(p.summary)+'</p><div class="lb-program-buttons"><button type="button" data-lb="program" data-id="'+p.id+'">Atvērt '+lbUIIcon('arrow',17)+'</button>'+(kb?'<button type="button" data-lb="kb-plan" data-id="'+p.id+'">＋ Dienas plānam</button>':'')+'</div></div></article>';
 }
 function lbPrograms(){
- return '<div class="lb-panel">'+
- '<div class="lb-head"><div><span>GATAVAS SESIJAS</span><h2>Izvēlies treniņa veidu</h2></div><div class="lb-head-count">'+lbAvailablePrograms().length+' PROGRAMMAS</div></div>'+
- '<div class="lb-subfilters"><button type="button" data-lb="program-fav-filter" aria-pressed="'+lbProgramFavOnly+'" class="'+(lbProgramFavOnly?'active':'')+'">♥ Programmu favorīti</button></div>'+
- '<div class="lb-program-grid">'+lbAvailablePrograms().filter(p=>!lbProgramFavOnly||(state.programFavorites||[]).includes(p.id)).map(lbProgramCard).join('')+'</div>'+
- (lbProgramFavOnly&&!lbAvailablePrograms().some(p=>(state.programFavorites||[]).includes(p.id))?'<p>Vēl nav saglabātu programmu. Pievieno programmu ar sirsniņu.</p>':'')+
- '<p class="lb-safety">'+(lbIsLiva()?lbLivaWarning():'Pēc intensīva basketbola vai pirms spēles izvēlies atjaunošanos. Lēcienu programmu veic tikai svaigā stāvoklī, bez sāpēm un ar pietiekamu atpūtu.')+'</p></div>';
+ const all=lbAvailablePrograms(),items=all.filter(p=>(lbProgramType==='all'||lbProgramCategory(p)===lbProgramType)&&(!lbProgramFavOnly||(state.programFavorites||[]).includes(p.id)));
+ return '<section class="lb-panel"><div class="lb-head"><div><span>GATAVAS SESIJAS</span><h2>Programmas</h2></div><div class="lb-head-count">'+items.length+' / '+all.length+'</div></div><div class="lb-program-filters" role="group" aria-label="Programmu veids">'+[['all','Visas'],['strength','Spēks / stabilitāte'],['weights','Svarbumbas'],['fitness','Kondīcija'],['recovery','Atjaunošanās']].map(([v,n])=>'<button type="button" data-lb="program-type" data-value="'+v+'" aria-pressed="'+(lbProgramType===v)+'" class="'+(lbProgramType===v?'active':'')+'">'+n+'</button>').join('')+'<button type="button" data-lb="program-fav-filter" aria-pressed="'+lbProgramFavOnly+'" class="'+(lbProgramFavOnly?'active':'')+'">♥ Favorīti</button></div><div class="lb-program-grid">'+items.map(lbProgramCard).join('')+'</div>'+(!items.length?'<div class="lb-empty"><h3>Nav programmu</h3><p>Izvēlies citu filtru.</p><button data-lb="program-reset">Rādīt visas</button></div>':'')+'<p class="lb-safety">'+(lbIsLiva()?lbLivaWarning():'Pēc intensīva basketbola vai pirms spēles izvēlies atjaunošanos.')+'</p></section>';
 }
-function lbSelectedDay(){
- const ids=lbCheckWorkout(lbDay()).ids,done=lbDay().checked.length,total=ids.reduce((n,id)=>n+(lbEntry(id)?.minutes||0),0);
- return (ids.length?'<div class="lb-custom-top"><div><span>IZVĒLĒTĀ DIENA</span><h2>Mans treniņš</h2><p>'+ids.length+' vingrinājumi · '+lbWorkoutDuration()+'</p></div><div class="lb-my-progress">'+done+'/'+ids.length+'</div></div>':'')+'<div class="lb-date-picker"><label for="lb-date">Treniņa datums</label><input id="lb-date" type="date" value="'+lbWorkDate+'"><button type="button" data-lb="today">Šodiena</button></div>';
-}
+
+
+function lbSelectedDay(){return '<div class="lb-date-picker lb-studio-date"><div class="lb-date-icon">'+lbUIIcon('calendar')+'</div><label for="lb-date">Treniņa datums<input id="lb-date" type="date" value="'+lbWorkDate+'"></label><button type="button" data-lb="today">Šodiena</button></div>'}
+
 function lbMyCard(id,index){
  const x=lbEntry(id);if(!x)return '';
  const checked=lbDay().checked.includes(id);
  return '<div class="lb-my-row"><img src="'+lbImage(id)+'" loading="lazy" alt="" width="512" height="512"><div class="lb-my-copy"><span>'+String(index+1).padStart(2,"0")+' · '+lbLevelName(x.level)+'</span><strong>'+safe(x.name)+'</strong><small>'+(lbDay().plan?.kind==='kettlebell-reps'?safe(kbDoseText(lbDay().plan.kbDoses[id])):lbDay().plan?lbDay().plan.rounds+' apļi · '+lbDay().plan.workSeconds+' s darbs / '+lbDay().plan.restSeconds+' s atpūta':safe(x.sets)+' · '+lbDurationLabel(x))+'</small><button type="button" class="lb-my-technique" data-lb="view" data-id="'+id+'">Skatīt izpildi ↗</button>'+lbLoadField(x)+'</div><div class="lb-my-controls"><button data-lb="my-check" data-id="'+id+'" class="'+(checked?'done':'')+'" aria-label="Atzīmēt vingrinājumu">'+(checked?'✓':'○')+'</button><button data-lb="my-remove" data-id="'+id+'" aria-label="Izņemt vingrinājumu">×</button></div></div>';
 }
+
 function lbMyWorkout(){
- const workout=lbCheckWorkout(lbDay());
- return '<div class="lb-panel">'+lbSelectedDay()+lbGearCombos()+lbBuilderUI(workout)+(workout.ids.length?'<section class="lb-resume"><div><span>SAGLABĀTAIS TRENIŅŠ</span><strong>'+workout.ids.length+' vingrinājumi · '+lbWorkoutDuration()+'</strong></div><button type="button" data-lb="open-workout">Atvērt treniņu ↗</button></section>':'')+'</div>';
+ const w=lbCheckWorkout(lbDay()),n=w.ids.length,d=w.checked.length;
+ const resume=n?'<section class="lb-resume lb-studio-resume"><div><span>'+(w.completed?'PAVEIKTS TRENIŅŠ':'IZVĒLĒTĀS DIENAS TRENIŅŠ')+'</span><strong>'+n+' vingrinājumi · '+lbWorkoutDuration()+'</strong><div class="lb-resume-meter" role="progressbar" aria-label="Treniņa progress" aria-valuenow="'+d+'" aria-valuemin="0" aria-valuemax="'+n+'"><i style="width:'+Math.round(d/n*100)+'%"></i></div><small>'+d+' no '+n+' paveikti</small></div><button type="button" data-lb="open-workout">'+(w.completed?'Apskatīt':d?'Turpināt':'Atvērt treniņu')+' '+lbUIIcon('arrow',18)+'</button></section>':'';
+ return '<div class="lb-panel">'+lbSelectedDay()+resume+lbBuilderUI(w)+'</div>';
 }
+
 function lbOpenWorkout(){state.activeWorkoutDate=lbWorkDate;lbFocusId=null;save();go('mans-trenins');}
 function lbWorkoutExercise(id,index,workout){
  const x=lbEntry(id);if(!x)return '';const p=workout.plan,done=workout.checked.includes(id),fav=lbFaves().includes(id);
@@ -211,8 +216,8 @@ function lbWorkoutExercise(id,index,workout){
 function renderCustomWorkout(){
  lbSyncBuilder();const savedDate=state.activeWorkoutDate;if(/^\d{4}-\d{2}-\d{2}$/.test(savedDate||''))lbWorkDate=savedDate;
  const workout=lbCheckWorkout(lbDay()),ids=workout.ids,done=workout.checked.length;
- if(!ids.length)return '<div class="ap-screen lb-page lb-run"><button type="button" class="lb-back" data-lb="return-builder">‹ Atpakaļ uz atlasi</button><div class="lb-empty"><h1>Treniņš vēl nav sagatavots</h1><p>Izvēlies ilgumu, grūtību un inventāru.</p><button type="button" data-lb="return-builder">Sagatavot treniņu</button></div></div>';
- return '<div class="ap-screen lb-page lb-run"><div class="lb-run-top"><button type="button" class="lb-back" data-lb="return-builder">‹ Atpakaļ uz atlasi</button><span>'+safe(lbWorkDate.split('-').reverse().join('.'))+'</span></div><header class="lb-run-title"><span>TAVS SAGATAVOTAIS TRENIŅŠ</span><h1>'+(workout.plan?workout.plan.minutes+' minūšu treniņš':'Tavs vingrinājumu saraksts')+'</h1><p>'+ids.length+' vingrinājumi · '+done+' paveikti</p></header><div class="lb-run-progress" role="progressbar" aria-label="Paveiktie vingrinājumi" aria-valuenow="'+done+'" aria-valuemin="0" aria-valuemax="'+ids.length+'"><i style="width:'+Math.round(done/ids.length*100)+'%"></i></div>'+lbPlanSummary(workout)+'<div class="lb-run-list">'+ids.map((id,index)=>lbWorkoutExercise(id,index,workout)).join('')+'</div>'+lbBalanceBlock(workout.plan)+'<button type="button" class="lb-generate lb-run-finish" data-lb="complete" '+(lbWorkDate>fitToday()?'disabled':'')+'>'+(lbWorkDate>fitToday()?'Ieplānots nākamajai dienai':workout.completed?'✓ Treniņš paveikts · atcelt atzīmi':'✓ Pabeigt treniņu')+'</button><button type="button" class="lb-run-change" data-lb="return-builder">Mainīt treniņa iestatījumus</button><div class="lb-attribution">Vingrinājumu attēli: <a href="https://repdb.co" target="_blank" rel="noopener noreferrer">Exercise data by RepDB (repdb.co)</a>.</div></div>';
+ if(!ids.length)return '<div class="ap-screen lb-page lb-studio lb-run"><button type="button" class="lb-back" data-lb="return-builder">‹ Atpakaļ uz atlasi</button><div class="lb-empty"><h1>Treniņš vēl nav sagatavots</h1><p>Izvēlies ilgumu, grūtību un inventāru.</p><button type="button" data-lb="return-builder">Sagatavot treniņu</button></div></div>';
+ return '<div class="ap-screen lb-page lb-studio lb-run"><div class="lb-run-top"><button type="button" class="lb-back" data-lb="return-builder">‹ Atpakaļ uz atlasi</button><span>'+safe(lbWorkDate.split('-').reverse().join('.'))+'</span></div><header class="lb-run-title"><span>TAVS SAGATAVOTAIS TRENIŅŠ</span><h1>'+(workout.plan?workout.plan.minutes+' minūšu treniņš':'Tavs vingrinājumu saraksts')+'</h1><p>'+ids.length+' vingrinājumi · '+done+' paveikti</p></header><div class="lb-run-progress" role="progressbar" aria-label="Paveiktie vingrinājumi" aria-valuenow="'+done+'" aria-valuemin="0" aria-valuemax="'+ids.length+'"><i style="width:'+Math.round(done/ids.length*100)+'%"></i></div>'+lbPlanSummary(workout)+'<div class="lb-run-list">'+ids.map((id,index)=>lbWorkoutExercise(id,index,workout)).join('')+'</div>'+lbBalanceBlock(workout.plan)+'<button type="button" class="lb-generate lb-run-finish" data-lb="complete" '+(lbWorkDate>fitToday()?'disabled':'')+'>'+(lbWorkDate>fitToday()?'Ieplānots nākamajai dienai':workout.completed?'✓ Treniņš paveikts · atcelt atzīmi':'✓ Pabeigt treniņu')+'</button><button type="button" class="lb-run-change" data-lb="return-builder">Mainīt treniņa iestatījumus</button><div class="lb-attribution">Vingrinājumu attēli: <a href="https://repdb.co" target="_blank" rel="noopener noreferrer">Exercise data by RepDB (repdb.co)</a>.</div></div>';
 }
 
 function lbExerciseDetail(){
@@ -230,11 +235,9 @@ function lbReadiness(){
  if(lbIsLiva())return '<div class="lb-tips"><div><span>ĀTRĀ IZVĒLE</span><h2>Ko gribi darīt šodien?</h2></div><div class="lb-choice-row"><button data-lb="quick" data-value="recovery"><strong>Pēc mēģinājuma</strong><small>Mobilitāte</small></button><button data-lb="quick" data-value="weightloss"><strong>Svara samazināšana</strong><small>Kondīcija un spēks</small></button><button data-lb="quick" data-value="dance"><strong>Tautas dejām</strong><small>Spēks un līdzsvars</small></button></div></div>';
  return '<div class="lb-tips"><div><span>ĀTRĀ IZVĒLE</span><h2>Ko gribi darīt šodien?</h2></div><div class="lb-choice-row"><button data-lb="quick" data-value="recovery"><span>◌</span><strong>Viegli pēc spēles</strong><small>Mobilitāte un atjaunošanās</small></button><button data-lb="quick" data-value="strength"><span>↗</span><strong>Normāli pastrādāt</strong><small>Spēks un kontrole</small></button><button data-lb="quick" data-value="movement"><span>⬡</span><strong>Basketbola forma</strong><small>Sānu kustības un stabilitāte</small></button></div></div>';
 }
-renderFitnessHome=function(){
- lbSyncBuilder();
- return '<div class="ap-screen lb-page">'+(lbFocusId?lbExerciseDetail():(lbTab==='mine'?'<header class="lb-simple-heading"><span>PIELĀGOTS TEV</span><h1>Tavs treniņš</h1></header>':lbHero()+lbReadiness())+lbTabs()+(lbTab==='library'?lbLibrary():lbTab==='programs'?lbPrograms():lbMyWorkout())+
- '<div class="lb-attribution">Vingrinājumu attēli: <a href="https://repdb.co" target="_blank" rel="noopener noreferrer">Exercise data by RepDB (repdb.co)</a>. Attēli ir ilustratīvi. Pie sāpēm pārtrauc vingrinājumu.</div>')+'</div>';
-};
+
+renderFitnessHome=function(){lbSyncBuilder();const content=lbFocusId?lbExerciseDetail():lbTab==='library'?lbLibrary():lbTab==='programs'?lbPrograms():lbMyWorkout();return '<div class="ap-screen lb-page lb-studio">'+lbHero()+lbTabs()+content+'<div class="lb-attribution">Vingrinājumu attēli: <a href="https://repdb.co" target="_blank" rel="noopener noreferrer">Exercise data by RepDB (repdb.co)</a>. Attēli ir ilustratīvi. Pie sāpēm pārtrauc vingrinājumu.</div></div>'};
+
 function lbProgramGallery(id){const x=lbEntry(id);if(!x)return '';
  return '<div class="ap-ex-visual"><div class="ap-ex-visual-kicker">VINGRINĀJUMS ATTĒLOS</div>'+lbPoseImages(id,true)+'</div>';
 }
@@ -282,7 +285,18 @@ function lbBalanceBlock(p){if(!p?.balanceSeconds)return '';const x=lbBalanceExer
 function lbSyncBuilder(){if(lbBuilderProfile===activeProfile)return;lbBuilderProfile=activeProfile;const o=state.workoutBuilder||{};lbTarget=[10,15,20,25,30,35,40,45,50,55,60].includes(o.minutes)?o.minutes:25;lbBuildLevel=['easy','medium','hard'].includes(o.level)?o.level:'medium';lbBuildFocus=lbFocusOptions().some(([v])=>v===o.focus)?o.focus:lbIsLiva()?'dance':'full';lbBuildEquipment=LB_BUILD_EQUIPMENT.some(x=>x[0]===o.equipment)?o.equipment:'none';lbBuildBalance=!!o.balance;}
 function lbRememberBuilder(){state.workoutBuilder={minutes:lbTarget,level:lbBuildLevel,focus:lbBuildFocus,equipment:lbBuildEquipment,balance:lbBuildBalance};save();}
 function lbWorkoutDuration(){return lbDay().plan?lbDay().plan.minutes+' min plānā':lbTimeSummary(lbDay().ids);}
-function lbBuilderUI(workout){return '<section class="lb-builder lb-auto"><div class="lb-auto-heading"><span>TAVS LAIKS. TAVA SLODZE.</span><h3>Saliec man treniņu</h3></div><div class="lb-auto-time"><label for="lb-build-time">Treniņa ilgums</label><output id="lb-duration-value" for="lb-build-time">'+lbTarget+' <small>min</small></output></div><input id="lb-build-time" type="range" min="10" max="60" step="5" value="'+lbTarget+'" aria-label="Treniņa ilgums minūtēs"><div class="lb-duration">'+[10,20,30,45,60].map(m=>'<button type="button" data-lb="duration" data-value="'+m+'" aria-pressed="'+(lbTarget===m)+'" class="'+(lbTarget===m?'selected':'')+'">'+m+' min</button>').join('')+'</div><span class="lb-auto-label">GRŪTĪBA</span><div class="lb-auto-levels" role="group" aria-label="Treniņa grūtība">'+[['easy','Viegli','Mierīgs temps'],['medium','Vidēji','Līdzsvarota slodze'],['hard','Grūti','Vairāk darba, īsāka atpūta']].map(([v,l,n])=>'<button type="button" data-lb="build-level" data-value="'+v+'" class="'+(lbBuildLevel===v?'selected':'')+'" aria-pressed="'+(lbBuildLevel===v)+'" '+(lbBuildFocus==='recovery'&&v!=='easy'?'disabled':'')+'><strong>'+l+'</strong><small>'+n+'</small></button>').join('')+'</div><div class="lb-build-inputs"><label>Mērķis<select data-lb-select="focus">'+lbFocusOptions().map(([v,l])=>'<option value="'+v+'" '+(lbBuildFocus===v?'selected':'')+'>'+l+'</option>').join('')+'</select></label><label>Pieejamais inventārs<select data-lb-select="build-equipment">'+LB_BUILD_EQUIPMENT.map(([v,l])=>'<option value="'+v+'" '+(lbBuildEquipment===v?'selected':'')+'>'+l+'</option>').join('')+'</select></label></div>'+lbBalanceToggle()+'<button type="button" class="lb-generate" data-lb="generate">'+(workout.ids.length?'↻ Sagatavot citu variantu':'✦ Atlasīt vingrinājumus')+'</button>'+(workout.ids.length?'<p class="lb-auto-note">Aizstās izvēlētās dienas komplektu.</p>':'')+'</section>';}
+
+function lbBuilderUI(workout){
+ const desc={full:'Viss ķermenis',basket:'Basketbola forma',dance:'Tautas deju forma',weightloss:'Kondīcija un spēks',strength:'Spēks un muskuļi',core:'Stabils korpuss',recovery:'Viegla kustība'};
+ const section=(n,title,icon,html)=>'<section class="lb-builder-step"><div class="lb-step-heading"><span class="lb-step-index">'+n+'</span><h4>'+title+'</h4>'+lbUIIcon(icon,19)+'</div>'+html+'</section>';
+ const choices=(arr,act,value,label)=>'<div class="lb-pick-grid" role="group" aria-label="'+label+'">'+arr.map(([v,l,n])=>'<button type="button" data-lb="'+act+'" data-value="'+v+'" class="'+(value===v?'selected':'')+'" aria-pressed="'+(value===v)+'"><strong>'+safe(l)+'</strong><small>'+safe(n||'')+'</small></button>').join('')+'</div>';
+ const goal=choices(lbFocusOptions().map(([v,l])=>[v,l,desc[v]]),'focus-choice',lbBuildFocus,'Treniņa mērķis');
+ const time='<div class="lb-auto-time"><label for="lb-build-time">Izvēlies ilgumu</label><output id="lb-duration-value" for="lb-build-time">'+lbTarget+' <small>min</small></output></div><input id="lb-build-time" type="range" min="10" max="60" step="5" value="'+lbTarget+'" aria-label="Treniņa ilgums minūtēs"><div class="lb-duration">'+[10,20,30,45,60].map(m=>'<button type="button" data-lb="duration" data-value="'+m+'" aria-pressed="'+(lbTarget===m)+'" class="'+(lbTarget===m?'selected':'')+'">'+m+' min</button>').join('')+'</div>';
+ const level='<div class="lb-auto-levels" role="group" aria-label="Treniņa grūtība">'+[['easy','Viegla','Mierīgs temps'],['medium','Vidēja','Līdzsvarota'],['hard','Augsta','Lielāka slodze']].map(([v,l,n])=>'<button type="button" data-lb="build-level" data-value="'+v+'" class="'+(lbBuildLevel===v?'selected':'')+' level-'+v+'" aria-pressed="'+(lbBuildLevel===v)+'" '+(lbBuildFocus==='recovery'&&v!=='easy'?'disabled':'')+'><i></i><strong>'+l+'</strong><small>'+n+'</small></button>').join('')+'</div>';
+ const gear=choices([['none','Paša svars','Bez inventāra'],['kettlebell','Svarbumbas','5 / 10 / 15 kg'],['dumbbell','Hanteles','Hanteļu komplekts'],['barbell','Stienis','Savienotais stienis'],['loop_band','Gumijas cilpa','Pretestības gumija'],['support','Sols','Stabils paaugstinājums']],'equipment-choice',lbBuildEquipment,'Pieejamais inventārs');
+ return '<section class="lb-builder lb-auto lb-studio-builder"><div class="lb-auto-heading"><span>PERSONĪGAIS PLĀNS</span><h3>Izveido treniņu</h3><p>Izvēlies mērķi, laiku, slodzi un inventāru.</p></div>'+section('01','Mērķis','target',goal)+section('02','Ilgums','clock',time)+section('03','Grūtības pakāpe','bolt',level)+section('04','Inventārs','barbell',gear+lbBalanceToggle())+'<div class="lb-builder-submit"><button type="button" class="lb-generate" data-lb="generate">'+lbUIIcon('bolt')+(workout.ids.length?'Ģenerēt citu treniņu':'Ģenerēt treniņu')+lbUIIcon('arrow')+'</button>'+(workout.ids.length?'<p class="lb-auto-note">Jaunais plāns aizstās šīs dienas vingrinājumu komplektu.</p>':'')+'</div></section>';
+}
+
 function lbClock(seconds){return Math.floor(seconds/60)+' min'+(seconds%60?' '+seconds%60+' s':'');}
 function lbPlanSummary(workout){const p=workout.plan;if(!p)return '';if(p.kind==='kettlebell-reps'){return '<section class="lb-plan-summary"><div><span>SVARBUMBU TRENIŅŠ</span><strong>'+safe(p.title)+' · ~'+p.minutes+' min</strong></div><div class="lb-plan-badges"><span>'+p.rounds+(p.circuit?' apļi':' piegājieni')+'</span><span>'+p.restSeconds+' s atpūta</span><span>5 / 10 / 15 kg</span></div><p>'+(p.warmupSeconds/60)+' min iesildīšanās: soļošana, viegli pietupieni, gurnu atvirzīšana bez svara un plecu kustības. Pēc treniņa '+(p.cooldownSeconds/60)+' min mierīga atsildīšanās.</p><p>'+(p.circuit?'Izpildi vienu piegājienu no katra vingrinājuma, tad atkārto apli.':'Pabeidz visus viena vingrinājuma piegājienus pirms nākamā. Vienpusējiem vingrinājumiem izpildi abas puses.')+' Atpūties ilgāk, ja nepieciešams. Atstāj 2-3 kvalitatīvus atkārtojumus rezervē.</p><p>Norādītais svars ir sākuma ieteikums, nevis pienākums. Ja 5 kg ir par smagu, izlaid vai aizstāj vingrinājumu. Pārej uz nākamo svaru tikai tad, kad visi piegājieni augšējā atkārtojumu robežā izdodas ar tīru tehniku un 2-3 atkārtojumu rezervi. Smagu kāju slodzi neplāno tieši pirms '+(lbIsLiva()?'deju mēģinājuma vai koncerta':'spēles')+'.</p><button type="button" class="lb-plan-build" data-lb="builder">Mainīt iestatījumus</button></section>';}return '<section class="lb-plan-summary"><div><span>TAVS SAGATAVOTAIS PLĀNS</span><strong>'+p.minutes+' min <small>· '+({easy:'viegli',medium:'vidēji',hard:'grūti'})[p.level]+'</small></strong></div><div class="lb-plan-badges"><span>'+p.rounds+' apļi</span><span>'+p.workSeconds+' s darbs</span><span>'+p.restSeconds+' s atpūta</span><span>'+safe(LB_BUILD_EQUIPMENT.find(x=>x[0]===p.equipment)?.[1]||'Paša svars')+'</span></div><p>2 min iesildīšanās · '+p.roundRestSeconds+' s starp apļiem · '+lbClock(p.cooldownSeconds)+' atsildīšanās.</p><p>'+p.ids.length+' vingrinājumi norādītajā secībā katrā aplī. Vienpusējos vingrinājumos pusi darba laika katrai pusei. Strādā kontrolēti; ja vajag, pagarini atpūtu.</p><button type="button" class="lb-plan-build" data-lb="builder">Mainīt iestatījumus</button></section>';}
 
@@ -306,6 +320,7 @@ function kbGenerate(){
 
 function lbGenerate(){
  if(lbBuildEquipment==='kettlebell')return kbGenerate();
+ if(lbDay().ids.length&&!confirm('Aizstāt izvēlētās dienas treniņu?'))return;
  const target=Math.max(10,Math.min(60,Math.round(Number(lbTarget)/5)*5||25));
  const level=lbBuildFocus==='recovery'?'easy':lbBuildLevel,rank={easy:0,medium:1,hard:2},focus=lbBuildFocus;
  let pool=LB_AUTO_POOL.map(([id,pattern,support])=>({x:lbEntry(id),pattern,support})).filter(o=>o.x&&(!o.support||lbBuildEquipment==='support')&&rank[o.x.level]<=rank[level]);
@@ -336,13 +351,17 @@ function lbGenerate(){
 document.addEventListener('click',event=>{
  const target=event.target.closest('[data-lb]');if(!target)return;
  const act=target.dataset.lb,id=target.dataset.id;
+ if(act==="program-type"){lbProgramType=target.dataset.value;render();return}
+ if(act==="program-reset"){lbProgramType="all";lbProgramFavOnly=false;render();return}
+ if(act==="focus-choice"){const v=target.dataset.value;if(!lbFocusOptions().some(x=>x[0]===v))return;lbBuildFocus=v;if(v==="recovery"){lbBuildLevel="easy";if(lbBuildEquipment==="kettlebell")lbBuildEquipment="none";}lbRememberBuilder();render();return}
+ if(act==="equipment-choice"){const v=target.dataset.value;if(!LB_BUILD_EQUIPMENT.some(x=>x[0]===v))return;lbBuildEquipment=v;if(v==="kettlebell"&&lbBuildFocus==="recovery"){lbBuildFocus="full";}lbRememberBuilder();render();return}
  if(act==="program-fav-filter"){lbProgramFavOnly=!lbProgramFavOnly;render();return}
  if(act==="program-favorite"){if(!lbAvailablePrograms().some(p=>p.id===id))return;state.programFavorites=Array.isArray(state.programFavorites)?state.programFavorites:[];const i=state.programFavorites.indexOf(id);if(i>=0)state.programFavorites.splice(i,1);else state.programFavorites.push(id);save();render();return}
  if(act==="more"){lbVisible+=24;render();return}
  if(["level","group","fav-filter","recent-filter","clear"].includes(act))lbVisible=24;
  if(act==="open-workout"){lbOpenWorkout();return}
  if(act==="return-builder"){lbFocusId=null;lbTab="mine";go("majasha");return}
- if(act==="tab"){lbTab=target.dataset.value;lbFocusId=null;render();return}
+ if(act==="tab"){lbTab=target.dataset.value;lbFocusId=null;render();window.scrollTo?.({top:0,behavior:"instant"});return}
  if(act==="today"){lbWorkDate=fitToday();render();return}
  if(act==="level"){lbLevel=target.dataset.value;render();return}
  if(act==="group"){lbGroup=target.dataset.value;render();return}
