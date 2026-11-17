@@ -11,20 +11,19 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <title>Mans uzturs | Progress un treniņi</title>
-  <link rel="stylesheet" href="styles.css?v=51">
-  <link rel="stylesheet" href="fitness.css?v=51">
-  <link rel="stylesheet" href="active-v2.css?v=51">
-  <link rel="stylesheet" href="planner.css?v=51">
-  <link rel="stylesheet" href="exercise-library.css?v=51">
-  <link rel="stylesheet" href="weight-progress.css?v=51">
+  <link rel="stylesheet" href="styles.css?v=52">
+  <link rel="stylesheet" href="fitness.css?v=52">
+  <link rel="stylesheet" href="active-v2.css?v=52">
+  <link rel="stylesheet" href="planner.css?v=52">
+  <link rel="stylesheet" href="exercise-library.css?v=52">
+  <link rel="stylesheet" href="weight-progress.css?v=52">
 </head>
 <body>
   <div class="app-shell">
-    <header class="site-header">
-      <a class="brand" href="#progress" aria-label="Mans uzturs, sākums"><span class="brand-icon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18M5 5c7 4 7 10 14 14M19 5C12 9 12 15 5 19"/></svg></span><span>MANS<span class="brand-accent">UZTURS</span></span></a>
-      <div class="header-actions"><label class="profile-picker"><span>Profils</span><select id="profile-select" aria-label="Izvēlies profilu"><option value="maris">👤 Māris</option><option value="liva">👤 Līva</option></select></label><button type="button" id="refresh-app" class="refresh-btn" aria-label="Atjaunināt aplikāciju" title="Atjaunināt aplikāciju">↻</button></div>
+    <header class="site-header compact-header">
+      <div class="header-actions"><label class="profile-picker"><span>Profils</span><select id="profile-select" aria-label="Izvēlies profilu"><option value="maris">👤 Māris</option><option value="liva">👤 Līva</option></select></label><button type="button" id="cloud-account" class="cloud-account" data-cloud="open" aria-label="Mākoņa konts" title="Mākoņa konts" hidden><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18h12a4 4 0 0 0 .7-7.9 6.5 6.5 0 0 0-12.5-1.4A4.7 4.7 0 0 0 6 18Z"/></svg><span class="cloud-account-dot" aria-hidden="true"></span></button><button type="button" id="refresh-app" class="refresh-btn" aria-label="Atjaunināt aplikāciju" title="Atjaunināt aplikāciju">↻</button></div>
     </header>
-    <div class="cloud-bar" role="group" aria-label="Datu glabāšana"><div><span class="cloud-dot" aria-hidden="true"></span><span id="cloud-status" role="status">Tikai šajā ierīcē</span></div><button type="button" id="cloud-open" data-cloud="open">Pieslēgt kontu</button></div>
+    <div id="cloud-bar" class="cloud-bar" role="group" aria-label="Datu glabāšana"><div><span class="cloud-dot" aria-hidden="true"></span><span id="cloud-status" role="status">Tikai šajā ierīcē</span></div><button type="button" id="cloud-open" data-cloud="open">Pieslēgt kontu</button></div>
     <main id="app" aria-live="polite"></main>
     <nav class="bottom-nav" aria-label="Galvenā navigācija">
       <button type="button" data-nav="progress"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 17l6-6 4 3 6-7M3 3v18h18"/></svg></span><span>Progress</span></button>
@@ -34,17 +33,17 @@
   <div id="cloud-panel" class="cloud-overlay" hidden><section class="cloud-dialog" role="dialog" aria-modal="true" aria-labelledby="cloud-panel-title"><header><h2 id="cloud-panel-title">Mākonis</h2><button type="button" id="cloud-close" data-cloud="close" aria-label="Aizvērt">×</button></header><p id="cloud-panel-status" role="status"></p><div id="cloud-panel-body"></div></section></div>
   <div id="modal" class="modal-layer" hidden></div>
   <div id="toast" role="status" aria-live="polite" class="toast" hidden></div>
-  <script src="data.js?v=51"></script>
-  <script src="fitness.js?v=51"></script>
-  <script src="cloud-sync.js?v=51"></script>
-  <script src="app.js?v=51"></script>
-  <script src="active-v2.js?v=51"></script>
-  <script src="planner.js?v=51"></script>
-  <script src="exercise-data.js?v=51"></script>
-  <script src="repdb-catalog.js?v=51"></script>
-  <script src="exercise-lv.js?v=51"></script>
-<script src="exercise-library.js?v=51"></script>
-  <script src="weight-progress.js?v=51"></script>
+  <script src="data.js?v=52"></script>
+  <script src="fitness.js?v=52"></script>
+  <script src="cloud-sync.js?v=52"></script>
+  <script src="app.js?v=52"></script>
+  <script src="active-v2.js?v=52"></script>
+  <script src="planner.js?v=52"></script>
+  <script src="exercise-data.js?v=52"></script>
+  <script src="repdb-catalog.js?v=52"></script>
+  <script src="exercise-lv.js?v=52"></script>
+<script src="exercise-library.js?v=52"></script>
+  <script src="weight-progress.js?v=52"></script>
 </body>
 </html>
 
