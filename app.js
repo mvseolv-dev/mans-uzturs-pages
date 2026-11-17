@@ -6,7 +6,7 @@ const PROFILE_KEY='mans-uzturs-active-profile';
 const DEFAULT = {config:{kcal:2000,protein:150,goal:85,extraProtein:0},weights:[],checks:{},shopping:{},swaps:{},customMeals:{},hiddenShopping:[],extraShopping:[],workouts:{}};
 const LIVA_DEFAULT = {config:{kcal:null,protein:null,goal:null,extraProtein:0},weights:[],checks:{},shopping:{},swaps:{},customMeals:{},hiddenShopping:[],extraShopping:[],workouts:{},configured:false,preferences:{completed:false}};
 const PREF_DEFAULT={meat:true,eggs:true,dairy:true,soy:true,legumes:true,fish:false,seafood:false,dislikes:'',completed:false};
-let activeProfile=localStorage.getItem(PROFILE_KEY)==='liva'?'liva':'maris';
+let activeProfile=window.CloudSync?.profile()||(localStorage.getItem(PROFILE_KEY)==='liva'?'liva':'maris');
 let state=load();
 function normalizeActivePage(value){if(['trenini','komanda'].includes(value))return 'majasha';return ['progress','majasha','mans-trenins','fitroutine'].includes(value)?value:'progress';}
 let page=normalizeActivePage(location.hash.slice(1));
@@ -14,11 +14,11 @@ let selectedDay = (rigaToday().getUTCDay()+6)%7;
 let weekShift=0;
 const fmt = (n, digits=0) => Number(n).toLocaleString('lv-LV',{minimumFractionDigits:digits,maximumFractionDigits:digits});
 const safe = x => String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function profileKey(){return activeProfile==='liva'?'mans-uzturs-liva-v1':STORAGE_KEY;}
+function profileKey(){return window.CloudSync?.key(activeProfile)||(activeProfile==='liva'?'mans-uzturs-liva-v1':STORAGE_KEY);}
 function profileDefault(){return activeProfile==='liva'?LIVA_DEFAULT:DEFAULT;}
 function load(){const base=profileDefault();try{const s=JSON.parse(localStorage.getItem(profileKey()));if(s&&s.config&&Array.isArray(s.weights)&&s.checks&&s.shopping)return {...base,...s,config:{...base.config,...s.config}};}catch(_){}return JSON.parse(JSON.stringify(base));}
-function save(){try{localStorage.setItem(profileKey(),JSON.stringify(state));}catch(_){toast('Neizdevās saglabāt datus pārlūkā.');}}
-function switchProfile(profile){if(profile!=='maris'&&profile!=='liva')return;activeProfile=profile;localStorage.setItem(PROFILE_KEY,profile);state=load();if(typeof lbResetProfile==='function')lbResetProfile();page='progress';weekShift=0;selectedDay=(rigaToday().getUTCDay()+6)%7;location.hash=page;render();toast(profile==='liva'?'Atvērts Līvas profils.':'Atvērts Māra profils.');}
+function save(){try{localStorage.setItem(profileKey(),JSON.stringify(state));window.CloudSync?.changed();}catch(_){toast('Neizdevās saglabāt datus pārlūkā.');}}
+function switchProfile(profile){if(window.CloudSync?.locked()){const sel=document.getElementById('profile-select');if(sel)sel.value=activeProfile;toast('Lai mainītu kontu, vispirms izraksties.');return;}if(profile!=='maris'&&profile!=='liva')return;activeProfile=profile;localStorage.setItem(PROFILE_KEY,profile);state=load();if(typeof lbResetProfile==='function')lbResetProfile();page='progress';weekShift=0;selectedDay=(rigaToday().getUTCDay()+6)%7;location.hash=page;render();toast(profile==='liva'?'Atvērts Līvas profils.':'Atvērts Māra profils.');}
 function rigaToday(){const parts=Object.fromEntries(new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Riga',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).filter(p=>p.type!=='literal').map(p=>[p.type,Number(p.value)]));return new Date(Date.UTC(parts.year,parts.month-1,parts.day,12));}
 function dateISO(d){return [d.getUTCFullYear(),String(d.getUTCMonth()+1).padStart(2,'0'),String(d.getUTCDate()).padStart(2,'0')].join('-');}
 function weekMonday(){const today=rigaToday();const weekday=today.getUTCDay();const shift=(weekday+6)%7;const nextWeekOffset=0;return new Date(Date.UTC(today.getUTCFullYear(),today.getUTCMonth(),today.getUTCDate()-shift+nextWeekOffset+weekShift*7,12));}
