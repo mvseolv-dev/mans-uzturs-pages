@@ -62,6 +62,8 @@ window.CloudSync=(()=>{
   const btn=$('cloud-open'),status=$('cloud-status'),a=getAccount();
   if(btn){btn.textContent=a?'Mākonis':'Pieslēgt kontu';btn.dataset.status=kind}
   if(status){status.textContent=text;status.dataset.status=kind}
+  const bar=$('cloud-bar');if(bar)bar.hidden=!!a;
+  const account=$('cloud-account');if(account){account.hidden=!a;account.dataset.status=kind;account.title='Mākoņa konts: '+text;account.setAttribute('aria-label','Mākoņa konts: '+text);}
   const selector=$('profile-select');if(selector){selector.disabled=!!a;}
   const panel=$('cloud-panel');if(panel&&!panel.hidden)paintPanel();
  }
