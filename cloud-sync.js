@@ -175,10 +175,10 @@ window.CloudSync=(()=>{
    conflict=null;label('Sinhronizēts','ok');
   })}catch(e){
    if(getAccount()?.uid===a.uid){
-    if(e.status===401||e.status===403)label('Pieslēdzies vēlreiz','error');
+    if(e.status===401||e.status===403){const current=getAccount();if(current?.uid===a.uid)write(AUTH_KEY,{...current,expires:0});label('Pieslēdzies vēlreiz','error');}
     else label(connected()?'Nav izdevies sinhronizēt · dati ierīcē':'Bezsaistē · dati ierīcē','offline');
    }
-  }finally{busy=false}
+  }finally{busy=false;paintPanel()}
  }
  function queue(){clearTimeout(timer);timer=setTimeout(()=>syncNow(),800)}
  function changed(){const a=getAccount();if(!a)return;label(connected()?'Gaida sinhronizāciju':'Bezsaistē · dati ierīcē',connected()?'pending':'offline');queue()}
@@ -223,7 +223,7 @@ window.CloudSync=(()=>{
   }catch(e){
    const msg=e.status===400||e.status===401?'Neizdevās pieslēgties. Pārbaudi e-pastu, paroli un konta aktivizāciju.':e.status===429?'Pārāk daudz mēģinājumu. Mēģini vēlāk.':'Neizdevās pieslēgties. '+(e.status?'Pārbaudi savienojumu un kontu.':(e.message==='Vispirms izraksties no pašreizējā konta.'?e.message:'Dati ierīcē nav mainīti.'));
    label(msg,'error');
-  }finally{busy=false}
+  }finally{busy=false;paintPanel()}
  }
  async function logout(){
   const a=getAccount();if(!a||busy)return;
@@ -244,8 +244,7 @@ window.CloudSync=(()=>{
   // Never rerender the password form while a user is typing.
   const editing=body.querySelector('form')&&body.contains(document.activeElement);
   const status=$('cloud-panel-status');if(status){status.textContent=lastStatus;status.dataset.status=lastKind;}
-  if(!a&&editing)return;
-  if(a&&lastKind==='error'&&editing)return;
+  if(editing){const submit=body.querySelector('button[type="submit"]');if(submit)submit.disabled=busy;return;}
   const title=a?(a.profile==='liva'?'Līvas':'Māra')+' mākonis':'Pieslēgt mākoņa kontu';
   $('cloud-panel-title').textContent=title;
   const conflictHtml=conflict&&a&&conflict.uid===a.uid?'<div class="cloud-conflict"><strong>Vienlaikus mainīti dati</strong><p>Ierīcē: '+esc(countText(conflict.local))+'<br>Mākonī: '+esc(countText(conflict.remote))+'</p><p>Neatkarīgās izmaiņas tiks apvienotas. Izvēlies, kuru versiju paturēt tikai konfliktējošajos laukos. Abu versiju rezerves kopija paliks ierīcē.</p><button type="button" data-cloud="local">Priekšroku ierīcei</button><button type="button" data-cloud="remote">Priekšroku mākonim</button></div>':'';
@@ -268,5 +267,5 @@ window.CloudSync=(()=>{
   if(a)queue();
  }
  document.addEventListener('DOMContentLoaded',init);
- return {profile:()=>getAccount()?.profile||null,key:p=>{const a=getAccount();return a?.profile===p?keyOf(a):null},changed,locked:()=>!!getAccount(),syncNow,merge3};
+ return {profile:()=>getAccount()?.profile||null,key:p=>{const a=getAccount();return a?.profile===p?keyOf(a):null},changed,locked:()=>!!getAccount(),syncNow,merge3,login,logout};
 })();
