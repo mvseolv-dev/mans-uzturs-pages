@@ -46,28 +46,29 @@ function kbDose(id,sets,level='easy',rest=75){
  const m=kbMove(id);if(!m)return null;
  return {sets,reps:m.reps,kg:KB_MOVES[id]?.kg??null,next:KB_MOVES[id]?.next??null,rest,seconds:m.sec};
 }
-function kbDoseText(d){return d?d.sets+' x '+d.reps+(d.kg===null?' · paša svars':' · sākumā '+d.kg+' kg')+' · '+d.rest+' s atpūta':''}
-function kbEstimatedMinutes(ids,doses,circuit=false){
- let sec=5*60+3*60;
+function kbDoseText(d){return d?d.sets+' x '+d.reps+(d.kg===null?' · paša svars':' · sākumā '+d.kg+' kg'+(d.next>d.kg?' (vēlāk '+d.next+' kg, ja tehnika stabila)':''))+' · '+d.rest+' s atpūta':''}
+function kbEstimatedMinutes(ids,doses,circuit=false,warmup=300,cooldown=180){
+ let sec=warmup+cooldown;
  if(circuit){const rounds=doses[ids[0]].sets;sec+=rounds*ids.reduce((n,id)=>n+doses[id].seconds+doses[id].rest,0);}
  else for(const id of ids){const d=doses[id];sec+=d.sets*(d.seconds+d.rest);}
  return Math.ceil(sec/60);
 }
 function kbPlanFor(p,target,level,focus,balance=false,automatic=false){
  const desired=Math.max(10,Math.min(60,Number(target)||p.minutes));
- let sets=automatic?(desired<30?2:desired<50?3:4):p.sets;
+ let sets=automatic?(desired<=10?1:desired<35?2:3):p.sets;
  if(level==='easy')sets=Math.min(sets,2);
  if(p.advanced)sets=Math.min(sets,2);
  let ids=p.moves.slice();
  // Short sessions use fewer exercises rather than rushed rest intervals.
- const balanceSeconds=balance&&!p.advanced?120:0;
+ const warmup=automatic&&desired<=15?180:300,cooldown=automatic&&desired<=15?120:180;
+ const balanceSeconds=balance&&!p.advanced&&desired>=20?120:0;
  let doses=Object.fromEntries(ids.map(id=>[id,kbDose(id,sets,level,p.rest)]));
  if(automatic){
-  while(ids.length>1&&kbEstimatedMinutes(ids,doses,p.circuit)+balanceSeconds/60>desired){ids.pop();doses=Object.fromEntries(ids.map(id=>[id,kbDose(id,sets,level,p.rest)]));}
-  if(kbEstimatedMinutes(ids,doses,p.circuit)+balanceSeconds/60>desired&&sets>1){sets=1;doses=Object.fromEntries(ids.map(id=>[id,kbDose(id,sets,level,p.rest)]));}
+  while(ids.length>1&&kbEstimatedMinutes(ids,doses,p.circuit,warmup,cooldown)+balanceSeconds/60>desired){ids.pop();doses=Object.fromEntries(ids.map(id=>[id,kbDose(id,sets,level,p.rest)]));}
+  if(kbEstimatedMinutes(ids,doses,p.circuit,warmup,cooldown)+balanceSeconds/60>desired&&sets>1){sets=1;doses=Object.fromEntries(ids.map(id=>[id,kbDose(id,sets,level,p.rest)]));}
  }
- const minutes=kbEstimatedMinutes(ids,doses,p.circuit)+balanceSeconds/60;
- return {kind:'kettlebell-reps',programId:p.id,title:p.title,minutes,targetMinutes:desired,level,focus,equipment:'kettlebell',ids,kbDoses:doses,circuit:!!p.circuit,advanced:!!p.advanced,rounds:sets,workSeconds:0,restSeconds:p.rest,roundRestSeconds:p.rest,warmupSeconds:300,cooldownSeconds:180,balanceSeconds,balanceExerciseId:balanceSeconds?'balance-dome-stand':null};
+ const minutes=kbEstimatedMinutes(ids,doses,p.circuit,warmup,cooldown)+balanceSeconds/60;
+ return {kind:'kettlebell-reps',programId:p.id,title:p.title,minutes,targetMinutes:desired,level,focus,equipment:'kettlebell',ids,kbDoses:doses,circuit:!!p.circuit,advanced:!!p.advanced,rounds:sets,workSeconds:0,restSeconds:p.rest,roundRestSeconds:p.rest,warmupSeconds:warmup,cooldownSeconds:cooldown,balanceSeconds,balanceExerciseId:balanceSeconds?'balance-dome-stand':null};
 }
 for(const [id,m] of Object.entries(KB_MOVES)){
  const x=WORKOUT_LIBRARY.find(x=>x.id===id);if(!x||x.equipment!=='kettlebell')continue;
@@ -226,6 +227,8 @@ activeExercise=function(id,routine,index){
  '<button class="'+(done?'done':'')+'" data-ap-check="'+id+'" data-ap-routine="'+routine+'">'+(done?'✓ PAVEIKTS':'○ ATZĪMĒT')+'</button></div></div></article>';
 };
 ACTIVE_PROGRAMS.splice(0,ACTIVE_PROGRAMS.length,...WORKOUT_PRESETS);
+const lbPreviousRoutine=renderFitnessRoutine;
+renderFitnessRoutine=function(id){const html=lbPreviousRoutine(id),p=kbProgram(id);if(!p)return html;const intro='<section class="lb-kb-intro"><strong>Viena svarbumba katram vingrinājumam · 5 / 10 / 15 kg</strong><p>5 min iesildīšanās bez svara, '+p.rest+' s atpūta '+(p.circuit?'starp vingrinājumiem; izpildi '+p.sets+' apļus':'starp piegājieniem; pabeidz katra vingrinājuma piegājienus pēc kārtas')+', 3 min atsildīšanās. Izvēlies vieglāku svaru, ja nevari izpildīt atkārtojumus ar 2-3 rezervē.</p>'+(p.advanced?'<p><strong>Vēzienus izvēlies tikai pēc tehnikas apgūšanas, ne nogurumā.</strong></p>':'')+'<button type="button" data-lb="kb-plan" data-id="'+p.id+'">Pievienot izvēlētās dienas treniņam</button></section>';return html.replace('<div class="ap-routine-progress">',intro+'<div class="ap-routine-progress">');};
 // Curated movements with known equipment and technique; the full catalog remains browsable.
 const LB_AUTO_POOL=[
  ['bodyweight-squat','squat'],['split-squat','lunge'],['reverse','lunge'],['lateral','lunge'],['rdl','hinge'],['glute-bridge','hinge'],['single-leg-glute-bridge','hinge'],['bodyweight-good-morning','hinge'],
@@ -259,7 +262,7 @@ function lbRememberBuilder(){state.workoutBuilder={minutes:lbTarget,level:lbBuil
 function lbWorkoutDuration(){return lbDay().plan?lbDay().plan.minutes+' min plānā':lbTimeSummary(lbDay().ids);}
 function lbBuilderUI(workout){return '<section class="lb-builder lb-auto"><div class="lb-auto-heading"><span>TAVS LAIKS. TAVA SLODZE.</span><h3>Saliec man treniņu</h3></div><div class="lb-auto-time"><label for="lb-build-time">Treniņa ilgums</label><output id="lb-duration-value" for="lb-build-time">'+lbTarget+' <small>min</small></output></div><input id="lb-build-time" type="range" min="10" max="60" step="5" value="'+lbTarget+'" aria-label="Treniņa ilgums minūtēs"><div class="lb-duration">'+[10,20,30,45,60].map(m=>'<button type="button" data-lb="duration" data-value="'+m+'" aria-pressed="'+(lbTarget===m)+'" class="'+(lbTarget===m?'selected':'')+'">'+m+' min</button>').join('')+'</div><span class="lb-auto-label">GRŪTĪBA</span><div class="lb-auto-levels" role="group" aria-label="Treniņa grūtība">'+[['easy','Viegli','Mierīgs temps'],['medium','Vidēji','Līdzsvarota slodze'],['hard','Grūti','Vairāk darba, īsāka atpūta']].map(([v,l,n])=>'<button type="button" data-lb="build-level" data-value="'+v+'" class="'+(lbBuildLevel===v?'selected':'')+'" aria-pressed="'+(lbBuildLevel===v)+'" '+(lbBuildFocus==='recovery'&&v!=='easy'?'disabled':'')+'><strong>'+l+'</strong><small>'+n+'</small></button>').join('')+'</div><div class="lb-build-inputs"><label>Mērķis<select data-lb-select="focus">'+[['full','Pilns ķermenis'],['basket','Basketbolam'],['strength','Spēks'],['core','Korpusa stabilitāte'],['recovery','Mobilitāte / atjaunošanās']].map(([v,l])=>'<option value="'+v+'" '+(lbBuildFocus===v?'selected':'')+'>'+l+'</option>').join('')+'</select></label><label>Pieejamais inventārs<select data-lb-select="build-equipment">'+LB_BUILD_EQUIPMENT.map(([v,l])=>'<option value="'+v+'" '+(lbBuildEquipment===v?'selected':'')+'>'+l+'</option>').join('')+'</select></label></div>'+lbBalanceToggle()+'<button type="button" class="lb-generate" data-lb="generate">'+(workout.ids.length?'↻ Sagatavot citu variantu':'✦ Atlasīt vingrinājumus')+'</button>'+(workout.ids.length?'<p class="lb-auto-note">Aizstās izvēlētās dienas komplektu.</p>':'')+'</section>';}
 function lbClock(seconds){return Math.floor(seconds/60)+' min'+(seconds%60?' '+seconds%60+' s':'');}
-function lbPlanSummary(workout){const p=workout.plan;if(!p)return '';if(p.kind==='kettlebell-reps'){return '<section class="lb-plan-summary"><div><span>SVARBUMBU TRENIŅŠ</span><strong>'+safe(p.title)+' · ~'+p.minutes+' min</strong></div><div class="lb-plan-badges"><span>'+p.rounds+(p.circuit?' apļi':' piegājieni')+'</span><span>'+p.restSeconds+' s atpūta</span><span>5 / 10 / 15 kg</span></div><p>5 min iesildīšanās: soļošana, viegli pietupieni, gurnu atvirzīšana bez svara un plecu kustības. Pēc treniņa 3 min mierīga atsildīšanās.</p><p>'+(p.circuit?'Izpildi vienu piegājienu no katra vingrinājuma, tad atkārto apli.':'Pabeidz visus viena vingrinājuma piegājienus pirms nākamā. Vienpusējiem vingrinājumiem izpildi abas puses.')+' Atpūties ilgāk, ja nepieciešams. Atstāj 2-3 kvalitatīvus atkārtojumus rezervē.</p><p>Norādītais svars ir sākuma ieteikums, nevis pienākums. Ja 5 kg ir par smagu, izlaid vai aizstāj vingrinājumu. Smagu kāju slodzi neplāno tieši pirms spēles.</p><button type="button" class="lb-plan-build" data-lb="builder">Mainīt iestatījumus</button></section>';}return '<section class="lb-plan-summary"><div><span>TAVS SAGATAVOTAIS PLĀNS</span><strong>'+p.minutes+' min <small>· '+({easy:'viegli',medium:'vidēji',hard:'grūti'})[p.level]+'</small></strong></div><div class="lb-plan-badges"><span>'+p.rounds+' apļi</span><span>'+p.workSeconds+' s darbs</span><span>'+p.restSeconds+' s atpūta</span><span>'+safe(LB_BUILD_EQUIPMENT.find(x=>x[0]===p.equipment)?.[1]||'Paša svars')+'</span></div><p>2 min iesildīšanās · '+p.roundRestSeconds+' s starp apļiem · '+lbClock(p.cooldownSeconds)+' atsildīšanās.</p><p>'+p.ids.length+' vingrinājumi norādītajā secībā katrā aplī. Vienpusējos vingrinājumos pusi darba laika katrai pusei. Strādā kontrolēti; ja vajag, pagarini atpūtu.</p><button type="button" class="lb-plan-build" data-lb="builder">Mainīt iestatījumus</button></section>';}
+function lbPlanSummary(workout){const p=workout.plan;if(!p)return '';if(p.kind==='kettlebell-reps'){return '<section class="lb-plan-summary"><div><span>SVARBUMBU TRENIŅŠ</span><strong>'+safe(p.title)+' · ~'+p.minutes+' min</strong></div><div class="lb-plan-badges"><span>'+p.rounds+(p.circuit?' apļi':' piegājieni')+'</span><span>'+p.restSeconds+' s atpūta</span><span>5 / 10 / 15 kg</span></div><p>'+(p.warmupSeconds/60)+' min iesildīšanās: soļošana, viegli pietupieni, gurnu atvirzīšana bez svara un plecu kustības. Pēc treniņa '+(p.cooldownSeconds/60)+' min mierīga atsildīšanās.</p><p>'+(p.circuit?'Izpildi vienu piegājienu no katra vingrinājuma, tad atkārto apli.':'Pabeidz visus viena vingrinājuma piegājienus pirms nākamā. Vienpusējiem vingrinājumiem izpildi abas puses.')+' Atpūties ilgāk, ja nepieciešams. Atstāj 2-3 kvalitatīvus atkārtojumus rezervē.</p><p>Norādītais svars ir sākuma ieteikums, nevis pienākums. Ja 5 kg ir par smagu, izlaid vai aizstāj vingrinājumu. Pārej uz nākamo svaru tikai tad, kad visi piegājieni augšējā atkārtojumu robežā izdodas ar tīru tehniku un 2-3 atkārtojumu rezervi. Smagu kāju slodzi neplāno tieši pirms spēles.</p><button type="button" class="lb-plan-build" data-lb="builder">Mainīt iestatījumus</button></section>';}return '<section class="lb-plan-summary"><div><span>TAVS SAGATAVOTAIS PLĀNS</span><strong>'+p.minutes+' min <small>· '+({easy:'viegli',medium:'vidēji',hard:'grūti'})[p.level]+'</small></strong></div><div class="lb-plan-badges"><span>'+p.rounds+' apļi</span><span>'+p.workSeconds+' s darbs</span><span>'+p.restSeconds+' s atpūta</span><span>'+safe(LB_BUILD_EQUIPMENT.find(x=>x[0]===p.equipment)?.[1]||'Paša svars')+'</span></div><p>2 min iesildīšanās · '+p.roundRestSeconds+' s starp apļiem · '+lbClock(p.cooldownSeconds)+' atsildīšanās.</p><p>'+p.ids.length+' vingrinājumi norādītajā secībā katrā aplī. Vienpusējos vingrinājumos pusi darba laika katrai pusei. Strādā kontrolēti; ja vajag, pagarini atpūtu.</p><button type="button" class="lb-plan-build" data-lb="builder">Mainīt iestatījumus</button></section>';}
 
 function kbApply(p,target,level,focus,balance,automatic){
  if(p.advanced&&!confirm('Vēzieni paredzēti tikai pēc vilkmes un vēziena tehnikas apgūšanas. Vai tiešām vēlies šo programmu?'))return;
@@ -268,7 +271,8 @@ function kbApply(p,target,level,focus,balance,automatic){
  const plan=kbPlanFor(p,target,level,focus,balance,automatic);
  if(!plan.ids.every(id=>lbEntry(id)&&kbMove(id))){toast('Neizdevās sagatavot svarbumbu programmu.');return;}
  day.ids=plan.ids.slice();lbResetFinished(day);day.plan=plan;
- // Preserve historically recorded loads, but never prefill them as performed.
+ // A replacement workout must not inherit old measured loads.
+ day.loads={};
  lbTarget=Math.max(10,Math.min(60,Math.round(target/5)*5));lbBuildLevel=level;lbBuildFocus=focus;lbBuildEquipment='kettlebell';lbBuildBalance=!!plan.balanceSeconds;
  lbRememberBuilder();lbTab='mine';lbFocusId=null;lbSave();lbOpenWorkout();toast('Svarbumbu treniņš ir gatavs.');
 }
