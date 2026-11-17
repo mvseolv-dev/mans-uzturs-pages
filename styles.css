@@ -62,3 +62,34 @@ button{max-width:100%;overflow-wrap:anywhere}
 .sport-move-text{padding:15px}.sport-move-text small{font-size:10px;color:var(--green);letter-spacing:.08em;font-weight:800}.sport-move-text h3{font-size:16px;margin:6px 0}.sport-move-text p{font-size:12px;color:var(--muted);margin:0}
 .sport-tip{border:1px solid #eedcba;background:#fff7e8;border-radius:18px;padding:20px}.sport-tip p{font-size:13px;color:#806d50;margin:8px 0 0}.sport-links{display:flex;gap:10px;flex-wrap:wrap}.sport-links .btn{flex:1}
 @media(max-width:500px){.sport-hero{padding:25px 19px}.sport-metrics{gap:5px}.sport-metrics>div{padding:11px 9px}.sport-metrics span{font-size:8px;letter-spacing:0}.sport-metrics strong{font-size:clamp(16px,5vw,23px)}.sport-metrics small{font-size:10px}.sport-item{padding:11px;gap:8px}.sport-day{flex-basis:42px}.sport-mark{flex-basis:32px;width:32px;height:32px}.sport-moves{grid-template-columns:1fr}.sport-move{display:grid;grid-template-columns:120px minmax(0,1fr)}.sport-art{height:auto;min-height:145px}.sport-move-text{padding:13px}}
+
+
+/* Cloud account / offline status */
+.cloud-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 13px;margin:0 0 15px;background:#162129;border:1px solid #34434e;color:#e3e9ed;border-radius:13px;font-size:12px;min-width:0}
+.cloud-bar>div{display:flex;align-items:center;gap:8px;min-width:0}
+.cloud-dot{width:8px;height:8px;background:#9ba8b1;border-radius:50%;flex:none}
+.cloud-bar:has([data-status="ok"]) .cloud-dot{background:#a9e785}
+.cloud-bar:has([data-status="offline"]) .cloud-dot,.cloud-bar:has([data-status="pending"]) .cloud-dot,.cloud-bar:has([data-status="busy"]) .cloud-dot{background:#e9bf72}
+.cloud-bar:has([data-status="conflict"]) .cloud-dot,.cloud-bar:has([data-status="error"]) .cloud-dot{background:#f29c93}
+.cloud-bar button{flex:none;border:1px solid #536873;background:#23313a;color:#f7fbfc;padding:10px 12px;min-height:44px;border-radius:10px;font-size:12px;font-weight:750}
+.cloud-bar button[data-status="ok"]{color:#b5ef79;border-color:#5c8158}
+.cloud-overlay[hidden]{display:none!important}
+.cloud-overlay{display:flex;align-items:center;justify-content:center;position:fixed;inset:0;z-index:2000;background:#080c10b8;padding:16px;overflow-y:auto;color-scheme:dark}
+.cloud-dialog{width:100%;max-width:440px;max-height:90vh;overflow-y:auto;display:grid;gap:12px;background:#182229;border:1px solid #34434e;border-radius:20px;color:#f3f7f9;padding:21px;box-shadow:0 20px 70px #0008}
+.cloud-dialog header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.cloud-dialog header h2{font-size:22px;line-height:1.2;color:#f3f7f9}
+.cloud-dialog p{font-size:13px;line-height:1.55;color:#b0bdc7;overflow-wrap:anywhere;margin:4px 0 13px}
+.cloud-dialog #cloud-panel-status{padding:10px 12px;border-radius:10px;background:#25323b;margin:0;color:#e8f1f5;font-size:12px}
+.cloud-dialog #cloud-panel-status[data-status="ok"]{background:#273d2d;color:#b5ef79}
+.cloud-dialog #cloud-panel-status[data-status="error"],.cloud-dialog #cloud-panel-status[data-status="conflict"]{background:#472f2d;color:#ffd6cf}
+.cloud-dialog form,.cloud-dialog label,.cloud-actions,.cloud-conflict{display:grid;gap:10px}
+.cloud-dialog label{font-size:12px;color:#b0bdc7}
+.cloud-dialog :is(input,select){width:100%;box-sizing:border-box;min-width:0;min-height:46px;background:#202c34;border:1px solid #485966;color:#f3f7f9;padding:11px;border-radius:10px;font-size:16px}
+.cloud-dialog button{min-height:45px;border:1px solid #485966;border-radius:11px;background:#202c34;color:#f3f7f9;padding:10px 13px;font-size:13px;font-weight:750;cursor:pointer}
+.cloud-dialog button[type="submit"],.cloud-dialog button[data-cloud="sync"]{background:#b5ef79;color:#142016;border-color:#b5ef79}
+.cloud-dialog button[data-cloud="close"]{width:44px;padding:8px;font-size:25px;flex:none}
+.cloud-dialog button:disabled{opacity:.55;cursor:wait}
+.cloud-dialog .cloud-download{width:100%;margin-top:10px}
+.cloud-conflict{background:#302827;border:1px solid #8d665c;padding:12px;border-radius:12px;margin:12px 0}
+.cloud-conflict p{margin:0;color:#f3d5cb}
+.cloud-dialog :is(input,select,button):focus-visible,.cloud-bar button:focus-visible{outline:2px solid #b5ef79;outline-offset:2px}
