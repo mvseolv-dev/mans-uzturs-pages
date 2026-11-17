@@ -8,8 +8,8 @@ const LIVA_DEFAULT = {config:{kcal:null,protein:null,goal:null,extraProtein:0},w
 const PREF_DEFAULT={meat:true,eggs:true,dairy:true,soy:true,legumes:true,fish:false,seafood:false,dislikes:'',completed:false};
 let activeProfile=localStorage.getItem(PROFILE_KEY)==='liva'?'liva':'maris';
 let state=load();
-let page=['dashboard','trenini','komanda','majasha','mans-trenins','fitroutine','uzturs','diena','nedela','iepirkumi','gatavosana','progress'].includes(location.hash.slice(1))?location.hash.slice(1):'progress';
-if(activeProfile==='liva'&&['trenini','komanda'].includes(page))page='majasha';
+function normalizeActivePage(value){if(['trenini','komanda'].includes(value))return 'majasha';return ['progress','majasha','mans-trenins','fitroutine'].includes(value)?value:'progress';}
+let page=normalizeActivePage(location.hash.slice(1));
 let selectedDay = (rigaToday().getUTCDay()+6)%7;
 let weekShift=0;
 const fmt = (n, digits=0) => Number(n).toLocaleString('lv-LV',{minimumFractionDigits:digits,maximumFractionDigits:digits});
@@ -176,39 +176,23 @@ function renderSport(){
  '<div class="sport-heading"><small>SPĒKS UN MOBILITĀTE</small><h2>Mājas treniņš · 15-20 min</h2></div><p class="sport-description">Veic vienu reizi nedēļā, piemēram, otrdien, ja jūties atjaunojies. Sāc ar vienu apli un tikai pēc tam pārej uz diviem. Shēmas ir ilustratīvas.</p><div class="sport-moves">'+SPORT_MOVES.map((x,i)=>'<article class="sport-move"><div class="sport-art">'+moveArt(x[3])+'</div><div class="sport-move-text"><small>0'+(i+1)+' · '+x[1]+'</small><h3>'+x[0]+'</h3><p>'+x[2]+'</p></div></article>').join('')+'</div><div class="sport-tip"><h3>Atjaunošanās arī ir treniņa daļa</h3><p>Otrdienās un piektdienās ieplānotas 60 min pastaigas mierīgā tempā. Ja pēc basketbola esi noguris, pastaigu saīsini. Ar jau esošo basketbola slodzi nevajag katru brīvo dienu piepildīt ar intensīviem treniņiem.</p></div><div class="sport-links"><button class="btn" data-nav="progress">Svara progress →</button><button class="btn secondary" data-nav="diena">Uzturs →</button></div></div>'+footer();
 }
 function render(){
- const isMaris=activeProfile==='maris';
  document.body.dataset.profile=activeProfile;
- if(page==='dashboard'){page='progress';history.replaceState(null,'','#progress');}
- const innerPages=['diena','nedela','iepirkumi','gatavosana'];
- if(['trenini','komanda'].includes(page)){page='majasha';history.replaceState(null,'','#majasha');}
- const shownMaris=['progress','majasha','uzturs'];
+ page=normalizeActivePage(page);
+ if(location.hash!=='#'+page)history.replaceState(null,'','#'+page);
  document.querySelectorAll('.bottom-nav [data-nav]').forEach(n=>{
   const section=n.dataset.nav;
-  n.hidden=!shownMaris.includes(section);
-  n.classList.toggle('active',section===page||(section==='uzturs'&&innerPages.includes(page))||(section==='majasha'&&['fitroutine','mans-trenins'].includes(page)));
+  n.hidden=!['progress','majasha'].includes(section);
+  n.classList.toggle('active',section===page||(section==='majasha'&&['fitroutine','mans-trenins'].includes(page)));
  });
  const selector=document.getElementById('profile-select');if(selector)selector.value=activeProfile;
  const brand=document.querySelector('.brand');if(brand)brand.href='#progress';
  const app=document.getElementById('app');
- if(activeProfile==='liva'&&(!state.configured||!state.preferences?.completed)&&!['majasha','mans-trenins','fitroutine'].includes(page)){app.innerHTML=renderProfileSetup();return;}
- let content;
- if(page==='mans-trenins')content=typeof renderCustomWorkout==='function'?renderCustomWorkout():'<div class="ap-screen">Ielādē treniņu...</div>';
- else if(page==='majasha')content=renderFitnessHome();
- else if(page==='fitroutine')content=renderFitnessRoutine(window.fitOpenRoutine);
- else if(page==='uzturs')content=renderFitnessNutrition();
- else if(page==='diena')content=renderDay();
- else if(page==='nedela')content=renderWeek();
- else if(page==='iepirkumi')content=renderShopping();
- else if(page==='gatavosana')content=renderPrep();
- else content=isMaris?renderFitnessProgress():renderProgress();
- if(innerPages.includes(page)){
-  content='<div class="fit-subnav"><button data-nav="uzturs">← Uzturs</button>'+[
-   ['diena','Maltītes'],['nedela','Nedēļa'],['iepirkumi','Iepirkumi'],['gatavosana','Gatavošana']
-  ].map(([id,label])=>'<button data-nav="'+id+'" class="'+(page===id?'active':'')+'">'+label+'</button>').join('')+'</div>'+content;
- }
- app.innerHTML=content;
+ if(page==='mans-trenins')app.innerHTML=typeof renderCustomWorkout==='function'?renderCustomWorkout():'<div class="ap-screen">Ielādē treniņu...</div>';
+ else if(page==='majasha')app.innerHTML=renderFitnessHome();
+ else if(page==='fitroutine')app.innerHTML=renderFitnessRoutine(window.fitOpenRoutine);
+ else app.innerHTML=renderFitnessProgress();
 }
-function go(p){page=p;location.hash=p;render();window.scrollTo({top:0,behavior:'instant'})}
+function go(p){page=normalizeActivePage(p);location.hash=page;render();window.scrollTo({top:0,behavior:'instant'})}
 function toast(str){const el=document.getElementById('toast');el.textContent=str;el.hidden=false;clearTimeout(toast.handle);toast.handle=setTimeout(()=>el.hidden=true,2700)}
 function recipeModal(id, servings=1){const r=RECIPES[id];if(!r)return;let ing=Object.entries(r.ingredients).map(([id,g])=>`<div class="ingredient"><span>${FOODS[id].name}</span><strong>${fmtGrams(g*servings)}</strong></div>`).join('');const el=document.getElementById('modal');el.hidden=false;el.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-label="${safe(r.name)}"><button type="button" class="close" data-action="close-modal" aria-label="Aizvērt">×</button><p class="eyebrow">${r.type} · ${r.time} min</p><h2>${r.name}</h2><p class="desc" style="margin:10px 0 18px">${servings} ${servings===1?"porcija":"porcijas"}: <strong>${r.kcal*servings} kcal</strong> un <strong>${fmt(r.protein*servings)} g olbaltumvielu</strong> (aptuveni).</p><div class="row" style="justify-content:flex-start;margin-bottom:18px"><button class="btn ${servings===1?"":"secondary"} small" data-action="recipe-servings" data-recipe="${id}" data-servings="1">1 porcija</button><button class="btn ${servings===2?"":"secondary"} small" data-action="recipe-servings" data-recipe="${id}" data-servings="2">2 porcijas</button></div><h3>Produkti ${servings} ${servings===1?"porcijai":"porcijām"}</h3><div class="ingredients">${ing}</div><h3>Pagatavošana</h3><ol class="modal-steps">${r.steps.map(s=>`<li>${s}</li>`).join('')}</ol><div class="inline-note green">${r.tip}</div><button class="btn" data-action="close-modal" style="margin-top:15px;width:100%">Skaidrs</button></div>`;document.body.style.overflow='hidden'}
 function closeModal(){document.getElementById('modal').hidden=true;document.getElementById('modal').innerHTML='';document.body.style.overflow=''}
@@ -234,7 +218,7 @@ document.addEventListener('change',async e=>{if(e.target.id==='profile-select'){
 document.addEventListener('submit',e=>{if(e.target.id==='add-shopping'){e.preventDefault();const fd=new FormData(e.target),name=String(fd.get('name')||'').trim(),quantity=String(fd.get('quantity')||'').trim();if(!name)return;state.extraShopping??=[];state.extraShopping.push({id:'extra-'+Date.now(),name:name.slice(0,90),quantity:quantity.slice(0,40)});save();render();toast('Prece pievienota.');}else if(e.target.id==='dietary-settings'){e.preventDefault();state.preferences=readDietaryPrefs(new FormData(e.target));save();render();toast('Līvas ēdienkarte atjaunināta.');}else if(e.target.id==='profile-setup'){e.preventDefault();const fd=new FormData(e.target),kcal=Number(fd.get('kcal')),protein=Number(fd.get('protein')),goal=Number(fd.get('goal'));if(kcal<1200||kcal>4000||protein<40||protein>250||goal<35||goal>200){toast('Pārbaudi ievadītos mērķus.');return;}state.config={kcal,protein,goal,extraProtein:0};state.preferences=readDietaryPrefs(fd);state.configured=true;save();render();toast('Līvas profils izveidots.');}else if(e.target.id==='custom-meal-form'){e.preventDefault();const fd=new FormData(e.target),name=String(fd.get('name')||'').trim(),guess=estimateMeal(name),kcal=String(fd.get('kcal')||'').trim()===''?guess.kcal:Number(fd.get('kcal')),protein=String(fd.get('protein')||'').trim()===''?guess.protein:Number(fd.get('protein'));if(!name||!Number.isFinite(kcal)||kcal<0||kcal>4000||!Number.isFinite(protein)||protein<0||protein>250){toast('Pārbaudi ēdienu un uzturvērtības.');return;}const date=dateISO(dayDate(selectedDay));state.customMeals??={};state.customMeals[date]??=[];state.customMeals[date].push({id:String(Date.now())+'-'+Math.random().toString(36).slice(2,7),name,kcal,protein});save();render();toast('Apēstais ēdiens pievienots.');}else if(e.target.id==='weight-form'){e.preventDefault();const fd=new FormData(e.target),date=fd.get('date'),rawWeight=String(fd.get('weight')||'').trim().replace(',', '.'),weight=Number(rawWeight);if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||(typeof wpValidDate==='function'&&!wpValidDate(date))||!/^\d{2,3}(?:\.\d{1,2})?$/.test(rawWeight)||!Number.isFinite(weight)||weight<30||weight>300||date>dateISO(rigaToday())){toast('Ievadi derīgu datumu un svaru.');return}state.weights=state.weights.filter(x=>x.date!==date);state.weights.push({date,weight});save();render();toast('Svars saglabāts.')}else if(e.target.id==='settings-form'){e.preventDefault();const fd=new FormData(e.target),kcal=Number(fd.get('kcal')),protein=Number(fd.get('protein')),goal=Number(fd.get('goal')),extraProtein=Number(fd.get('extraProtein'));if(kcal<1400||kcal>4000||protein<50||protein>250||goal<40||goal>200||![0,1,2].includes(extraProtein)){toast('Pārbaudi iestatījumu vērtības.');return}state.config={kcal,protein,goal,extraProtein};save();render();toast('Iestatījumi saglabāti.')}});
 document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
-window.addEventListener('hashchange',()=>{let hash=location.hash.slice(1);if(['dashboard','trenini','komanda','majasha','mans-trenins','fitroutine','uzturs','diena','nedela','iepirkumi','gatavosana','progress'].includes(hash)){page=hash;render()}});
+window.addEventListener('hashchange',()=>{page=normalizeActivePage(location.hash.slice(1));render()});
 if('serviceWorker' in navigator && /^https?:/.test(location.protocol))navigator.serviceWorker.register('./sw.js').catch(()=>{});
 let lastRigaDate=dateISO(rigaToday());
 function refreshRigaDay(){const today=dateISO(rigaToday());if(today!==lastRigaDate){lastRigaDate=today;if(weekShift===0){selectedDay=(rigaToday().getUTCDay()+6)%7;}render();}}
