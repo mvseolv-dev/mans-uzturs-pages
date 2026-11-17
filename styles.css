@@ -93,3 +93,14 @@ button{max-width:100%;overflow-wrap:anywhere}
 .cloud-conflict{background:#302827;border:1px solid #8d665c;padding:12px;border-radius:12px;margin:12px 0}
 .cloud-conflict p{margin:0;color:#f3d5cb}
 .cloud-dialog :is(input,select,button):focus-visible,.cloud-bar button:focus-visible{outline:2px solid #b5ef79;outline-offset:2px}
+
+/* Compact header and private account status */
+body .site-header.compact-header,body:has(.ap-screen) .site-header.compact-header{justify-content:flex-end;padding:8px 0 10px;min-height:0;gap:0}
+.site-header.compact-header .header-actions{margin-left:auto;gap:8px}
+.cloud-bar[hidden],.cloud-account[hidden]{display:none!important}
+.cloud-account{position:relative;display:grid;place-items:center;flex:none;width:44px;height:44px;padding:0;border:1px solid #34434e;border-radius:12px;background:#182229;color:#b5ef79;cursor:pointer}
+.cloud-account-dot{position:absolute;right:6px;top:6px;width:8px;height:8px;border-radius:50%;background:#9ba8b1;box-shadow:0 0 0 2px #182229}
+.cloud-account[data-status="ok"] .cloud-account-dot{background:#9cdb79}
+.cloud-account:is([data-status="offline"],[data-status="pending"],[data-status="busy"]) .cloud-account-dot{background:#e9bf72}
+.cloud-account:is([data-status="conflict"],[data-status="error"]) .cloud-account-dot{background:#f29c93}
+.cloud-account:focus-visible{outline:2px solid #b5ef79;outline-offset:2px}
