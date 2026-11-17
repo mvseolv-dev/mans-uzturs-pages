@@ -28,3 +28,23 @@ body[data-profile=maris] .bottom-nav{grid-template-columns:repeat(3,minmax(0,1fr
  .wp-entry-compact form>p{grid-row:3;grid-column:1;margin:0}
 }
 @media(max-width:340px){.wp-entry-compact input[type=date]{padding:7px 4px;font-size:14px}}
+
+/* Daily entry and goal share the first compact row; latest weigh-in follows. */
+.wp-screen>.wp-top-controls{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:10px;align-items:start;margin:0 0 4px}
+.wp-screen>.wp-top-controls>.wp-entry-compact{margin:0;gap:9px}
+.wp-top-controls .wp-entry-compact form{grid-template-columns:1fr;gap:7px}
+.wp-top-controls .wp-entry-compact .wp-entry-fields{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:8px}
+.wp-top-controls .wp-entry-compact input{min-width:0}
+.wp-screen .wp-top-controls .wp-entry-compact button.wp-save{grid-row:2;grid-column:1;min-height:44px;margin:0}
+.wp-top-controls .wp-entry-compact form>p{grid-row:3;grid-column:1;margin:0}
+.wp-top-controls .wp-goal{padding:14px 16px;border-radius:17px;margin:0}
+.wp-top-controls .wp-goal .wp-card-head{gap:8px;flex-wrap:wrap}
+.wp-top-controls .wp-goal .wp-card-head h2{font-size:20px;margin:5px 0 0}
+.wp-top-controls .wp-goal .wp-meter{margin:13px 0 7px}
+.wp-top-controls .wp-goal details{margin-top:12px;padding-top:9px}
+.wp-top-controls .wp-goal form{margin-top:9px}
+@media(max-width:600px){
+ .wp-screen>.wp-top-controls{grid-template-columns:minmax(0,1fr);gap:8px}
+ .wp-top-controls .wp-goal{padding:12px 14px}
+ .wp-top-controls .wp-entry-compact form{grid-template-columns:1fr}
+}
