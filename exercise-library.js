@@ -396,26 +396,30 @@ function lbSmartPlan({target,level,focus,equipment,balance=false,prior=[],random
  if(focus==='recovery')level='easy';
  const rank={easy:0,medium:1,hard:2},safeFocus=LB_SLOTS[focus]?focus:'full';
  const warm=target<=15?180:300,cool=target<=15?120:180,bal=balance&&target>=20&&safeFocus!=='recovery'?120:0;
- const maxCount=safeFocus==='recovery'?6:safeFocus==='core'?5:target<=15?4:target<=25?5:target<=40?6:8;
+ const maxCount=safeFocus==='recovery'?6:safeFocus==='core'?(target<=20?3:5):target<=15?3:target<=25?4:target<=40?5:6;
  const compatible=o=>{const eq=o.x.equipment||'bodyweight';return eq==='bodyweight'||(equipment==='support'&&['plyo_box','flat_bench'].includes(eq))||eq===equipment};
  const onlyLowImpact=safeFocus==='dance'||safeFocus==='weightloss'||safeFocus==='recovery';
  let pool=[...LB_AUTO_POOL,...LB_KB_POOL].map(([id,pattern,support])=>({x:lbEntry(id),pattern,support})).filter(o=>o.x&&(LB_REP_SPEC[o.x.id]||LB_TIME_SPEC[o.x.id])&&rank[o.x.level]<=rank[level]&&(!o.support||equipment==='support')&&compatible(o));
  pool=pool.filter(o=>safeFocus==='recovery'?o.pattern==='mobility'||['supported-single-leg-stand','heel-to-toe-walk'].includes(o.x.id):safeFocus==='core'?o.pattern==='core':o.pattern!=='mobility'&&(safeFocus==='weightloss'||o.pattern!=='cardio'));
  if(onlyLowImpact)pool=pool.filter(o=>!['single-leg-box-squat','archer-push-ups','copenhagen-plank','pike-push-ups'].includes(o.x.id));
+ const priority={basket:new Set(['lateral','reverse','split-squat','kettlebell-reverse-lunge','rdl','kettlebell-kickstand-deadlift','single-leg-calf-raise','calf','deadbug','bird-dog','sideplank']),dance:new Set(['calf','standing-hip-abduction','side-lying-hip-abduction','supported-single-leg-stand','heel-to-toe-walk','banded-lateral-walk','reverse','split-squat','kettlebell-reverse-lunge','rdl','kettlebell-kickstand-deadlift','bird-dog','deadbug']),weightloss:new Set(['walking','high-knees','bodyweight-squat','goblet-squat','wall-push-ups','push','glute-bridge'])}[safeFocus]||new Set();
  const fav=new Set(lbFaves()),prev=new Set(prior),usesGear=['kettlebell','dumbbell','barbell','loop_band','support'].includes(equipment);
- const scored=pool.map(o=>({...o,family:LB_FAMILIES[o.x.id]||o.x.id,score:(usesGear&&(o.x.equipment===equipment||(equipment==='support'&&o.support))?4:0)+(LB_MAIN_IDS.has(o.x.id)?1.8:0)+(fav.has(o.x.id)?.45:0)+(prev.has(o.x.id)?.2:0)+random()*.5+(o.x.level===level?.15:0)})).sort((a,b)=>b.score-a.score);
+ const scored=pool.map(o=>({...o,family:LB_FAMILIES[o.x.id]||o.x.id,score:(usesGear&&(o.x.equipment===equipment||(equipment==='support'&&o.support))?4:0)+(LB_MAIN_IDS.has(o.x.id)?1.8:0)+(priority.has(o.x.id)?1.25:0)+(fav.has(o.x.id)?.45:0)+(prev.has(o.x.id)?.2:0)+random()*.5+(o.x.level===level?.15:0)})).sort((a,b)=>b.score-a.score);
  let chosen=[],doses={};
  const minutes=()=>lbSmartMinutes(chosen.map(o=>o.x.id),doses,warm,cool,bal);
- const add=o=>{const id=o.x.id;doses[id]=lbRepDose(o,1,level,safeFocus);chosen.push(o);if(minutes()>target){chosen.pop();delete doses[id];return false}return true};
+ const add=(o,sets=1)=>{const id=o.x.id;doses[id]=lbRepDose(o,sets,level,safeFocus);chosen.push(o);if(minutes()>target){chosen.pop();delete doses[id];return false}return true};
  // For very short sessions, keep useful movement coverage rather than repeat one lift.
- const patterns=safeFocus==='basket'||safeFocus==='dance'?['squat','hinge','core','lunge','balance','push','pull']:LB_SLOTS[safeFocus];
- const order=target<=20&&['full','strength','weightloss'].includes(safeFocus)?['squat','push','hinge','pull','core','cardio','balance']:patterns;
+ const patterns=safeFocus==='basket'?['lunge','hinge','core','balance','push','pull','squat']:safeFocus==='dance'?['lunge','balance','hinge','core','squat','push','pull']:safeFocus==='weightloss'?['squat','push','hinge','cardio','pull','core','balance','lunge']:LB_SLOTS[safeFocus];
+ const order=target<=20&&['full','strength'].includes(safeFocus)?['squat','push','hinge','pull','core','balance']:patterns;
  const familyUsed=o=>chosen.some(c=>c.family===o.family);
  const used=o=>chosen.some(c=>c.x.id===o.x.id);
  const candidates=pattern=>scored.filter(o=>o.pattern===pattern&&!used(o)&&!familyUsed(o));
- for(const pattern of order){if(chosen.length>=maxCount)break;for(const o of candidates(pattern)){if(add(o))break}}
- // Fill only from relevant patterns, and never insert a duplicate variant just to fill time.
- for(const p of order){if(chosen.length>=maxCount)break;for(const o of candidates(p)){if(add(o))break}}
+ const initialSets=target>=25&&safeFocus!=='recovery'?2:1;
+ // Reserve two working sets up front for moderate-length sessions. Cover key movement patterns first.
+ for(const pattern of order){if(chosen.length>=maxCount)break;for(const o of candidates(pattern)){if(add(o,initialSets))break}}
+ // One-set accessories are allowed after the main work, or when a very short session cannot fit more.
+ for(const pattern of order){if(chosen.length>=maxCount||(initialSets===2&&chosen.length>=3&&safeFocus!=='weightloss'))break;if(chosen.some(o=>o.pattern===pattern)&&!['core','recovery'].includes(safeFocus))continue;for(const o of candidates(pattern)){if(add(o,1))break}}
+ if(!chosen.length){for(const o of scored){if(add(o,1))break;}}
  if(!chosen.length)return null;
  const baseSets=safeFocus==='recovery'?Math.min(2,target>=20?2:1):level==='easy'?2:3;
  // Add sets evenly, keeping compound lifts first. Do not squeeze rest to hit a timer.
