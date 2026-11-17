@@ -243,3 +243,24 @@ body:has(.lb-studio) .bottom-nav button.active{background:#273d2d;color:#b5ef79}
 @media(max-width:600px){
 .lb-studio{gap:14px}.lb-studio .lb-studio-builder{padding:16px}.lb-studio .lb-builder-step{padding:17px 0}.lb-studio .lb-program-grid{grid-template-columns:1fr}.lb-studio .lb-studio-program{display:grid;grid-template-columns:104px minmax(0,1fr)}.lb-studio .lb-studio-program .lb-program-img{height:100%;min-height:140px;aspect-ratio:auto}.lb-studio .lb-program-body{padding:12px;gap:8px}.lb-studio .lb-program-body h3{font-size:16px}.lb-studio .lb-program-buttons button{padding:10px;font-size:12px}.lb-studio .lb-program-heart{top:8px;right:8px}.lb-studio .lb-studio-resume{grid-template-columns:1fr}.lb-studio .lb-run-exercise{padding:15px}}
 @media(max-width:370px){.lb-studio .lb-studio-date{grid-template-columns:minmax(0,1fr) auto}.lb-date-icon{display:none}.lb-pick-grid button{padding:10px}.lb-studio .lb-studio-tabs button strong{font-size:10px}.lb-studio .lb-studio-program{grid-template-columns:86px minmax(0,1fr)}.lb-studio .lb-auto-levels button{padding:10px 7px}.lb-studio .lb-auto-levels button small{font-size:10px}}
+
+
+/* Shared ready-made program execution styles. */
+.lb-studio .ap-routine-cover{min-height:205px;background-image:linear-gradient(90deg,#182229 8%,#182229db 52%,#18222965),var(--ap-photo);border:1px solid var(--lb-border);border-radius:18px}
+.lb-studio .ap-routine-cover>div{padding:21px;max-width:500px}
+.lb-studio .ap-routine-cover h1{font-size:clamp(26px,5vw,38px);line-height:1.15;margin:12px 0}
+.lb-studio .ap-routine-cover p{color:var(--lb-text);font-size:13px;line-height:1.6}
+.lb-studio .ap-back{font-size:12px;min-height:44px;padding:8px 2px}
+.lb-studio .ap-routine-progress,.lb-studio .lb-kb-intro{background:var(--lb-card);border-color:var(--lb-border);color:var(--lb-text)}
+.lb-studio .lb-kb-intro strong{color:var(--lb-accent)}
+.lb-studio .ap-routine-progress>div{background:var(--lb-control)}
+.lb-studio .ap-exercise{background:var(--lb-card);border-color:var(--lb-border);border-radius:18px;overflow:hidden}
+.lb-studio .ap-ex-visual{background:var(--lb-control);min-width:0}
+.lb-studio .ap-ex-info h3{line-height:1.25;overflow-wrap:anywhere}
+.lb-studio .ap-ex-info ol{padding-left:20px;margin:7px 0 13px;display:grid;gap:8px}
+.lb-studio .ap-ex-info li,.lb-studio .ap-ex-info p{font-size:13px;line-height:1.65;color:var(--lb-muted)}
+.lb-studio .ap-ex-actions button,.lb-studio .lb-detail-fav,.lb-studio .lb-kb-intro button{min-height:44px;border-radius:11px}
+.lb-studio .ap-ex-actions button,.lb-studio .lb-detail-fav{background:var(--lb-control);border:1px solid var(--lb-border);color:var(--lb-text)}
+.lb-studio .ap-ex-actions button.done,.lb-studio .lb-kb-intro button{background:var(--lb-accent);border-color:var(--lb-accent);color:var(--lb-on)}
+.lb-studio .ap-disclaimer{color:var(--lb-muted);line-height:1.6}
+@media(max-width:450px){.lb-studio .ap-routine-cover>div{padding:18px}.lb-studio .ap-ex-info{padding:15px}.lb-studio .ap-ex-info h3{font-size:20px}}
