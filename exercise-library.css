@@ -171,3 +171,75 @@
 /* Single-kettlebell training */
 .lb-load-label select{display:block;width:100%;max-width:260px;margin-top:6px;padding:10px 12px;background:#172419;color:#f0f8e7;border:1px solid #657b49;border-radius:10px;font:inherit;font-weight:700;min-height:42px}
 .lb-kb-intro{display:grid;gap:10px;padding:16px;border:1px solid #526c43;border-radius:15px;background:#1b2c20;color:#e9f3e2;margin:14px 0;font-size:13px;line-height:1.5}.lb-kb-intro strong{color:#d0fc73}.lb-kb-intro p{margin:0}.lb-kb-intro button{border:0;border-radius:11px;background:#d0fc73;color:#18280e;padding:12px;font-weight:800;cursor:pointer}.lb-program-card button[data-lb="kb-plan"]{background:#243b20;color:#d0fc73;border:1px solid #6d934b;margin-bottom:7px}
+
+
+/* v48 - shared workout studio, mobile-first neutral charcoal / fresh green */
+.lb-studio{--lb-card:#182229;--lb-control:#202c34;--lb-border:#34434e;--lb-text:#f3f7f9;--lb-muted:#b0bdc7;--lb-accent:#b5ef79;--lb-on:#142016;--lb-active:#273d2d;gap:17px;color:var(--lb-text)}
+body:has(.lb-studio){--ap-bg:#10171d;--ap-accent:#b5ef79;--ap-white:#f3f7f9;--ap-muted:#b0bdc7}
+body:has(.lb-studio) .bottom-nav{background:#182229;border-color:#34434e}
+body:has(.lb-studio) .bottom-nav button.active{background:#273d2d;color:#b5ef79}
+.lb-studio :is(button,input,select):focus-visible{outline:2px solid var(--lb-accent);outline-offset:3px}
+.lb-studio button{cursor:pointer}.lb-studio button:disabled{cursor:not-allowed}
+.lb-studio-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:3px 2px}
+.lb-studio-kicker{font-size:10px;letter-spacing:.13em;color:var(--lb-muted);font-weight:800}
+.lb-studio-header h1{font-size:clamp(32px,6vw,43px);line-height:1.05;letter-spacing:-.05em;margin:8px 0}
+.lb-studio-header p{font-size:13px;line-height:1.5;color:var(--lb-muted);margin:0}
+.lb-studio-mark{width:52px;height:52px;display:grid;place-items:center;flex:none;background:var(--lb-active);color:var(--lb-accent);border:1px solid #4a6951;border-radius:16px}
+.lb-studio .lb-studio-tabs{background:var(--lb-card);border:1px solid var(--lb-border);padding:5px;gap:5px;border-radius:16px}
+.lb-studio .lb-studio-tabs button{min-height:63px;display:flex;flex-direction:column;gap:5px;position:relative;color:var(--lb-muted);font-size:11px;border-radius:11px}
+.lb-studio .lb-studio-tabs button strong{font-weight:750}.lb-studio .lb-studio-tabs button.current{background:var(--lb-accent);color:var(--lb-on)}
+.lb-studio .lb-studio-tabs button>span{position:absolute;right:7px;top:6px;min-width:18px;height:18px;background:#374b38;color:#e4facd}
+.lb-studio .lb-panel{gap:15px}
+.lb-studio .lb-studio-date{background:var(--lb-card);border:1px solid var(--lb-border);padding:12px;display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:10px;align-items:center}
+.lb-date-icon{display:grid;place-items:center;color:var(--lb-accent)}
+.lb-studio .lb-date-picker label{display:grid;gap:4px;font-size:11px;color:var(--lb-muted);min-width:0}
+.lb-studio .lb-date-picker input{display:block;width:100%;min-width:0;max-width:100%;padding:6px 8px;min-height:39px;background:var(--lb-control);border-color:var(--lb-border);font-size:15px;color:var(--lb-text)}
+.lb-studio .lb-date-picker button{min-height:44px;background:var(--lb-control);border:1px solid var(--lb-border);color:var(--lb-text)!important;font-size:12px;padding:9px 13px}
+.lb-studio .lb-studio-resume{margin:0;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;background:var(--lb-active);border:1px solid #57775c;padding:17px;gap:16px}
+.lb-studio-resume small{font-size:11px;color:#c6dac0}.lb-resume-meter{height:6px;border-radius:8px;background:#435b43;overflow:hidden}.lb-resume-meter i{display:block;height:100%;background:var(--lb-accent);border-radius:8px}
+.lb-studio .lb-resume button{background:var(--lb-accent);color:var(--lb-on);display:flex;align-items:center;justify-content:center;gap:9px;min-height:46px;font-size:13px}
+.lb-studio .lb-studio-builder{padding:21px;gap:0;border:1px solid var(--lb-border);background:var(--lb-card);border-radius:18px}
+.lb-studio .lb-auto-heading>span{color:var(--lb-accent);font-size:10px;letter-spacing:.13em}.lb-studio .lb-auto-heading h3{font-size:25px;margin:7px 0}.lb-studio .lb-auto-heading p{color:var(--lb-muted);font-size:13px}
+.lb-builder-step{padding:21px 0;border-top:1px solid var(--lb-border);display:grid;gap:12px}.lb-builder-step:first-of-type{margin-top:19px}
+.lb-step-heading{display:flex;align-items:center;gap:9px}.lb-step-heading h4{font-size:16px;line-height:1.25;margin:0;flex:1;color:var(--lb-text)}.lb-step-heading>svg{color:var(--lb-muted)}
+.lb-step-index{font-size:10px;letter-spacing:.06em;font-weight:800;color:var(--lb-accent);background:#263b31;display:grid;place-items:center;width:29px;height:29px;border-radius:9px;flex:none}
+.lb-pick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.lb-pick-grid button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;justify-content:center;gap:5px;min-height:64px;padding:12px 15px;background:var(--lb-control);border:1px solid var(--lb-border);border-radius:12px;color:var(--lb-text);min-width:0}
+.lb-pick-grid button strong{font-size:13px;font-weight:750;overflow-wrap:anywhere}.lb-pick-grid button small{font-size:11px;line-height:1.3;color:var(--lb-muted);overflow-wrap:anywhere}
+.lb-pick-grid button.selected{background:var(--lb-active);border-color:var(--lb-accent);box-shadow:inset 3px 0 var(--lb-accent)}.lb-pick-grid button.selected strong{color:var(--lb-accent)}
+.lb-studio .lb-auto-time label{font-size:13px;color:var(--lb-muted)}.lb-studio .lb-auto-time output{color:var(--lb-accent);font-size:36px}.lb-studio .lb-auto-time output small{color:var(--lb-muted)}
+.lb-studio .lb-auto input[type=range]{accent-color:var(--lb-accent);height:32px;margin:0}
+.lb-studio .lb-auto .lb-duration button{background:var(--lb-control);color:var(--lb-text);border:1px solid var(--lb-border);min-height:44px;font-size:12px}
+.lb-studio .lb-auto .lb-duration button.selected{background:var(--lb-accent);color:var(--lb-on);border-color:var(--lb-accent)}
+.lb-studio .lb-auto-levels button{background:var(--lb-control);border:1px solid var(--lb-border);color:var(--lb-text);padding:13px 10px;min-height:88px;gap:5px}
+.lb-studio .lb-auto-levels button i{display:block;width:8px;height:8px;background:#9bdb99;border-radius:100%}.lb-studio .lb-auto-levels .level-medium i{background:#e8be70}.lb-studio .lb-auto-levels .level-hard i{background:#ef9388}
+.lb-studio .lb-auto-levels button strong{font-size:13px}.lb-studio .lb-auto-levels button small{font-size:11px;color:var(--lb-muted)}
+.lb-studio .lb-auto-levels button.selected{border-color:var(--lb-accent);background:var(--lb-active)}.lb-studio .lb-auto-levels button.selected strong{color:var(--lb-accent)}
+.lb-studio .lb-balance-toggle{background:var(--lb-control);border:1px solid var(--lb-border);min-height:58px}.lb-studio .lb-balance-toggle input{accent-color:var(--lb-accent)}.lb-studio .lb-balance-toggle small{color:var(--lb-muted)}
+.lb-builder-submit{display:grid;gap:10px;padding-top:6px}
+.lb-studio .lb-builder-submit .lb-generate{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--lb-accent);color:var(--lb-on)!important;min-height:55px;width:100%;font-size:15px;border-radius:13px}
+.lb-builder-submit .lb-generate svg:last-child{margin-left:auto}.lb-builder-submit .lb-generate svg:first-child{margin-right:auto}
+.lb-studio .lb-auto-note{color:var(--lb-muted);font-size:11px;text-align:center}
+.lb-studio .lb-head>div>span,.lb-studio .lb-detail-head>span{color:var(--lb-accent)}.lb-studio .lb-head-count{background:var(--lb-control);border-color:var(--lb-border);color:var(--lb-muted);font-size:11px}
+.lb-program-filters{display:flex;gap:7px;flex-wrap:wrap}.lb-program-filters button{background:var(--lb-card);border:1px solid var(--lb-border);color:var(--lb-text);border-radius:999px;min-height:44px;font-size:12px;font-weight:650;padding:8px 12px}.lb-program-filters button.active{background:var(--lb-active);border-color:var(--lb-accent);color:var(--lb-accent)}
+.lb-studio .lb-program-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.lb-studio .lb-studio-program{background:var(--lb-card);border:1px solid var(--lb-border);border-radius:18px;display:flex;flex-direction:column}
+.lb-studio .lb-studio-program .lb-program-img{width:100%;height:auto;min-height:0;flex:0 0 auto;aspect-ratio:2/1;background:#d8e4ec}.lb-studio .lb-studio-program .lb-program-img img{object-fit:contain;object-position:center}
+.lb-program-heart{position:absolute;right:10px;top:10px;width:44px;height:44px;display:grid;place-items:center;background:#17242be8;border:1px solid #b7cbd075;border-radius:13px;color:white}.lb-program-heart.on{color:#ffb4c3}.lb-program-heart.on svg{fill:#ffb4c3}
+.lb-studio .lb-program-body{padding:16px;gap:9px}.lb-program-label{color:var(--lb-accent);font-size:10px;letter-spacing:.07em;font-weight:800;overflow-wrap:anywhere}.lb-studio .lb-program-body h3{color:var(--lb-text);font-size:19px;line-height:1.2;overflow-wrap:anywhere}
+.lb-program-meta{display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap}.lb-program-meta span{display:flex;align-items:center;gap:4px;color:var(--lb-muted);font-size:11px;font-weight:750}.lb-program-meta .lb-pdone{color:var(--lb-accent)}
+.lb-studio .lb-program-body p{color:var(--lb-muted);font-size:12px;line-height:1.55}.lb-program-buttons{display:grid;gap:7px;margin-top:auto}.lb-studio .lb-program-buttons button{min-height:44px;font-size:12px;font-weight:750;background:var(--lb-accent);color:var(--lb-on);margin:0}.lb-studio .lb-program-buttons button[data-lb="kb-plan"]{background:var(--lb-control);border:1px solid var(--lb-border);color:var(--lb-text)}
+.lb-studio :is(.lb-ex-card,.lb-detail-copy,.lb-detail-photo,.lb-plan-summary,.lb-run-exercise,.lb-balance-block,.lb-empty){background:var(--lb-card);border-color:var(--lb-border)}
+.lb-studio :is(.lb-levels button,.lb-categories button,.lb-subfilters button,.lb-input-wrap,.lb-equipment select,.lb-load-label select,.lb-load-label input){background:var(--lb-control);border-color:var(--lb-border);color:var(--lb-text)}
+.lb-studio :is(.lb-levels button.active,.lb-categories button.active,.lb-add,.lb-detail-add,.lb-generate){background:var(--lb-accent);border-color:var(--lb-accent);color:var(--lb-on)!important}
+.lb-studio :is(.lb-add.chosen,.lb-detail-add.selected,.lb-subfilters button.active){background:var(--lb-active);color:var(--lb-accent)!important;border-color:var(--lb-accent)}
+.lb-studio :is(.lb-input-wrap>span,.lb-back,.lb-detail-copy>span,.lb-run-instructions h3,.lb-plan-summary strong,.lb-plan-build){color:var(--lb-accent)!important}
+.lb-studio .lb-thumb{background:#d8e4ec}.lb-studio .lb-thumb img{object-fit:contain}.lb-studio .lb-ex-actions{border-color:var(--lb-border)}.lb-studio .lb-ex-actions button{min-height:44px}
+.lb-studio .lb-favorite{min-width:44px;background:var(--lb-control);border-color:var(--lb-border)}.lb-studio .lb-favorite.on{background:#412a33;color:#ffb4c3}
+.lb-studio :is(.lb-ex-meta,.lb-detail-copy li,.lb-run-cues p,.lb-plan-summary p){color:var(--lb-muted)}
+.lb-studio .lb-detail-buttons button,.lb-studio .lb-run-actions button{min-height:46px;background:var(--lb-control);border-color:var(--lb-border);color:var(--lb-text)}
+.lb-studio .lb-detail-buttons .lb-detail-add,.lb-studio .lb-run-actions button.done{background:var(--lb-accent);color:var(--lb-on)}.lb-studio .lb-detail-buttons .lb-detail-add.selected{background:var(--lb-active);color:var(--lb-accent)}
+.lb-studio .lb-pose-pair figcaption{background:var(--lb-control);color:var(--lb-text)}.lb-studio .lb-run-dose,.lb-studio .lb-plan-badges span{background:var(--lb-active);color:var(--lb-accent)}.lb-studio .lb-run-progress i{background:var(--lb-accent)}
+.lb-studio .lb-safety,.lb-studio .lb-attribution{background:transparent;border-color:var(--lb-border);color:var(--lb-muted)}.lb-studio .lb-attribution a{color:var(--lb-accent)}
+@media(max-width:600px){
+.lb-studio{gap:14px}.lb-studio .lb-studio-builder{padding:16px}.lb-studio .lb-builder-step{padding:17px 0}.lb-studio .lb-program-grid{grid-template-columns:1fr}.lb-studio .lb-studio-program{display:grid;grid-template-columns:104px minmax(0,1fr)}.lb-studio .lb-studio-program .lb-program-img{height:100%;min-height:140px;aspect-ratio:auto}.lb-studio .lb-program-body{padding:12px;gap:8px}.lb-studio .lb-program-body h3{font-size:16px}.lb-studio .lb-program-buttons button{padding:10px;font-size:12px}.lb-studio .lb-program-heart{top:8px;right:8px}.lb-studio .lb-studio-resume{grid-template-columns:1fr}.lb-studio .lb-run-exercise{padding:15px}}
+@media(max-width:370px){.lb-studio .lb-studio-date{grid-template-columns:minmax(0,1fr) auto}.lb-date-icon{display:none}.lb-pick-grid button{padding:10px}.lb-studio .lb-studio-tabs button strong{font-size:10px}.lb-studio .lb-studio-program{grid-template-columns:86px minmax(0,1fr)}.lb-studio .lb-auto-levels button{padding:10px 7px}.lb-studio .lb-auto-levels button small{font-size:10px}}
