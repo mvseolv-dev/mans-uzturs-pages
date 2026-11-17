@@ -238,7 +238,8 @@ async function refreshApp(){
    await Promise.all(registrations.map(reg=>reg.update().catch(()=>{})));
   }
  }catch(_){}
- window.location.reload();
+ if(navigator.onLine===false){refreshingApp=false;if(button){button.disabled=false;button.textContent='↻';}toast('Atjaunināšanai nepieciešams internets. Dati ir saglabāti ierīcē.');return;}
+ const target=new URL(window.location.href);target.searchParams.set('refresh',String(Date.now()));window.location.replace(target.href);
 }
 document.getElementById('refresh-app')?.addEventListener('click',refreshApp);
 let pullStart=null;
