@@ -173,36 +173,33 @@
 .lb-kb-intro{display:grid;gap:10px;padding:16px;border:1px solid #526c43;border-radius:15px;background:#1b2c20;color:#e9f3e2;margin:14px 0;font-size:13px;line-height:1.5}.lb-kb-intro strong{color:#d0fc73}.lb-kb-intro p{margin:0}.lb-kb-intro button{border:0;border-radius:11px;background:#d0fc73;color:#18280e;padding:12px;font-weight:800;cursor:pointer}.lb-program-card button[data-lb="kb-plan"]{background:#243b20;color:#d0fc73;border:1px solid #6d934b;margin-bottom:7px}
 
 
-/* v48 - shared workout studio, mobile-first neutral charcoal / fresh green */
-.lb-studio{--lb-card:#182229;--lb-control:#202c34;--lb-border:#34434e;--lb-text:#f3f7f9;--lb-muted:#b0bdc7;--lb-accent:#b5ef79;--lb-on:#142016;--lb-active:#273d2d;gap:17px;color:var(--lb-text)}
-body:has(.lb-studio){--ap-bg:#10171d;--ap-accent:#b5ef79;--ap-white:#f3f7f9;--ap-muted:#b0bdc7}
-body:has(.lb-studio) .bottom-nav{background:#182229;border-color:#34434e}
-body:has(.lb-studio) .bottom-nav button.active{background:#273d2d;color:#b5ef79}
+/* Shared workout studio, using the Progress palette. */
+.lb-studio{--lb-card:var(--mu-card);--lb-control:var(--mu-control);--lb-border:var(--mu-border);--lb-text:var(--mu-text);--lb-muted:var(--mu-muted);--lb-accent:var(--mu-accent);--lb-on:var(--mu-on-accent);--lb-active:var(--mu-selected);--lb-selected-border:var(--mu-selected-border);gap:17px;color:var(--lb-text)}
 .lb-studio :is(button,input,select):focus-visible{outline:2px solid var(--lb-accent);outline-offset:3px}
 .lb-studio button{cursor:pointer}.lb-studio button:disabled{cursor:not-allowed}
 .lb-studio-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:3px 2px}
 .lb-studio-kicker{font-size:10px;letter-spacing:.13em;color:var(--lb-muted);font-weight:800}
 .lb-studio-header h1{font-size:clamp(32px,6vw,43px);line-height:1.05;letter-spacing:-.05em;margin:8px 0}
 .lb-studio-header p{font-size:13px;line-height:1.5;color:var(--lb-muted);margin:0}
-.lb-studio-mark{width:52px;height:52px;display:grid;place-items:center;flex:none;background:var(--lb-active);color:var(--lb-accent);border:1px solid #4a6951;border-radius:16px}
+.lb-studio-mark{width:52px;height:52px;display:grid;place-items:center;flex:none;background:var(--lb-active);color:var(--lb-accent);border:1px solid #303a30;border-radius:16px}
 .lb-studio .lb-studio-tabs{background:var(--lb-card);border:1px solid var(--lb-border);padding:5px;gap:5px;border-radius:16px}
 .lb-studio .lb-studio-tabs button{min-height:63px;display:flex;flex-direction:column;gap:5px;position:relative;color:var(--lb-muted);font-size:11px;border-radius:11px}
 .lb-studio .lb-studio-tabs button strong{font-weight:750}.lb-studio .lb-studio-tabs button.current{background:var(--lb-accent);color:var(--lb-on)}
-.lb-studio .lb-studio-tabs button>span{position:absolute;right:7px;top:6px;min-width:18px;height:18px;background:#374b38;color:#e4facd}
+.lb-studio .lb-studio-tabs button>span{position:absolute;right:7px;top:6px;min-width:18px;height:18px;background:#36432f;color:#dce7d2}
 .lb-studio .lb-panel{gap:15px}
 .lb-studio .lb-studio-date{background:var(--lb-card);border:1px solid var(--lb-border);padding:12px;display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:10px;align-items:center}
 .lb-date-icon{display:grid;place-items:center;color:var(--lb-accent)}
 .lb-studio .lb-date-picker label{display:grid;gap:4px;font-size:11px;color:var(--lb-muted);min-width:0}
 .lb-studio .lb-date-picker input{display:block;width:100%;min-width:0;max-width:100%;padding:6px 8px;min-height:39px;background:var(--lb-control);border-color:var(--lb-border);font-size:15px;color:var(--lb-text)}
 .lb-studio .lb-date-picker button{min-height:44px;background:var(--lb-control);border:1px solid var(--lb-border);color:var(--lb-text)!important;font-size:12px;padding:9px 13px}
-.lb-studio .lb-studio-resume{margin:0;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;background:var(--lb-active);border:1px solid #57775c;padding:17px;gap:16px}
-.lb-studio-resume small{font-size:11px;color:#c6dac0}.lb-resume-meter{height:6px;border-radius:8px;background:#435b43;overflow:hidden}.lb-resume-meter i{display:block;height:100%;background:var(--lb-accent);border-radius:8px}
+.lb-studio .lb-studio-resume{margin:0;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;background:var(--lb-active);border:1px solid #475840;padding:17px;gap:16px}
+.lb-studio-resume small{font-size:11px;color:#c1ccbb}.lb-resume-meter{height:6px;border-radius:8px;background:#303a30;overflow:hidden}.lb-resume-meter i{display:block;height:100%;background:var(--lb-accent);border-radius:8px}
 .lb-studio .lb-resume button{background:var(--lb-accent);color:var(--lb-on);display:flex;align-items:center;justify-content:center;gap:9px;min-height:46px;font-size:13px}
 .lb-studio .lb-studio-builder{padding:21px;gap:0;border:1px solid var(--lb-border);background:var(--lb-card);border-radius:18px}
 .lb-studio .lb-auto-heading>span{color:var(--lb-accent);font-size:10px;letter-spacing:.13em}.lb-studio .lb-auto-heading h3{font-size:25px;margin:7px 0}.lb-studio .lb-auto-heading p{color:var(--lb-muted);font-size:13px}
 .lb-builder-step{padding:21px 0;border-top:1px solid var(--lb-border);display:grid;gap:12px}.lb-builder-step:first-of-type{margin-top:19px}
 .lb-step-heading{display:flex;align-items:center;gap:9px}.lb-step-heading h4{font-size:16px;line-height:1.25;margin:0;flex:1;color:var(--lb-text)}.lb-step-heading>svg{color:var(--lb-muted)}
-.lb-step-index{font-size:10px;letter-spacing:.06em;font-weight:800;color:var(--lb-accent);background:#263b31;display:grid;place-items:center;width:29px;height:29px;border-radius:9px;flex:none}
+.lb-step-index{font-size:10px;letter-spacing:.06em;font-weight:800;color:var(--lb-accent);background:#273422;display:grid;place-items:center;width:29px;height:29px;border-radius:9px;flex:none}
 .lb-pick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .lb-pick-grid button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;justify-content:center;gap:5px;min-height:64px;padding:12px 15px;background:var(--lb-control);border:1px solid var(--lb-border);border-radius:12px;color:var(--lb-text);min-width:0}
 .lb-pick-grid button strong{font-size:13px;font-weight:750;overflow-wrap:anywhere}.lb-pick-grid button small{font-size:11px;line-height:1.3;color:var(--lb-muted);overflow-wrap:anywhere}
@@ -224,7 +221,7 @@ body:has(.lb-studio) .bottom-nav button.active{background:#273d2d;color:#b5ef79}
 .lb-program-filters{display:flex;gap:7px;flex-wrap:wrap}.lb-program-filters button{background:var(--lb-card);border:1px solid var(--lb-border);color:var(--lb-text);border-radius:999px;min-height:44px;font-size:12px;font-weight:650;padding:8px 12px}.lb-program-filters button.active{background:var(--lb-active);border-color:var(--lb-accent);color:var(--lb-accent)}
 .lb-studio .lb-program-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.lb-studio .lb-studio-program{background:var(--lb-card);border:1px solid var(--lb-border);border-radius:18px;display:flex;flex-direction:column}
 .lb-studio .lb-studio-program .lb-program-img{width:100%;height:auto;min-height:0;flex:0 0 auto;aspect-ratio:2/1;background:#d8e4ec}.lb-studio .lb-studio-program .lb-program-img img{object-fit:contain;object-position:center}
-.lb-program-heart{position:absolute;right:10px;top:10px;width:44px;height:44px;display:grid;place-items:center;background:#17242be8;border:1px solid #b7cbd075;border-radius:13px;color:white}.lb-program-heart.on{color:#ffb4c3}.lb-program-heart.on svg{fill:#ffb4c3}
+.lb-program-heart{position:absolute;right:10px;top:10px;width:44px;height:44px;display:grid;place-items:center;background:#131b15e8;border:1px solid #97a59475;border-radius:13px;color:white}.lb-program-heart.on{color:#ffb4c3}.lb-program-heart.on svg{fill:#ffb4c3}
 .lb-studio .lb-program-body{padding:16px;gap:9px}.lb-program-label{color:var(--lb-accent);font-size:10px;letter-spacing:.07em;font-weight:800;overflow-wrap:anywhere}.lb-studio .lb-program-body h3{color:var(--lb-text);font-size:19px;line-height:1.2;overflow-wrap:anywhere}
 .lb-program-meta{display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap}.lb-program-meta span{display:flex;align-items:center;gap:4px;color:var(--lb-muted);font-size:11px;font-weight:750}.lb-program-meta .lb-pdone{color:var(--lb-accent)}
 .lb-studio .lb-program-body p{color:var(--lb-muted);font-size:12px;line-height:1.55}.lb-program-buttons{display:grid;gap:7px;margin-top:auto}.lb-studio .lb-program-buttons button{min-height:44px;font-size:12px;font-weight:750;background:var(--lb-accent);color:var(--lb-on);margin:0}.lb-studio .lb-program-buttons button[data-lb="kb-plan"]{background:var(--lb-control);border:1px solid var(--lb-border);color:var(--lb-text)}
@@ -246,7 +243,7 @@ body:has(.lb-studio) .bottom-nav button.active{background:#273d2d;color:#b5ef79}
 
 
 /* Shared ready-made program execution styles. */
-.lb-studio .ap-routine-cover{min-height:205px;background-image:linear-gradient(90deg,#182229 8%,#182229db 52%,#18222965),var(--ap-photo);border:1px solid var(--lb-border);border-radius:18px}
+.lb-studio .ap-routine-cover{min-height:205px;background-image:linear-gradient(90deg,#131b15 8%,#131b15db 52%,#131b1565),var(--ap-photo);border:1px solid var(--lb-border);border-radius:18px}
 .lb-studio .ap-routine-cover>div{padding:21px;max-width:500px}
 .lb-studio .ap-routine-cover h1{font-size:clamp(26px,5vw,38px);line-height:1.15;margin:12px 0}
 .lb-studio .ap-routine-cover p{color:var(--lb-text);font-size:13px;line-height:1.6}
@@ -264,3 +261,29 @@ body:has(.lb-studio) .bottom-nav button.active{background:#273d2d;color:#b5ef79}
 .lb-studio .ap-ex-actions button.done,.lb-studio .lb-kb-intro button{background:var(--lb-accent);border-color:var(--lb-accent);color:var(--lb-on)}
 .lb-studio .ap-disclaimer{color:var(--lb-muted);line-height:1.6}
 @media(max-width:450px){.lb-studio .ap-routine-cover>div{padding:18px}.lb-studio .ap-ex-info{padding:15px}.lb-studio .ap-ex-info h3{font-size:20px}}
+
+/* Restrained accents: only primary actions and small progress indicators are bright. */
+.lb-studio .lb-studio-mark{background:var(--lb-card);color:var(--lb-muted);border-color:var(--lb-border)}
+.lb-studio .lb-studio-tabs{background:var(--lb-control);border-color:var(--lb-border)}
+.lb-studio .lb-studio-tabs button.current{background:var(--lb-active);color:var(--lb-accent)}
+.lb-studio .lb-studio-tabs button.current>span{background:#36432f;color:var(--lb-accent)}
+.lb-studio .lb-step-index{background:var(--lb-active);color:var(--lb-muted)}
+.lb-studio .lb-auto-heading>span,.lb-studio .lb-head>div>span,.lb-studio .lb-detail-head>span,.lb-studio .lb-detail-copy>span,.lb-studio .lb-run-instructions h3,.lb-studio .lb-program-label,.lb-studio .ap-ex-visual-kicker{color:var(--lb-muted)!important}
+.lb-studio .lb-auto-time output,.lb-studio .lb-plan-summary strong{color:var(--lb-text)!important}
+.lb-studio .lb-pick-grid button.selected,.lb-studio .lb-auto-levels button.selected{background:var(--lb-active);border-color:var(--lb-selected-border);box-shadow:none}
+.lb-studio .lb-pick-grid button.selected strong,.lb-studio .lb-auto-levels button.selected strong{color:var(--lb-text)}
+.lb-studio .lb-auto .lb-duration button.selected,.lb-studio .lb-program-filters button.active,.lb-studio .lb-levels button.active,.lb-studio .lb-categories button.active,.lb-studio .lb-subfilters button.active{background:var(--lb-active);border:1px solid var(--lb-selected-border);color:var(--lb-accent)!important}
+.lb-studio .lb-levels button.active small{color:#c1ccbb}
+.lb-studio .lb-studio-resume{background:var(--lb-card);border-color:var(--lb-border)}
+.lb-studio .lb-program-buttons button,.lb-studio .lb-ex-actions .lb-add,.lb-studio .lb-detail-buttons .lb-detail-add,.lb-studio .lb-kb-intro button{background:var(--lb-active);border:1px solid var(--lb-selected-border)!important;color:var(--lb-text)!important}
+.lb-studio .lb-program-buttons button[data-lb="kb-plan"]{background:var(--lb-control);border-color:var(--lb-border)!important;color:var(--lb-muted)!important}
+.lb-studio .lb-ex-actions .lb-add.chosen,.lb-studio .lb-detail-buttons .lb-detail-add.selected,.lb-studio .lb-run-actions button.done,.lb-studio .ap-ex-actions button.done{background:var(--lb-active);border-color:var(--lb-selected-border);color:var(--lb-accent)!important}
+.lb-studio .lb-run-dose,.lb-studio .lb-plan-badges span{color:#dce7d2;background:var(--lb-active)}
+.lb-studio .lb-run-progress,.lb-studio .ap-routine-progress>div{background:var(--lb-control)}
+.lb-studio .lb-back,.lb-studio .ap-back,.lb-studio .lb-plan-build,.lb-studio .lb-attribution a{color:#c1ccbb!important}
+.lb-studio .lb-run-title>span,.lb-studio .lb-run-ex-heading>span,.lb-studio .ap-ex-info>span,.lb-studio .ap-routine-cover>div>span:first-child{color:var(--lb-muted)!important}
+.lb-studio .lb-thumb-tag.easy{background:#263822ee;color:#dce7d2;border-color:#657b4d}
+.lb-studio .lb-pose-pair figure{border-color:var(--lb-border)}
+.lb-studio .ap-exercise-visual .ap-ex-actions button:first-child:not(.done){background:var(--lb-control);border-color:var(--lb-border);color:var(--lb-text)}
+.lb-studio .lb-program-heart:not(.on){color:var(--lb-text)}
+.lb-studio .lb-generate,.lb-studio .lb-resume button,.lb-studio .ap-cta-wide{background:var(--lb-accent);color:var(--lb-on)!important}
