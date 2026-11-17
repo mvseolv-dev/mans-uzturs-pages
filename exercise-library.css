@@ -167,3 +167,7 @@
 @media(max-width:680px){.lb-run-ex-content{grid-template-columns:1fr;gap:20px}.lb-run-images .lb-pose-pair{grid-template-columns:repeat(2,minmax(0,1fr))}.lb-run-images .lb-pose-pair.single{grid-template-columns:1fr;max-width:350px;margin:0 auto}.lb-run-exercise{padding:17px}.lb-run-exercise>h2{font-size:23px}.lb-run-instructions ol{font-size:14px}.lb-run-dose{font-size:12px}.lb-resume{align-items:stretch;flex-direction:column}.lb-resume button{width:100%}}
 
 .lb-run-actions .lb-run-remove{flex:0 0 42px;padding:9px;color:#a6b29e;font-size:20px;background:transparent;border-color:#ffffff15}
+
+/* Single-kettlebell training */
+.lb-load-label select{display:block;width:100%;max-width:260px;margin-top:6px;padding:10px 12px;background:#172419;color:#f0f8e7;border:1px solid #657b49;border-radius:10px;font:inherit;font-weight:700;min-height:42px}
+.lb-kb-intro{display:grid;gap:10px;padding:16px;border:1px solid #526c43;border-radius:15px;background:#1b2c20;color:#e9f3e2;margin:14px 0;font-size:13px;line-height:1.5}.lb-kb-intro strong{color:#d0fc73}.lb-kb-intro p{margin:0}.lb-kb-intro button{border:0;border-radius:11px;background:#d0fc73;color:#18280e;padding:12px;font-weight:800;cursor:pointer}.lb-program-card button[data-lb="kb-plan"]{background:#243b20;color:#d0fc73;border:1px solid #6d934b;margin-bottom:7px}
