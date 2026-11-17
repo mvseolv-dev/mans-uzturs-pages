@@ -287,3 +287,6 @@
 .lb-studio .ap-exercise-visual .ap-ex-actions button:first-child:not(.done){background:var(--lb-control);border-color:var(--lb-border);color:var(--lb-text)}
 .lb-studio .lb-program-heart:not(.on){color:var(--lb-text)}
 .lb-studio .lb-generate,.lb-studio .lb-resume button,.lb-studio .ap-cta-wide{background:var(--lb-accent);color:var(--lb-on)!important}
+
+/* Concise exercise guidance; full technique stays available on demand. */
+.lb-more-guide{margin:8px 0;font-size:12px;color:var(--mu-muted,#97a594)}.lb-more-guide summary{cursor:pointer;padding:9px 0;color:var(--mu-muted,#97a594);font-weight:650}.lb-more-guide[open] summary{margin-bottom:5px}.lb-more-guide ol,.lb-more-guide ul{margin:5px 0 9px!important;padding-left:20px!important}.lb-studio .lb-run-instructions>ol,.lb-studio .ap-ex-info>ol{display:grid;gap:6px;margin:8px 0!important}.lb-studio .lb-run-instructions>ol li,.lb-studio .ap-ex-info>ol li{line-height:1.5}
