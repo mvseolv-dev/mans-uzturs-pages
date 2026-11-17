@@ -63,7 +63,10 @@ window.CloudSync=(()=>{
   if(btn){btn.textContent=a?'Mākonis':'Pieslēgt kontu';btn.dataset.status=kind}
   if(status){status.textContent=text;status.dataset.status=kind}
   const bar=$('cloud-bar');if(bar)bar.hidden=!!a;
-  const account=$('cloud-account');if(account){account.hidden=!a;account.dataset.status=kind;account.title='Mākoņa konts: '+text;account.setAttribute('aria-label','Mākoņa konts: '+text);}
+  const name=a?(a.profile==='liva'?'Līva':'Māris'):'';
+  const account=$('cloud-account');if(account){account.hidden=!a;account.dataset.status=kind;account.title=name+' · '+text;account.setAttribute('aria-label',name+' · Konta izvēlne · '+text);}
+  const nameNode=$('cloud-profile-name');if(nameNode)nameNode.textContent=name;
+  const picker=$('local-profile-picker');if(picker)picker.hidden=!!a;
   const selector=$('profile-select');if(selector){selector.disabled=!!a;}
   const panel=$('cloud-panel');if(panel&&!panel.hidden)paintPanel();
  }
