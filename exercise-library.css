@@ -300,3 +300,6 @@
 .lb-gear-check{position:absolute;right:9px;top:12px;font-size:15px;color:var(--mu-muted,#97a594)}
 .lb-multi-gear button.selected .lb-gear-check{color:var(--mu-accent,#d0fc73)}
 .lb-multi-gear button:disabled{opacity:.45;cursor:not-allowed}
+
+/* Exercise count, next to the duration. */
+.lb-count-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:15px 0 7px}.lb-count-head label{font-size:13px;font-weight:700;color:var(--lb-text,#edf3e9)}.lb-count-head select{min-height:44px;max-width:52%;padding:8px 12px;background:var(--lb-control,#0c140e);border:1px solid var(--lb-border,#303a30);border-radius:10px;color:var(--lb-text,#edf3e9);font-size:16px}.lb-count-head select:focus-visible{outline:2px solid var(--lb-accent,#d0fc73);outline-offset:2px}
