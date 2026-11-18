@@ -197,7 +197,7 @@ function lbPrograms(){
 function lbMyCard(id,index){
  const x=lbEntry(id);if(!x)return '';
  const checked=lbDay().checked.includes(id);
- return '<div class="lb-my-row"><img src="'+lbImage(id)+'" loading="lazy" alt="" width="512" height="512"><div class="lb-my-copy"><span>'+String(index+1).padStart(2,"0")+' · '+lbLevelName(x.level)+'</span><strong>'+safe(x.name)+'</strong><small>'+(safe(lbPlanDoseText(lbDay().plan,id,x.sets+' · '+lbDurationLabel(x))))+'</small><button type="button" class="lb-my-technique" data-lb="view" data-id="'+id+'">Skatīt izpildi ↗</button>'+lbLoadField(x)+'</div><div class="lb-my-controls"><button data-lb="my-check" data-id="'+id+'" class="'+(checked?'done':'')+'" aria-label="Atzīmēt vingrinājumu">'+(checked?'✓':'○')+'</button><button data-lb="my-remove" data-id="'+id+'" aria-label="Izņemt vingrinājumu">×</button></div></div>';
+ return '<div class="lb-my-row"><img src="'+lbImage(id)+'" loading="lazy" alt="" width="512" height="512"><div class="lb-my-copy"><span>'+String(index+1).padStart(2,"0")+' · '+lbLevelName(x.level)+'</span><strong>'+safe(x.name)+'</strong><small>'+(safe(lbPlanDoseText(lbDay().plan,id,x.sets+' · '+lbDurationLabel(x))))+'</small><button type="button" class="lb-my-technique" data-lb="view" data-id="'+id+'">Skatīt izpildi ↗</button>'+lbLoadField(x)+'</div><div class="lb-my-controls"><button data-lb="my-check" data-id="'+id+'" class="'+(checked?'done':'')+'" aria-label="Atzīmēt vingrinājumu">'+(checked?'✓':'○')+'</button><button data-lb="my-remove" data-id="'+id+'" aria-label="'+(lbDay().plan?'Aizvietot vingrinājumu':'Izņemt vingrinājumu')+'" title="'+(lbDay().plan?'Aizvietot vingrinājumu':'Izņemt vingrinājumu')+'">×</button></div></div>';
 }
 
 function lbMyWorkout(){
@@ -220,7 +220,7 @@ function lbWorkoutExercise(id,index,workout){
  const x=lbEntry(id);if(!x)return '';const p=workout.plan,done=workout.checked.includes(id),fav=lbFaves().includes(id);
  const dose=lbPlanDoseText(p,id,x.sets);
  const steps=id==='high-knees'&&(lbIsLiva()||p?.kind==='smart-reps')?['Soļo uz vietas, pārmaiņus paceļot ceļus sev ērtā augstumā.','Saglabā taisnu stāju, bez lēciena vai skrējiena.']:x.instructions||[x.guide];
- return '<article class="lb-run-exercise '+(done?'is-done':'')+'"><div class="lb-run-ex-heading"><span>VINGRINĀJUMS '+String(index+1).padStart(2,'0')+'</span><span>'+lbLevelName(x.level)+'</span></div><h2>'+safe(x.name)+'</h2><div class="lb-run-dose">'+safe(dose)+'</div><div class="lb-run-ex-content"><div class="lb-run-images">'+lbPoseImages(id,true)+'</div><div class="lb-run-instructions"><h3>Kā izpildīt</h3>'+lbGuideHtml(x,steps)+lbLoadField(x)+'</div></div><div class="lb-run-actions"><button type="button" data-lb="my-check" data-id="'+id+'" aria-pressed="'+done+'" class="'+(done?'done':'')+'">'+(done?'✓ Paveikts':'○ Atzīmēt kā paveiktu')+'</button><button type="button" data-lb="favorite" data-id="'+id+'" aria-pressed="'+fav+'">'+(fav?'♥ Favorītos':'♡ Favorītiem')+'</button><button type="button" class="lb-run-remove" data-lb="my-remove" data-id="'+id+'" aria-label="Izņemt '+safe(x.name)+'">×</button></div></article>';
+ return '<article class="lb-run-exercise '+(done?'is-done':'')+'"><div class="lb-run-ex-heading"><span>VINGRINĀJUMS '+String(index+1).padStart(2,'0')+'</span><span>'+lbLevelName(x.level)+'</span></div><h2>'+safe(x.name)+'</h2><div class="lb-run-dose">'+safe(dose)+'</div><div class="lb-run-ex-content"><div class="lb-run-images">'+lbPoseImages(id,true)+'</div><div class="lb-run-instructions"><h3>Kā izpildīt</h3>'+lbGuideHtml(x,steps)+lbLoadField(x)+'</div></div><div class="lb-run-actions"><button type="button" data-lb="my-check" data-id="'+id+'" aria-pressed="'+done+'" class="'+(done?'done':'')+'">'+(done?'✓ Paveikts':'○ Atzīmēt kā paveiktu')+'</button><button type="button" data-lb="favorite" data-id="'+id+'" aria-pressed="'+fav+'">'+(fav?'♥ Favorītos':'♡ Favorītiem')+'</button><button type="button" class="lb-run-remove" data-lb="my-remove" data-id="'+id+'" aria-label="'+(p?'Aizvietot ':'Izņemt ')+safe(x.name)+'" title="'+(p?'Aizvietot vingrinājumu':'Izņemt vingrinājumu')+'">×</button></div></article>';
 }
 function renderCustomWorkout(){
  lbSyncBuilder();
@@ -355,6 +355,15 @@ const LB_TIME_SPEC={
  walking:[60,120,''],'suitcase-carry':[20,30,'katrā pusē'],'kettlebell-rack-hold':[15,25,'katrā pusē']
 };
 const LB_KB_POOL=[['goblet-squat','squat'],['kettlebell-deadlift','hinge'],['one-arm-kettlebell-row','pull'],['one-arm-kettlebell-floor-press','push'],['one-arm-kettlebell-shoulder-press','push'],['kettlebell-reverse-lunge','lunge'],['kettlebell-kickstand-deadlift','hinge'],['suitcase-carry','core'],['kettlebell-rack-hold','core']];
+const LB_SWAP_POOL=[
+ ['squat-pulse','squat'],['wall-sit','squat'],['squat-hold','squat'],['cossack-squat','lunge'],
+ ['incline-push-ups','push',true],['crunches','core'],['reverse-crunches','core'],['mountain-climbers','core'],
+ ['standing-side-bend','mobility'],['seated-spinal-twist','mobility'],['supine-spinal-twist','mobility'],['bird-dog-hold','core'],
+ ['db-squat','squat'],['db-sumo-squat','squat'],['dumbbell-deadlift','hinge'],
+ ['kettlebell-sumo-deadlift','hinge'],['banded-standing-hip-abduction','balance'],['banded-seated-hip-abduction','balance']
+];
+Object.assign(LB_REP_SPEC,{'squat-pulse':[8,12,'',2],'cossack-squat':[5,8,'katrā pusē',3],'incline-push-ups':[6,12,'',3],crunches:[8,12,'',3],'reverse-crunches':[8,12,'',3],'mountain-climbers':[8,12,'katrai kājai',2],'standing-side-bend':[6,8,'katrā pusē',3],'seated-spinal-twist':[5,8,'katrā pusē',4],'supine-spinal-twist':[5,8,'katrā pusē',4],'db-squat':[8,12,'',3],'db-sumo-squat':[8,12,'',3],'dumbbell-deadlift':[8,12,'',3],'kettlebell-sumo-deadlift':[8,12,'',3],'banded-standing-hip-abduction':[8,12,'katrai kājai',3],'banded-seated-hip-abduction':[10,15,'',3]});
+Object.assign(LB_TIME_SPEC,{'wall-sit':[20,35,''],'squat-hold':[15,25,''],'bird-dog-hold':[15,25,'katrā pusē']});
 const LB_SLOTS={
  full:['squat','push','hinge','pull','core','lunge','balance','core'],
  strength:['squat','push','hinge','pull','core','lunge','balance','core'],
@@ -456,6 +465,63 @@ function lbSmartPlan({target,level,focus,equipment,balance=false,prior=[],random
  const finalIds=chosen.map(o=>o.x.id),estimate=minutes();
  return {kind:'smart-reps',title:({full:'Pilna ķermeņa treniņš',strength:'Spēka treniņš',basket:'Basketbolista fiziskā sagatavotība',dance:'Dejotājas fiziskā sagatavotība',weightloss:'Spēks un kondīcija',core:'Korpusa stabilitāte',recovery:'Mobilitāte un atjaunošanās'})[safeFocus],minutes:estimate,targetMinutes:target,level,focus:safeFocus,equipment:gear[0]||'none',equipments:gear,ids:finalIds,doses,warmupSeconds:warm,cooldownSeconds:cool,balanceSeconds:bal,balanceExerciseId:bal?'balance-dome-stand':null};
 }
+
+function lbMovement(id){
+ return [...LB_AUTO_POOL,...LB_KB_POOL,...LB_SWAP_POOL].find(o=>o[0]===id)?.[1]||kbMove(id)?.pattern||null;
+}
+function lbReplacement(day,id,random=Math.random){
+ const p=day.plan,i=day.ids.indexOf(id),old=lbEntry(id),pattern=lbMovement(id);
+ if(!p||i<0||!old||!pattern)return null;
+ const level=['easy','medium','hard'].includes(p.level)?p.level:'medium',focus=LB_SLOTS[p.focus]?p.focus:'full',gear=lbGearList(p.equipments??p.equipment);
+ const rejected=new Set(Array.isArray(p.rejectedIds)?p.rejectedIds:[]),occupied=new Set(day.ids);
+ const otherFamilies=new Set(day.ids.filter(x=>x!==id).map(x=>LB_FAMILIES[x]||x));
+ const related={squat:['lunge','hinge'],lunge:['squat'],hinge:['squat'],push:[],pull:[],core:['balance'],balance:['core'],cardio:[],mobility:['balance']}[pattern]||[];
+ const candidates=lbSmartPool(level,focus,gear,LB_SWAP_POOL).filter(o=>!occupied.has(o.x.id)&&!rejected.has(o.x.id)&&!otherFamilies.has(LB_FAMILIES[o.x.id]||o.x.id)&&(o.pattern===pattern||related.includes(o.pattern)));
+ const baseline=Number(p.replacementBaseMinutes)||Number(p.minutes)||25;
+ const upper=Math.max(baseline+1,Math.min(Number(p.targetMinutes)||baseline,baseline+2),Number(p.minutes)||baseline);
+ let best=null,bestScore=-Infinity;
+ const score=(o,minutes,setsDiff=0)=>(o.pattern===pattern?70:0)+(o.x.equipment===old.equipment?10:0)+(o.x.level===old.level?5:0)+(lbFaves().includes(o.x.id)?1:0)-Math.abs(minutes-baseline)*25-setsDiff*8+random();
+ for(const o of candidates){
+  const nextId=o.x.id,ids=day.ids.slice();ids[i]=nextId;
+  if(p.kind==='smart-reps'){
+   const oldDose=p.doses?.[id];if(!oldDose)continue;
+   const baseSets=oldDose.sets;
+   for(const sets of [...new Set([baseSets,Math.min(3,baseSets+1),Math.max(1,baseSets-1)])]){
+    const d=lbRepDose(o,sets,level,focus);
+    for(const extraRest of [0,15,30]){
+     const dose={...d,rest:d.rest+extraRest};
+     const doses={...p.doses};delete doses[id];doses[nextId]=dose;
+     const minutes=lbSmartMinutes(ids,doses,p.warmupSeconds,p.cooldownSeconds,p.balanceSeconds||0);
+     if(!Number.isFinite(minutes)||minutes<baseline||minutes>upper)continue;
+     const value=score(o,minutes,Math.abs(sets-baseSets))+(dose.mode===oldDose.mode?6:0)-extraRest/10;
+     if(value>bestScore){bestScore=value;best={id:nextId,minutes,doses};}
+    }
+   }
+  }else if(p.kind==='kettlebell-reps'){
+   const original=p.kbDoses?.[id];if(!original||!kbMove(nextId))continue;
+   const dose=kbDose(nextId,original.sets,level,original.rest),doses={...p.kbDoses};if(!dose)continue;
+   delete doses[id];doses[nextId]=dose;
+   const minutes=kbEstimatedMinutes(ids,doses,p.circuit,p.warmupSeconds,p.cooldownSeconds)+(p.balanceSeconds||0)/60;
+   if(minutes<baseline||minutes>upper)continue;
+   const value=score(o,minutes);if(value>bestScore){bestScore=value;best={id:nextId,minutes,kbDoses:doses};}
+  }else{
+   const value=score(o,p.minutes);if(value>bestScore){bestScore=value;best={id:nextId,minutes:p.minutes};}
+  }
+ }
+ return best?{...best,baseline,rejectedIds:[...rejected,id]}:null;
+}
+function lbReplaceExercise(id){
+ const d=lbCheckWorkout(lbDay()),p=d.plan,i=d.ids.indexOf(id);if(!p||i<0)return;
+ const swap=lbReplacement(d,id);
+ if(!swap){toast('Nav līdzvērtīga aizvietotāja ar šo inventāru un ilgumu. Treniņš saglabāts.');return;}
+ d.ids[i]=swap.id;p.ids=d.ids.slice();p.minutes=swap.minutes;p.replacementBaseMinutes=swap.baseline;p.rejectedIds=swap.rejectedIds;
+ if(swap.doses)p.doses=swap.doses;if(swap.kbDoses)p.kbDoses=swap.kbDoses;
+ d.checked=d.checked.filter(x=>x!==id&&x!==swap.id);d.completed=false;
+ if(d.loads){delete d.loads[id];delete d.loads[swap.id];}
+ if(state.homeSessions)delete state.homeSessions[fitToday()+'|custom'];
+ lbSave();render();toast('Aizvietots: '+lbEntry(swap.id).name);
+}
+
 function lbGenerate(){
  const target=Math.max(10,Math.min(60,Math.round(Number(lbTarget)/5)*5||25)),focus=lbBuildFocus,level=focus==='recovery'?'easy':lbBuildLevel,equipment=focus==='recovery'?[]:lbBuildEquipment.slice(),day=lbDay();
  const plan=lbSmartPlan({target,level,focus,equipment,balance:lbBuildBalance,prior:day.ids});
@@ -497,7 +563,7 @@ document.addEventListener('click',event=>{
  if(act==="gear-combo"){const c=LB_GEAR_COMBOS.find(c=>c.id===target.dataset.value);if(!c)return;lbBuildEquipment=lbGearList(c.equipment);lbBuildBalance=c.balance;lbBuildFocus=lbIsLiva()&&c.focus==='basket'?'dance':c.focus;if(c.focus==='recovery')lbBuildLevel='easy';lbRememberBuilder();render();return}
  if(act==="generate"){lbGenerate();return}
  if(act==='kb-plan'){const p=kbProgram(id);if(p&&lbAvailablePrograms().some(x=>x.id===id))kbApply(p,p.minutes,p.level==='VIEGLS'?'easy':p.advanced?'hard':'medium',p.kind==='core'?'core':p.kind==='dance'?'dance':p.kind==='weightloss'?'weightloss':p.kind==='basket'?(lbIsLiva()?'weightloss':'basket'):'strength',false,false);return}
- if(act==="my-remove"){lbToggleSelected(id);return}
+ if(act==="my-remove"){if(lbDay().plan)lbReplaceExercise(id);else lbToggleSelected(id);return}
  if(act==="my-check"){const d=lbDay(),k=d.checked.indexOf(id);if(k>=0)d.checked.splice(k,1);else d.checked.push(id);d.completed=false;if(state.homeSessions)delete state.homeSessions[fitToday()+'|custom'];lbSave();render();return}
  if(act==="complete"){const d=lbDay();if(!d.ids.length)return;d.completed=!d.completed;
   state.homeSessions??={};if(d.completed){state.homeSessions[fitToday()+'|custom']=true;d.checked=[...d.ids];
