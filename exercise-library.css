@@ -293,3 +293,10 @@
 
 /* One compact technique paragraph; no duplicated instructions or cues. */
 .lb-studio .lb-compact-guide{font-size:13px;line-height:1.55;margin:5px 0 9px;color:var(--lb-text);overflow-wrap:anywhere}.lb-studio .lb-run-instructions h3{margin:0 0 5px}.lb-studio .lb-detail-copy .lb-compact-guide{margin:2px 0}.lb-studio .lb-balance-block .lb-compact-guide{margin:8px 0}
+
+/* Multi-select inventory, restrained accent. */
+.lb-multi-hint{font-size:12px;line-height:1.45;color:var(--mu-muted,#97a594);margin:0 0 9px}
+.lb-studio .lb-multi-gear button{position:relative;padding-right:30px;text-align:left;min-width:0}
+.lb-gear-check{position:absolute;right:9px;top:12px;font-size:15px;color:var(--mu-muted,#97a594)}
+.lb-multi-gear button.selected .lb-gear-check{color:var(--mu-accent,#d0fc73)}
+.lb-multi-gear button:disabled{opacity:.45;cursor:not-allowed}
